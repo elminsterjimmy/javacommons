@@ -23,9 +23,9 @@ public class DateUtilTest {
     Date date1 = DateUtil.getDate(2000, 1, 1);
     Date date2 = DateUtil.getDate(2000, 1, 2);
     Date date3 = DateUtil.getDate(1999, 12, 31);
-    Assert.assertEquals(date2.getTime(), DateUtil.addDay(date1, 1).getTime());
-    Assert.assertEquals(date3.getTime(), DateUtil.addDay(date1, -1).getTime());
-    Assert.assertEquals(date2.getTime(), DateUtil.addDay(date3, 2).getTime());
+    Assert.assertEquals(date2, DateUtil.addDay(date1, 1));
+    Assert.assertEquals(date3, DateUtil.addDay(date1, -1));
+    Assert.assertEquals(date2, DateUtil.addDay(date3, 2));
   }
 
   @Test

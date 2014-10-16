@@ -5,6 +5,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +69,13 @@ public abstract class ReflectUtil {
     do {
       Method[] methods = clazz.getDeclaredMethods();
       CollectionUtil.mergeArray(methodList, methods);
+      Class<?>[] interfaces = clazz.getInterfaces();
+      if (null != interfaces) {
+        for (Class<?> ife : interfaces) {
+          Method[] ifMethods = getAllMethod(ife);
+          CollectionUtil.mergeArray(methodList, ifMethods);
+        }
+      }
       clazz = clazz.getSuperclass();
     } while (null != clazz);
     return (Method[]) CollectionUtil.collection2Array(methodList);
@@ -129,7 +138,14 @@ public abstract class ReflectUtil {
   public static Object invoke(Object obj, String methodName, Object[] args)
       throws NoSuchMethodException, IllegalArgumentException,
       IllegalAccessException, InvocationTargetException {
-    Method method = getDeclaredMethod(obj.getClass(), methodName, args);
+    int argsCnt = args.length;
+    Class<?>[] classArgs = new Class<?>[argsCnt];
+    for (int i = 0; i < argsCnt; i++) {
+      classArgs[i] = args[i].getClass();
+    }
+    
+    Method method = getDeclaredMethod(obj.getClass(), methodName, classArgs);
+    
     if (null == method) {
       throw new NoSuchMethodException();
     }
@@ -245,7 +261,7 @@ public abstract class ReflectUtil {
     }
     return value;
   }
-
+  
   /**
    * Get the specified declared method by method name
    * 
@@ -259,65 +275,102 @@ public abstract class ReflectUtil {
    */
   public static Method getDeclaredMethod(Class<? extends Object> clazz,
       String methodName, Object[] args) {
+    Class<?>[] classes = new Class<?>[args.length];
+    for (int i = 0; i < args.length; i++) {
+      classes[i] = args[i].getClass();
+    }
+    return getDeclaredMethod(clazz, methodName, classes);
+  }
+  
+  /**
+   * Get the specified declared method by method name
+   * 
+   * @param clazz
+   *          the class declared the specified method
+   * @param methodName
+   *          the specified method's name
+   * @param args
+   *          the specified method's arguments type
+   * @return the specified declared method
+   */
+  public static Method getDeclaredMethod(Class<? extends Object> clazz,
+      String methodName, Class<?>[] args) {
     Method[] methods = getAllMethod(clazz);
     for (Method method : methods) {
       if (method.getName().equals(methodName)) {
         Class<?>[] argClasses = method.getParameterTypes();
+        int argCount = argClasses.length;
+        boolean checked = true;
         if (argClasses.length == args.length) {
-          int argCount = argClasses.length;
-          boolean isChecked = true;
-          for (int i = 0; i < argCount; i++) {
-            if (argClasses[i].isPrimitive()) {
-              if (!checkPrimitive(argClasses[i], args[i])) {
-                isChecked = false;
-                break;
-              }
-            } else {
-              if (!argClasses[i].isInstance(args[i])) {
-                isChecked = false;
-                break;
-              }
+          for (int i = 0; i< argCount; i++) {
+            if (!checkParamClass(argClasses[i], args[i])) {
+              checked = false;
+              break;
             }
           }
-          if (isChecked) {
-            return method;
-          }
+        } else {
+          checked = false;
+        }
+        if (checked) {
+          return method;
         }
       }
     }
     return null;
   }
+  
+  /**
+   * Check the actual class is same or assignable from expect class.
+   * @param expectClass the expect class
+   * @param actualClass the actual class
+   * @return the actual class is same or assignable from expect class
+   */
+  private static boolean checkParamClass(Class<?> expectClass, Class<?> actualClass) {
+    if (expectClass.isPrimitive()) {
+      if (actualClass.isPrimitive()) {
+        return expectClass == actualClass;
+      } else {
+        expectClass = getWrappedClass(expectClass);
+        return expectClass.isAssignableFrom(actualClass);
+      }
+    } else if (expectClass.isArray()) {
+      if (actualClass.isArray()) {
+        return checkParamClass(expectClass.getComponentType(), actualClass.getComponentType());
+      }
+    } else {
+      if (actualClass.isPrimitive()) {
+        actualClass = getWrappedClass(actualClass);
+      }
+      return expectClass.isAssignableFrom(actualClass);
+    }
+    return false;
+  }
 
   /**
-   * Check Class equal if the clazz is primitive
-   * 
-   * @param clazz
-   *          the primitive class
-   * @param object
-   *          the object to check
-   * @return the object is the type of the specified primitive class
+   * Get the wrap class of primitive type.
+   * @param primitive the primitive class
+   * @return the wrapped class
    */
-  private static boolean checkPrimitive(Class<?> clazz, Object object) {
-    if (object.getClass().isPrimitive()) {
-      return clazz == object.getClass();
-    }
-    Class<?> c = clazz;
-    if (Integer.TYPE == clazz) {
+  private static Class<?> getWrappedClass(Class<?> primitive) {
+    Class<?> c = primitive;
+    if (Integer.TYPE == primitive) {
       c = Integer.class;
-    } else if (Long.TYPE == clazz) {
+    } else if (Long.TYPE == primitive) {
       c = Long.class;
-    } else if (Short.TYPE == clazz) {
+    } else if (Short.TYPE == primitive) {
       c = Short.class;
-    } else if (Float.TYPE == clazz) {
+    } else if (Float.TYPE == primitive) {
       c = Float.class;
-    } else if (Double.TYPE == clazz) {
+    } else if (Double.TYPE == primitive) {
       c = Double.class;
-    } else if (Character.TYPE == clazz) {
+    } else if (Character.TYPE == primitive) {
       c = Character.class;
-    } else if (Boolean.TYPE == clazz) {
+    } else if (Boolean.TYPE == primitive) {
       c = Boolean.class;
+    } else if (Byte.TYPE == primitive) {
+      c = Byte.class;
     }
-    return c.isInstance(object);
+    return c;
   }
 
   /**
@@ -355,10 +408,9 @@ public abstract class ReflectUtil {
     }
     return null;
   }
-
+  
   /**
    * Get the method name for a depth in call stack.
-   * 
    * @param depth
    *          depth in the call stack (0 means current method, 1 means call
    *          method, ...)
@@ -368,5 +420,128 @@ public abstract class ReflectUtil {
     StackTraceElement[] stes = new Throwable().getStackTrace();
     StackTraceElement ste = stes[depth];
     return ste.getClassName() + StringConstants.SHARP + ste.getMethodName();
+  }
+
+  /**
+   * Get the constructor of specified class.
+   * 
+   * @param clazz
+   *          the specified class name
+   * @return the constructor
+   * @throws SecurityException
+   *           on error
+   * @throws NoSuchMethodException
+   *           on error
+   */
+  public static Constructor<?> getConstructor(Class<?> clazz)
+      throws NoSuchMethodException, SecurityException {
+    return getConstructor(clazz, null);
+  }
+
+  /**
+   * Get the constructor of specified class.
+   * 
+   * @param clazz
+   *          the specified class name
+   * @param args
+   *          the specified class' arguments type
+   * @return the constructor
+   * @throws SecurityException
+   *           on error
+   * @throws NoSuchMethodException
+   *           on error
+   */
+  public static Constructor<?> getConstructor(Class<?> clazz, Class<?>[] args)
+      throws NoSuchMethodException, SecurityException {
+    Constructor<?> constructor;
+    if (null == args) {
+      constructor = clazz.getDeclaredConstructor();
+    } else {
+      constructor = clazz.getDeclaredConstructor(args);
+    }
+    return constructor;
+  }
+
+  /**
+   * Create new instance of specified class from reflect.
+   * 
+   * @param clazz
+   *          the class name
+   * @return the new instance
+   * @throws SecurityException
+   * @throws NoSuchMethodException
+   * @throws InvocationTargetException
+   * @throws IllegalArgumentException
+   * @throws IllegalAccessException
+   * @throws InstantiationException
+   */
+  public static Object newInstanceViaReflect(Class<?> clazz)
+      throws NoSuchMethodException, SecurityException, InstantiationException,
+      IllegalAccessException, IllegalArgumentException,
+      InvocationTargetException {
+    Constructor<?> constructor = getConstructor(clazz);
+    makeAccessible(constructor);
+    return constructor.newInstance();
+  }
+  
+  /**
+   * Get the generic type from type.
+   * @param type the type
+   * @return the generic type
+   * @throws ClassNotFoundException on error
+   */
+  public static Class<?>[] getGenericType(Type type) throws ClassNotFoundException {
+    Class<?>[] rtn = null;
+    if (type instanceof ParameterizedType) {
+      ParameterizedType pt = (ParameterizedType) type;
+      Type[] actualTypes = pt.getActualTypeArguments();
+      rtn = new Class<?>[actualTypes.length];
+      for (int i = 0; i < actualTypes.length; i++) {
+        Type actualType = actualTypes[i];
+        String[] split = actualType.toString().split(StringConstants.SPACE);
+        String className;
+        if (split.length > 1) {
+          className = split[1];
+        } else {
+          return null;
+        }
+        rtn[i] = Class.forName(className);
+      }
+    }
+    return rtn;
+  }
+  
+  /**
+   * Get the generic return type of specified method.
+   * @param method the method
+   * @return the generic return type
+   * @throws ClassNotFoundException on error
+   */
+  public static Class<?>[] getGenericReturnType(Method method) throws ClassNotFoundException {
+    Type type = method.getGenericReturnType();
+    return getGenericType(type);
+  }
+  
+  /**
+   * Get the generic parameter type of specified method
+   * @param method the method
+   * @param parIdx the parameter index
+   * @return the generic parameter type
+   * @throws ClassNotFoundException on error
+   */
+  public static Class<?>[] getGenericParamType(Method method, int parIdx) throws ClassNotFoundException {
+    Type type = method.getGenericParameterTypes()[parIdx];
+    return getGenericType(type);
+  }
+  
+  /**
+   * Get the generic type of specified field.
+   * @param field the field
+   * @return the generic type
+   * @throws ClassNotFoundException on error
+   */
+  public static Class<?>[] getGenericFieldType(Field field) throws ClassNotFoundException {
+    Type type = field.getGenericType();
+    return getGenericType(type);
   }
 }
