@@ -1,5 +1,7 @@
 package com.elminster.common.util;
 
+import static com.elminster.common.constants.Constants.StringConstants.EMPTY_STRING;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,7 +10,9 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,7 +38,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.elminster.common.constants.Constants.EncodingConstants;
-import static com.elminster.common.constants.Constants.StringConstants.EMPTY_STRING;
 import com.elminster.common.util.Messages.Message;
 
 /**
@@ -63,8 +66,10 @@ abstract public class XMLUtil {
 
   /**
    * Create document.
+   * 
    * @return the document
-   * @throws Exception on error
+   * @throws Exception
+   *           on error
    */
   public static Document createDocument() throws Exception {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -81,11 +86,16 @@ abstract public class XMLUtil {
 
   /**
    * Create document with namespace, qualified name and doc type.
-   * @param namespaceURI the namespace URI
-   * @param qualifiedName the qualified name
-   * @param doctype the document type
+   * 
+   * @param namespaceURI
+   *          the namespace URI
+   * @param qualifiedName
+   *          the qualified name
+   * @param doctype
+   *          the document type
    * @return the document
-   * @throws Exception on error
+   * @throws Exception
+   *           on error
    */
   public static Document createDocument(String namespaceURI,
       String qualifiedName, DocumentType doctype) throws Exception {
@@ -104,9 +114,12 @@ abstract public class XMLUtil {
 
   /**
    * Convert a input source to document.
-   * @param is the input source
+   * 
+   * @param is
+   *          the input source
    * @return the document
-   * @throws Exception on error
+   * @throws Exception
+   *           on error
    */
   public static Document convertToDocument(InputSource is) throws Exception {
     DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -140,9 +153,12 @@ abstract public class XMLUtil {
 
   /**
    * Convert a input stream to document.
-   * @param inputStream the input stream
+   * 
+   * @param inputStream
+   *          the input stream
    * @return the document
-   * @throws Exception on error
+   * @throws Exception
+   *           on error
    */
   public static Document convert2Document(InputStream inputStream)
       throws Exception {
@@ -152,9 +168,12 @@ abstract public class XMLUtil {
 
   /**
    * Convert a file to document.
-   * @param fileName file name
+   * 
+   * @param fileName
+   *          file name
    * @return the document
-   * @throws Exception on error
+   * @throws Exception
+   *           on error
    */
   public static Document convert2Document(String fileName) throws Exception {
     FileInputStream fis = null;
@@ -170,12 +189,43 @@ abstract public class XMLUtil {
   }
 
   /**
+   * Get fisrt specified child node by tag name.
+   * 
+   * @param parent
+   *          the parent node
+   * @param tagName
+   *          the tag name
+   * @return the child node
+   * @throws Exception
+   *           on error
+   */
+  public static Node getFirstChildNode(Node parent, String tagName)
+      throws Exception {
+    if (null != parent) {
+      NodeList childrenList = parent.getChildNodes();
+      int childrenCnt = childrenList.getLength();
+      for (int i = 0; i < childrenCnt; i++) {
+        Node child = childrenList.item(i);
+        if (child.getNodeName().equals(tagName)) {
+          return child;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
    * Get specified child nodes by tag name.
-   * @param parent the parent node
-   * @param tagName the tag name
-   * @param searchDeeper search deeper?
+   * 
+   * @param parent
+   *          the parent node
+   * @param tagName
+   *          the tag name
+   * @param searchDeeper
+   *          search deeper?
    * @return the child node list
-   * @throws Exception on error
+   * @throws Exception
+   *           on error
    */
   public static List<Node> getChildNode(Node parent, String tagName,
       boolean searchDeeper) throws Exception {
@@ -197,13 +247,19 @@ abstract public class XMLUtil {
   }
 
   /**
-   * Get the value of the specified child node. (only first value will be returned, and will
-   * return EMPTY_STRING if the tag exist but no value, null if the tag not exist)
-   * @param parent the parent node
-   * @param tagName the tag name
-   * @param searchDeeper search deeper?
+   * Get the value of the specified child node. (only first value will be
+   * returned, and will return EMPTY_STRING if the tag exist but no value, null
+   * if the tag not exist)
+   * 
+   * @param parent
+   *          the parent node
+   * @param tagName
+   *          the tag name
+   * @param searchDeeper
+   *          search deeper?
    * @return the value of specified child node
-   * @throws Exception on error
+   * @throws Exception
+   *           on error
    */
   public static String getChildNodeValue(Node parent, String tagName,
       boolean searchDeeper) throws Exception {
@@ -236,13 +292,20 @@ abstract public class XMLUtil {
   }
 
   /**
-   * Get the specified attribute value from child node. (only first value will be returned)
-   * @param parent the parent node
-   * @param tagName the tag name
-   * @param attributeName the attribute name
-   * @param searchDeeper search deeper?
+   * Get the specified attribute value from child node. (only first value will
+   * be returned)
+   * 
+   * @param parent
+   *          the parent node
+   * @param tagName
+   *          the tag name
+   * @param attributeName
+   *          the attribute name
+   * @param searchDeeper
+   *          search deeper?
    * @return the attribute value
-   * @throws Exception on error
+   * @throws Exception
+   *           on error
    */
   public static String getChildNodeAttribute(Node parent, String tagName,
       String attributeName, boolean searchDeeper) throws Exception {
@@ -275,11 +338,16 @@ abstract public class XMLUtil {
 
   /**
    * Create the text node of specified node.
-   * @param document the document
-   * @param nodeName the node name
-   * @param nodeText the node text
+   * 
+   * @param document
+   *          the document
+   * @param nodeName
+   *          the node name
+   * @param nodeText
+   *          the node text
    * @return the created text node
-   * @throws Exception on error
+   * @throws Exception
+   *           on error
    */
   public static Element createTextNode(Document document, String nodeName,
       String nodeText) throws Exception {
@@ -287,17 +355,22 @@ abstract public class XMLUtil {
       throw new IllegalArgumentException();
     }
     Element element = document.createElement(nodeName);
-    Text textNode = document.createTextNode(null == nodeText ? EMPTY_STRING : nodeText);
+    Text textNode = document.createTextNode(null == nodeText ? EMPTY_STRING
+        : nodeText);
     element.appendChild(textNode);
     return element;
   }
 
   /**
    * Convert specified node to String
-   * @param node the node
-   * @param withHeader with header or not
+   * 
+   * @param node
+   *          the node
+   * @param withHeader
+   *          with header or not
    * @return the converted String
-   * @throws Exception on error
+   * @throws Exception
+   *           on error
    */
   public static String convertToString(Node node, boolean withHeader)
       throws Exception {
@@ -306,11 +379,16 @@ abstract public class XMLUtil {
 
   /**
    * Convert specified node to String
-   * @param node the node
-   * @param encoding the encoding
-   * @param withHeader with header or not
+   * 
+   * @param node
+   *          the node
+   * @param encoding
+   *          the encoding
+   * @param withHeader
+   *          with header or not
    * @return the converted String
-   * @throws Exception on error
+   * @throws Exception
+   *           on error
    */
   public static String convertToString(Node node, String encoding,
       boolean withHeader) throws Exception {
@@ -343,9 +421,13 @@ abstract public class XMLUtil {
 
   /**
    * Write specified document to a output file.
-   * @param document the document
-   * @param outputFilePath the output file path
-   * @throws Exception on error
+   * 
+   * @param document
+   *          the document
+   * @param outputFilePath
+   *          the output file path
+   * @throws Exception
+   *           on error
    */
   public static void writeFile(Document document, String outputFilePath)
       throws Exception {
@@ -354,10 +436,15 @@ abstract public class XMLUtil {
 
   /**
    * Write specified document to a output file.
-   * @param document the document
-   * @param outputFilePath the output file path
-   * @param encoding encoding
-   * @throws Exception on error
+   * 
+   * @param document
+   *          the document
+   * @param outputFilePath
+   *          the output file path
+   * @param encoding
+   *          encoding
+   * @throws Exception
+   *           on error
    */
   public static void writeFile(Document document, String outputFilePath,
       String encoding) throws Exception {
@@ -366,9 +453,13 @@ abstract public class XMLUtil {
 
   /**
    * Write specified document to a output file.
-   * @param document the document
-   * @param file the output file
-   * @throws Exception on error
+   * 
+   * @param document
+   *          the document
+   * @param file
+   *          the output file
+   * @throws Exception
+   *           on error
    */
   public static void writeFile(Document document, File file) throws Exception {
     writeFile(document, file, DEFAULT_ENCODING, true);
@@ -376,14 +467,20 @@ abstract public class XMLUtil {
 
   /**
    * Write specified document to a output file.
-   * @param document the document
-   * @param file the output file
-   * @param encoding the encoding
-   * @param indent use indent or not?
-   * @throws Exception on error
+   * 
+   * @param document
+   *          the document
+   * @param file
+   *          the output file
+   * @param encoding
+   *          the encoding
+   * @param indent
+   *          use indent or not?
+   * @throws Exception
+   *           on error
    */
-  public static void writeFile(Document document, File file, String encoding, boolean indent)
-      throws Exception {
+  public static void writeFile(Document document, File file, String encoding,
+      boolean indent) throws Exception {
     if (StringUtil.isEmpty(encoding)) {
       encoding = DEFAULT_ENCODING;
     }
@@ -411,10 +508,14 @@ abstract public class XMLUtil {
 
   /**
    * Convert the document's encoding.
-   * @param document the document
-   * @param convertEncoding the encoding to convert
+   * 
+   * @param document
+   *          the document
+   * @param convertEncoding
+   *          the encoding to convert
    * @return the converted encoding document
-   * @throws Exception on error
+   * @throws Exception
+   *           on error
    */
   public static Document convertEncoding(Document document,
       String convertEncoding) throws Exception {
@@ -435,8 +536,11 @@ abstract public class XMLUtil {
 
   /**
    * Get the attribute value from specified node.
-   * @param node the node
-   * @param attributeName the attribute name
+   * 
+   * @param node
+   *          the node
+   * @param attributeName
+   *          the attribute name
    * @return the attribut value
    */
   public static String getNodeAttribute(Node node, String attributeName) {
@@ -456,7 +560,9 @@ abstract public class XMLUtil {
 
   /**
    * Get the value of specified node.
-   * @param node the node
+   * 
+   * @param node
+   *          the node
    * @return the value of the node
    */
   public static String getNodeValue(Node node) {
@@ -471,9 +577,13 @@ abstract public class XMLUtil {
 
   /**
    * Set node's attribute.
-   * @param node the node
-   * @param attributeName the attribute name
-   * @param value the value
+   * 
+   * @param node
+   *          the node
+   * @param attributeName
+   *          the attribute name
+   * @param value
+   *          the value
    */
   public static void setNodeAttributeValue(Node node, String attributeName,
       String value) {
@@ -496,10 +606,15 @@ abstract public class XMLUtil {
 
   /**
    * Set or add node attribute.
-   * @param node the node
-   * @param attributeName the attribute name
-   * @param attributeValue the attribute value
-   * @param doc the document
+   * 
+   * @param node
+   *          the node
+   * @param attributeName
+   *          the attribute name
+   * @param attributeValue
+   *          the attribute value
+   * @param doc
+   *          the document
    */
   public static void setAddNodeAttribute(Node node, String attributeName,
       String attributeValue, Document doc) {
@@ -524,9 +639,13 @@ abstract public class XMLUtil {
 
   /**
    * Get the attribute.
-   * @param attributeName the attribute name
-   * @param attributeValue the attribute value
-   * @param doc the document
+   * 
+   * @param attributeName
+   *          the attribute name
+   * @param attributeValue
+   *          the attribute value
+   * @param doc
+   *          the document
    * @return the attribute
    */
   private static Attr getAttribute(String attributeName, String attributeValue,
@@ -538,9 +657,13 @@ abstract public class XMLUtil {
 
   /**
    * Set or add the node text value.
-   * @param node the node
-   * @param value the value
-   * @param document the document
+   * 
+   * @param node
+   *          the node
+   * @param value
+   *          the value
+   * @param document
+   *          the document
    */
   public static void setNodeTextValue(Node node, String value, Document document) {
     if (null == node) {
@@ -557,9 +680,12 @@ abstract public class XMLUtil {
 
   /**
    * Get the encoding of specified XML file.
-   * @param fileName the file name
+   * 
+   * @param fileName
+   *          the file name
    * @return the encoding of the file
-   * @throws Exception on error
+   * @throws Exception
+   *           on error
    */
   public static String getEncoding(String fileName) throws Exception {
     FileInputStream fis = new FileInputStream(fileName);
@@ -570,9 +696,13 @@ abstract public class XMLUtil {
 
   /**
    * Create a node with tag name.
-   * @param document the document
-   * @param parent the parent node
-   * @param tagName the tag name
+   * 
+   * @param document
+   *          the document
+   * @param parent
+   *          the parent node
+   * @param tagName
+   *          the tag name
    * @return the created node
    */
   public static Element createNode(Document document, Node parent,
@@ -629,4 +759,58 @@ abstract public class XMLUtil {
       throws Exception {
     return (String) xpath.evaluate(expression, node, XPathConstants.STRING);
   }
+  
+  /**
+   * Convert specified Node to Map.
+   * @param node the node
+   * @return the map
+   */
+  public static Map<String, Object> node2Map(Node node) {
+    Map<String, Object> map = new HashMap<String, Object>();
+    if (node == null) {
+      return map;
+    }
+    NodeList children = node.getChildNodes();
+    int len = children.getLength();
+    
+    for (int i = 0; i < len; i++) {
+      Node child = children.item(i);
+      String childName = child.getNodeName();
+      if ("#text".equals(childName)) {
+        continue;
+      }
+      map.put(child.getNodeName(), node2Map(child));
+    }
+    String nodeValue = XMLUtil.getNodeValue(node);
+    if (null != nodeValue && StringUtil.isNotEmpty(nodeValue.trim())) {
+      map.put("#text", nodeValue);
+    }
+    NamedNodeMap attributeMap = node.getAttributes();
+    if (null != attributeMap) {
+      int attLen = attributeMap.getLength();
+      Map<String, Object> attMap = new HashMap<String, Object>();
+      for (int i = 0; i < attLen; i++) {
+        Node att = attributeMap.item(i);
+        attMap.put(att.getNodeName(), att.getNodeValue());
+      }
+      map.put("#attribute", attMap);
+    }
+    return map;
+  }
+
+  /**
+   * Convert specified DOM to Map.
+   * @param doc the DOM
+   * @return the map
+   */
+  public static Map<String, Object> dom2Map(Document doc) {
+    Map<String, Object> map = new HashMap<String, Object>();
+    if (doc == null) {
+      return map;
+    }
+    Element root = doc.getDocumentElement();
+    map.putAll(node2Map(root));
+    return map;
+  }
+
 }
