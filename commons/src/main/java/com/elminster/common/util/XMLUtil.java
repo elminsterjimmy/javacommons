@@ -765,6 +765,7 @@ abstract public class XMLUtil {
    * @param node the node
    * @return the map
    */
+  @SuppressWarnings("unchecked")
   public static Map<String, Object> node2Map(Node node) {
     Map<String, Object> map = new HashMap<String, Object>();
     if (node == null) {
@@ -779,7 +780,12 @@ abstract public class XMLUtil {
       if ("#text".equals(childName)) {
         continue;
       }
-      map.put(child.getNodeName(), node2Map(child));
+      List<Object> cl = (List<Object>) map.get(childName);
+      if (null == cl) {
+        cl = new ArrayList<Object>(); 
+      }
+      cl.add(node2Map(child));
+      map.put(child.getNodeName(), cl);
     }
     String nodeValue = XMLUtil.getNodeValue(node);
     if (null != nodeValue && StringUtil.isNotEmpty(nodeValue.trim())) {
@@ -788,12 +794,14 @@ abstract public class XMLUtil {
     NamedNodeMap attributeMap = node.getAttributes();
     if (null != attributeMap) {
       int attLen = attributeMap.getLength();
-      Map<String, Object> attMap = new HashMap<String, Object>();
-      for (int i = 0; i < attLen; i++) {
-        Node att = attributeMap.item(i);
-        attMap.put(att.getNodeName(), att.getNodeValue());
+      if (attLen > 0) {
+        Map<String, Object> attMap = new HashMap<String, Object>();
+        for (int i = 0; i < attLen; i++) {
+          Node att = attributeMap.item(i);
+          attMap.put(att.getNodeName(), att.getNodeValue());
+        }
+        map.put("#attribute", attMap);
       }
-      map.put("#attribute", attMap);
     }
     return map;
   }
@@ -809,8 +817,7 @@ abstract public class XMLUtil {
       return map;
     }
     Element root = doc.getDocumentElement();
-    map.putAll(node2Map(root));
+    map.put(root.getNodeName(), node2Map(root));
     return map;
   }
-
 }

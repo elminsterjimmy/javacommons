@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aaa at="at">
 	<bbb bt="bt">
-		<ccc ct="ct">ctext</ccc>
+		<ccc ct="ct1">ctext1</ccc>
+		<ccc ct="ct2">ctext2</ccc>
+		<ccc ct="ct3">ctext3</ccc>
+		<ccc ct="ct4">ctext4</ccc>
 		<ddd dt1="dt1" dt2="dt2">dtext</ddd>
 	</bbb>
+	<bbb>empty</bbb>
 </aaa>
