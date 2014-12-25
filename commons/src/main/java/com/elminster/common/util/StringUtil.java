@@ -636,7 +636,7 @@ public abstract class StringUtil {
    * @return the boolean value
    */
   public static boolean string2Boolean(String string) {
-    return "1".equals(string) || "true".equalsIgnoreCase(string)
+    return "1".equals(string) || Boolean.TRUE.toString().equalsIgnoreCase(string)
         || "yes".equalsIgnoreCase(string) || "on".equalsIgnoreCase(string);
   }
 

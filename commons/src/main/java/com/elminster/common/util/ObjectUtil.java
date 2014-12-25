@@ -22,8 +22,7 @@ public abstract class ObjectUtil {
   /** Empty Array: <code>[]</code> */
   private static final String EMPTY_ARRAY = ARRAY_START + ARRAY_END;
   /** Array Elements' separator: <code>, </code> */
-  private static final String ARRAY_ELEMENT_SEPARATOR = StringConstants.COMMA
-      + StringConstants.SPACE;
+  private static final String ARRAY_ELEMENT_SEPARATOR = StringConstants.COMMA + StringConstants.SPACE;
   /** Array's address: <code>@ </code> */
   private static final String ARRAY_ADDRESS = StringConstants.AT;
 
@@ -38,8 +37,7 @@ public abstract class ObjectUtil {
    */
   public static boolean contains(Object[] array, Object element) {
     if (null == array) {
-      throw new IllegalArgumentException(
-          Messages.getString(Message.TARGET_ARRAY_IS_NULL));
+      throw new IllegalArgumentException(Messages.getString(Message.TARGET_ARRAY_IS_NULL));
     }
     for (Object obj : array) {
       if (isEqual(obj, element)) {
@@ -154,15 +152,14 @@ public abstract class ObjectUtil {
 
     Field[] fields = ReflectUtil.getAllField(obj.getClass());
     try {
-      builder.append(StringConstants.LEFT_SQUARE_BRACKETS);
+      builder.append(ARRAY_START);
       for (Field field : fields) {
         Object value;
         value = ReflectUtil.getFieldValue(obj, field);
-        builder.append(field.getName() + StringConstants.EQUAL
-            + toString(value));
+        builder.append(field.getName() + StringConstants.EQUAL + toString(value));
         builder.append(StringConstants.LF);
       }
-      builder.append(StringConstants.RIGHT_SQUARE_BRACKETS);
+      builder.append(ARRAY_END);
     } catch (IllegalArgumentException e) {
       e.printStackTrace();
     } catch (IllegalAccessException e) {
@@ -482,12 +479,10 @@ public abstract class ObjectUtil {
     Class<?> type1 = o1[0].getClass();
     Class<?> type2 = o2[0].getClass();
     if (!type1.equals(type2)) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.ARRAY_TYPE_UNMATCH,
-          new Object[] { type1.toString(), type2.toString() }));
+      throw new IllegalArgumentException(Messages.getString(Message.ARRAY_TYPE_UNMATCH, new Object[] {
+          type1.toString(), type2.toString() }));
     }
-    Object[] result = (Object[]) Array
-        .newInstance(type1, o1.length + o2.length);
+    Object[] result = (Object[]) Array.newInstance(type1, o1.length + o2.length);
     System.arraycopy(o1, 0, result, 0, o1.length);
     System.arraycopy(o2, 0, result, o1.length, o2.length);
     return result;

@@ -19,24 +19,26 @@ public class MessageFactory {
   private String packageName;
   /***/
   private Class<?> clazz;
-  
+
   /** caches. */
   private static Map<Class<?>, MessageFactory> factories = new HashMap<Class<?>, MessageFactory>();
-  
+
   /**
    * Constructor.
    * 
-   * @param clazz the class
+   * @param clazz
+   *          the class
    */
   private MessageFactory(Class<?> clazz) {
     this.clazz = clazz;
     this.packageName = clazz.getPackage().getName();
   }
-  
+
   /**
    * Get or create message factory via specified class.
    * 
-   * @param clazz the class
+   * @param clazz
+   *          the class
    * @return the message factory
    */
   public static synchronized MessageFactory getInstance(Class<?> clazz) {
@@ -47,35 +49,42 @@ public class MessageFactory {
     }
     return mf;
   }
-  
+
   /**
    * Get localized message.
    * 
-   * @param key message key
-   * @param locale the locale
-   * @param args the arguments
+   * @param key
+   *          message key
+   * @param locale
+   *          the locale
+   * @param args
+   *          the arguments
    * @return the localized message
    */
   public String getMessage(String key, Locale locale, Object... args) {
     try {
-      return getLocalizedMessage(ResourceBundle.getBundle(packageName + ".resource",
-          locale == null ? Locale.getDefault() : locale, clazz.getClassLoader()), key, args);
-     } catch (MissingResourceException error) {
-       try {
-         return getLocalizedMessage(ResourceBundle.getBundle(packageName + ".resource",
-             Locale.getDefault(), clazz.getClassLoader()), key, args);
-       } catch (MissingResourceException e) {
-         return key + " (missing resource)";
-       }
-     }
+      return getLocalizedMessage(
+          ResourceBundle.getBundle(packageName + ".resource", locale == null ? Locale.getDefault() : locale,
+              clazz.getClassLoader()), key, args);
+    } catch (MissingResourceException error) {
+      try {
+        return getLocalizedMessage(
+            ResourceBundle.getBundle(packageName + ".resource", Locale.getDefault(), clazz.getClassLoader()), key, args);
+      } catch (MissingResourceException e) {
+        return key + " (missing resource)";
+      }
+    }
   }
-  
+
   /**
    * Get localized message.
    * 
-   * @param rb the resource bundle
-   * @param key message key
-   * @param args the arguments
+   * @param rb
+   *          the resource bundle
+   * @param key
+   *          message key
+   * @param args
+   *          the arguments
    * @return the localized message
    */
   private String getLocalizedMessage(ResourceBundle rb, String key, Object... args) {

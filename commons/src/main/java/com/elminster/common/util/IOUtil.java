@@ -21,7 +21,7 @@ public class IOUtil {
    * The default buffer size to use.
    */
   private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
-  
+
   /** The default encoding. UTF-8. */
   private static final String DEFAULT_ENCODING = EncodingConstants.UTF8;
 
@@ -32,14 +32,17 @@ public class IOUtil {
    * This method buffers the input internally, so there is no need to use a
    * <code>BufferedInputStream</code>.
    * 
-   * @param input the <code>InputStream</code> to read from
-   * @param output the <code>OutputStream</code> to write to
+   * @param input
+   *          the <code>InputStream</code> to read from
+   * @param output
+   *          the <code>OutputStream</code> to write to
    * @return the number of bytes copied
-   * @throws NullPointerException if the input or output is null
-   * @throws IOException if an I/O error occurs
+   * @throws NullPointerException
+   *           if the input or output is null
+   * @throws IOException
+   *           if an I/O error occurs
    */
-  public static long copyLarge(InputStream input, OutputStream output)
-      throws IOException {
+  public static long copyLarge(InputStream input, OutputStream output) throws IOException {
     byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
     long count = 0;
     int n = 0;
@@ -57,11 +60,15 @@ public class IOUtil {
    * This method buffers the input internally, so there is no need to use a
    * <code>BufferedReader</code>.
    * 
-   * @param input the <code>Reader</code> to read from
-   * @param output the <code>Writer</code> to write to
+   * @param input
+   *          the <code>Reader</code> to read from
+   * @param output
+   *          the <code>Writer</code> to write to
    * @return the number of characters copied
-   * @throws NullPointerException if the input or output is null
-   * @throws IOException if an I/O error occurs
+   * @throws NullPointerException
+   *           if the input or output is null
+   * @throws IOException
+   *           if an I/O error occurs
    */
   public static long copyLarge(Reader input, Writer output) throws IOException {
     char[] buffer = new char[DEFAULT_BUFFER_SIZE];
@@ -86,15 +93,19 @@ public class IOUtil {
    * bytes cannot be returned as an int. For large streams use the
    * <code>copyLarge(InputStream, OutputStream)</code> method.
    * 
-   * @param input the <code>InputStream</code> to read from
-   * @param output the <code>OutputStream</code> to write to
+   * @param input
+   *          the <code>InputStream</code> to read from
+   * @param output
+   *          the <code>OutputStream</code> to write to
    * @return the number of bytes copied
-   * @throws NullPointerException if the input or output is null
-   * @throws IOException if an I/O error occurs
-   * @throws ArithmeticException if the byte count is too large
+   * @throws NullPointerException
+   *           if the input or output is null
+   * @throws IOException
+   *           if an I/O error occurs
+   * @throws ArithmeticException
+   *           if the byte count is too large
    */
-  public static int copy(InputStream input, OutputStream output)
-      throws IOException {
+  public static int copy(InputStream input, OutputStream output) throws IOException {
     long count = copyLarge(input, output);
     if (count > Integer.MAX_VALUE) {
       return -1;
@@ -111,13 +122,17 @@ public class IOUtil {
    * <p>
    * This method uses {@link InputStreamReader}.
    * 
-   * @param input the <code>InputStream</code> to read from
-   * @param output the <code>Writer</code> to write to
-   * @throws NullPointerException if the input or output is null
-   * @throws IOException if an I/O error occurs
+   * @param input
+   *          the <code>InputStream</code> to read from
+   * @param output
+   *          the <code>Writer</code> to write to
+   * @throws NullPointerException
+   *           if the input or output is null
+   * @throws IOException
+   *           if an I/O error occurs
    */
   public static void copy(InputStream input, Writer output) throws IOException {
-    InputStreamReader in = new InputStreamReader(input, "utf-8"); //$NON-NLS-1$
+    InputStreamReader in = new InputStreamReader(input, DEFAULT_ENCODING);
     copy(in, output);
   }
 
@@ -132,12 +147,17 @@ public class IOUtil {
    * chars cannot be returned as an int. For large streams use the
    * <code>copyLarge(Reader, Writer)</code> method.
    * 
-   * @param input the <code>Reader</code> to read from
-   * @param output the <code>Writer</code> to write to
+   * @param input
+   *          the <code>Reader</code> to read from
+   * @param output
+   *          the <code>Writer</code> to write to
    * @return the number of characters copied
-   * @throws NullPointerException if the input or output is null
-   * @throws IOException if an I/O error occurs
-   * @throws ArithmeticException if the character count is too large
+   * @throws NullPointerException
+   *           if the input or output is null
+   * @throws IOException
+   *           if an I/O error occurs
+   * @throws ArithmeticException
+   *           if the character count is too large
    */
   public static int copy(Reader input, Writer output) throws IOException {
     long count = copyLarge(input, output);
@@ -159,14 +179,18 @@ public class IOUtil {
    * <p>
    * This method uses {@link InputStreamReader}.
    * 
-   * @param input the <code>InputStream</code> to read from
-   * @param output the <code>Writer</code> to write to
-   * @param encoding the encoding to use, null means platform default
-   * @throws NullPointerException if the input or output is null
-   * @throws IOException if an I/O error occurs
+   * @param input
+   *          the <code>InputStream</code> to read from
+   * @param output
+   *          the <code>Writer</code> to write to
+   * @param encoding
+   *          the encoding to use, null means platform default
+   * @throws NullPointerException
+   *           if the input or output is null
+   * @throws IOException
+   *           if an I/O error occurs
    */
-  public static void copy(InputStream input, Writer output, String encoding)
-      throws IOException {
+  public static void copy(InputStream input, Writer output, String encoding) throws IOException {
     if (encoding == null) {
       copy(input, output);
     } else {
@@ -181,10 +205,13 @@ public class IOUtil {
    * This method buffers the input internally, so there is no need to use a
    * <code>BufferedInputStream</code>.
    * 
-   * @param input the <code>InputStream</code> to read from
+   * @param input
+   *          the <code>InputStream</code> to read from
    * @return the requested byte array
-   * @throws NullPointerException if the input is null
-   * @throws IOException if an I/O error occurs
+   * @throws NullPointerException
+   *           if the input is null
+   * @throws IOException
+   *           if an I/O error occurs
    */
   public static byte[] toByteArray(InputStream input) throws IOException {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -199,10 +226,13 @@ public class IOUtil {
    * This method buffers the input internally, so there is no need to use a
    * <code>BufferedInputStream</code>.
    * 
-   * @param is the <code>InputStream</code> to read from
+   * @param is
+   *          the <code>InputStream</code> to read from
    * @return the requested character array
-   * @throws NullPointerException if the input is null
-   * @throws IOException if an I/O error occurs
+   * @throws NullPointerException
+   *           if the input is null
+   * @throws IOException
+   *           if an I/O error occurs
    * @since Commons IO 1.1
    */
   public static char[] toCharArray(InputStream is) throws IOException {
@@ -221,14 +251,17 @@ public class IOUtil {
    * This method buffers the input internally, so there is no need to use a
    * <code>BufferedInputStream</code>.
    * 
-   * @param is the <code>InputStream</code> to read from
-   * @param encoding the encoding to use, null means platform default
+   * @param is
+   *          the <code>InputStream</code> to read from
+   * @param encoding
+   *          the encoding to use, null means platform default
    * @return the requested character array
-   * @throws NullPointerException if the input is null
-   * @throws IOException if an I/O error occurs
+   * @throws NullPointerException
+   *           if the input is null
+   * @throws IOException
+   *           if an I/O error occurs
    */
-  public static char[] toCharArray(InputStream is, String encoding)
-      throws IOException {
+  public static char[] toCharArray(InputStream is, String encoding) throws IOException {
     CharArrayWriter output = new CharArrayWriter();
     copy(is, output, encoding);
     return output.toCharArray();
@@ -238,7 +271,8 @@ public class IOUtil {
    * Convert the specified string to an input stream, encoded as bytes using the
    * default character encoding of the platform.
    * 
-   * @param input the string to convert
+   * @param input
+   *          the string to convert
    * @return an input stream
    */
   public static InputStream toInputStream(String input) {
@@ -259,15 +293,16 @@ public class IOUtil {
    * Character encoding names can be found at <a
    * href="http://www.iana.org/assignments/character-sets">IANA</a>.
    * 
-   * @param input the string to convert
-   * @param encoding the encoding to use, null means platform default
-   * @throws IOException if the encoding is invalid
+   * @param input
+   *          the string to convert
+   * @param encoding
+   *          the encoding to use, null means platform default
+   * @throws IOException
+   *           if the encoding is invalid
    * @return an input stream
    */
-  public static InputStream toInputStream(String input, String encoding)
-      throws IOException {
-    byte[] bytes =
-        encoding != null ? input.getBytes(encoding) : input.getBytes(DEFAULT_ENCODING);
+  public static InputStream toInputStream(String input, String encoding) throws IOException {
+    byte[] bytes = encoding != null ? input.getBytes(encoding) : input.getBytes(DEFAULT_ENCODING);
     return new ByteArrayInputStream(bytes);
   }
 
@@ -277,15 +312,18 @@ public class IOUtil {
    * This method buffers the input internally using
    * <code>BufferedInputStream</code> if they are not already buffered.
    * 
-   * @param input1 the first stream
-   * @param input2 the second stream
+   * @param input1
+   *          the first stream
+   * @param input2
+   *          the second stream
    * @return true if the content of the streams are equal or they both don't
    *         exist, false otherwise
-   * @throws NullPointerException if either input is null
-   * @throws IOException if an I/O error occurs
+   * @throws NullPointerException
+   *           if either input is null
+   * @throws IOException
+   *           if an I/O error occurs
    */
-  public static boolean contentEquals(InputStream input1, InputStream input2)
-      throws IOException {
+  public static boolean contentEquals(InputStream input1, InputStream input2) throws IOException {
     if (!(input1 instanceof BufferedInputStream)) {
       input1 = new BufferedInputStream(input1);
     }
@@ -312,15 +350,18 @@ public class IOUtil {
    * This method buffers the input internally using <code>BufferedReader</code>
    * if they are not already buffered.
    * 
-   * @param input1 the first reader
-   * @param input2 the second reader
+   * @param input1
+   *          the first reader
+   * @param input2
+   *          the second reader
    * @return true if the content of the readers are equal or they both don't
    *         exist, false otherwise
-   * @throws NullPointerException if either input is null
-   * @throws IOException if an I/O error occurs
+   * @throws NullPointerException
+   *           if either input is null
+   * @throws IOException
+   *           if an I/O error occurs
    */
-  public static boolean contentEquals(Reader input1, Reader input2)
-      throws IOException {
+  public static boolean contentEquals(Reader input1, Reader input2) throws IOException {
     if (!(input1 instanceof BufferedReader)) {
       input1 = new BufferedReader(input1);
     }

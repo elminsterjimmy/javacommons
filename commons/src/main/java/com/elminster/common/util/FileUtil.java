@@ -61,6 +61,10 @@ public abstract class FileUtil {
   public static final String PARENT_DIR = "../";
   /** the command to current directory: <code>./</code>. */
   public static final String CURRENT_DIR = "./";
+  /** the file separator specified in OS. */
+  public static final String FILE_SEPARATOR = System.getProperty("file.separator"); //$NON-NLS-1$
+  /** the temporary directory specified in OS. */
+  public static final String TEMPORARY_DIR = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
 
   /**
    * Get the system temporary folder.
@@ -68,7 +72,7 @@ public abstract class FileUtil {
    * @return the system temporary folder path
    */
   public static String getSystemTemporaryFolder() {
-    return fixFolderName(System.getProperty("java.io.tmpdir")); //$NON-NLS-1$
+    return fixFolderName(TEMPORARY_DIR);
   }
 
   /**
@@ -111,8 +115,7 @@ public abstract class FileUtil {
    *          the suffix of the temporary file
    * @return the temporary file path
    */
-  public static String generateTemporaryFileByTimestamp(String parent,
-      String prefix, String suffix) {
+  public static String generateTemporaryFileByTimestamp(String parent, String prefix, String suffix) {
     String base = null == parent ? getSystemTemporaryFolder() : parent;
     StringBuilder sb = new StringBuilder();
     sb.append(base);
@@ -192,11 +195,9 @@ public abstract class FileUtil {
    * @param destFile
    *          the file to move to
    */
-  public static void moveFile(String srcFile, String destFile)
-      throws IllegalArgumentException {
+  public static void moveFile(String srcFile, String destFile) throws IllegalArgumentException {
     if (isFileExist(srcFile)) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.SOURCE_FILE_ISNT_EXIST, srcFile));
+      throw new IllegalArgumentException(Messages.getString(Message.SOURCE_FILE_ISNT_EXIST, srcFile));
     }
     File src = new File(srcFile);
     createFolder(destFile);
@@ -215,24 +216,19 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static void copyFile(String srcFile, String destFile)
-      throws IllegalArgumentException, IOException {
+  public static void copyFile(String srcFile, String destFile) throws IllegalArgumentException, IOException {
     if (StringUtil.isEmpty(srcFile)) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.SOURCE_FILE_IS_NULL, srcFile));
+      throw new IllegalArgumentException(Messages.getString(Message.SOURCE_FILE_IS_NULL, srcFile));
     }
     File file = new File(srcFile);
     if (!file.exists()) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.SOURCE_FILE_ISNT_EXIST, srcFile));
+      throw new IllegalArgumentException(Messages.getString(Message.SOURCE_FILE_ISNT_EXIST, srcFile));
     }
     if (file.isDirectory()) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.SOURCE_FILE_IS_FOLDER, srcFile));
+      throw new IllegalArgumentException(Messages.getString(Message.SOURCE_FILE_IS_FOLDER, srcFile));
     }
     if (StringUtil.isEmpty(destFile)) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.DEST_FILE_IS_NULL, destFile));
+      throw new IllegalArgumentException(Messages.getString(Message.DEST_FILE_IS_NULL, destFile));
     }
     createFolder(destFile);
     InputStream in = null;
@@ -267,11 +263,9 @@ public abstract class FileUtil {
    * @throws Exception
    *           Exception
    */
-  public static void copyFile(InputStream srcInputStream, String destFile)
-      throws Exception {
+  public static void copyFile(InputStream srcInputStream, String destFile) throws Exception {
     if (StringUtil.isEmpty(destFile)) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.DEST_FILE_IS_NULL, destFile));
+      throw new IllegalArgumentException(Messages.getString(Message.DEST_FILE_IS_NULL, destFile));
     }
     createFolder(destFile);
     OutputStream out = null;
@@ -297,11 +291,9 @@ public abstract class FileUtil {
    *          the specified folder name
    * @return the folder name which end with a file separate
    */
-  public static String fixFolderName(String folderName)
-      throws IllegalArgumentException {
+  public static String fixFolderName(String folderName) throws IllegalArgumentException {
     if (StringUtil.isEmpty(folderName)) {
-      throw new IllegalArgumentException(
-          Messages.getString(Message.FOLDER_NAME_IS_NULL));
+      throw new IllegalArgumentException(Messages.getString(Message.FOLDER_NAME_IS_NULL));
     }
     String rst = replaceFileSeparate(folderName);
     if (rst.endsWith(LINUX_FILE_SEPARATE)) {
@@ -322,25 +314,20 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static void copyFile2Directory(String srcFile, String destFolder)
-      throws IllegalArgumentException, IOException {
+  public static void copyFile2Directory(String srcFile, String destFolder) throws IllegalArgumentException, IOException {
     if (StringUtil.isEmpty(srcFile)) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.SOURCE_FILE_IS_NULL, srcFile));
+      throw new IllegalArgumentException(Messages.getString(Message.SOURCE_FILE_IS_NULL, srcFile));
     }
 
     File file = new File(srcFile);
     if (!file.exists()) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.SOURCE_FILE_ISNT_EXIST, srcFile));
+      throw new IllegalArgumentException(Messages.getString(Message.SOURCE_FILE_ISNT_EXIST, srcFile));
     }
     if (file.isDirectory()) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.SOURCE_FILE_IS_FOLDER, srcFile));
+      throw new IllegalArgumentException(Messages.getString(Message.SOURCE_FILE_IS_FOLDER, srcFile));
     }
     if (StringUtil.isEmpty(destFolder)) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.DEST_FILE_IS_NULL, destFolder));
+      throw new IllegalArgumentException(Messages.getString(Message.DEST_FILE_IS_NULL, destFolder));
     }
 
     String fixedFolderName = fixFolderName(destFolder);
@@ -378,24 +365,19 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static void copyDirectory(String srcFolder, String destFolder)
-      throws IllegalArgumentException, IOException {
+  public static void copyDirectory(String srcFolder, String destFolder) throws IllegalArgumentException, IOException {
     if (StringUtil.isEmpty(srcFolder)) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.SOURCE_FOLDER_IS_NULL, srcFolder));
+      throw new IllegalArgumentException(Messages.getString(Message.SOURCE_FOLDER_IS_NULL, srcFolder));
     }
     File file = new File(srcFolder);
     if (!file.exists()) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.SOURCE_FOLDER_ISNT_EXIST, srcFolder));
+      throw new IllegalArgumentException(Messages.getString(Message.SOURCE_FOLDER_ISNT_EXIST, srcFolder));
     }
     if (file.isFile()) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.SOURCE_FOLDER_IS_FILE, srcFolder));
+      throw new IllegalArgumentException(Messages.getString(Message.SOURCE_FOLDER_IS_FILE, srcFolder));
     }
     if (StringUtil.isEmpty(destFolder)) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.DEST_FILE_IS_NULL, destFolder));
+      throw new IllegalArgumentException(Messages.getString(Message.DEST_FILE_IS_NULL, destFolder));
     }
     createFolder(destFolder);
     File[] srcFiles = file.listFiles();
@@ -463,7 +445,7 @@ public abstract class FileUtil {
     }
     int idx = path.lastIndexOf(EXTENSION_SPLIT);
     if (-1 == idx) {
-      return ""; //$NON-NLS-1$
+      return EMPTY_STRING;
     }
     return path.substring(idx + 1);
   }
@@ -483,7 +465,7 @@ public abstract class FileUtil {
     if (file.isFile()) {
       fileName = path.substring(getPath(path).length());
       fileName = fileName.substring(0, fileName.lastIndexOf(EXTENSION_SPLIT));
-      if (fileName.startsWith(System.getProperty("file.separator"))) { //$NON-NLS-1$
+      if (fileName.startsWith(FILE_SEPARATOR)) {
         fileName = fileName.substring(1);
       }
     }
@@ -563,11 +545,9 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static void createZip(String outputZipFileName, String... files)
-      throws IllegalArgumentException, IOException {
+  public static void createZip(String outputZipFileName, String... files) throws IllegalArgumentException, IOException {
     if (null == outputZipFileName || null == files) {
-      throw new IllegalArgumentException(
-          Messages.getString(Message.PARA_IS_NULL));
+      throw new IllegalArgumentException(Messages.getString(Message.PARA_IS_NULL));
     }
     int fileCount = files.length;
     ZipOutputStream out = null;
@@ -602,11 +582,9 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  private static void zip(ZipOutputStream zOut, File file, String label)
-      throws IllegalArgumentException, IOException {
+  private static void zip(ZipOutputStream zOut, File file, String label) throws IllegalArgumentException, IOException {
     if (null == zOut || null == file) {
-      throw new IllegalArgumentException(
-          Messages.getString(Message.PARA_IS_NULL));
+      throw new IllegalArgumentException(Messages.getString(Message.PARA_IS_NULL));
     }
     FileInputStream fin = null;
     try {
@@ -651,11 +629,9 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static void unzip(String zipFile, String outputFile)
-      throws IllegalArgumentException, IOException {
+  public static void unzip(String zipFile, String outputFile) throws IllegalArgumentException, IOException {
     if (null == zipFile || null == outputFile) {
-      throw new IllegalArgumentException(
-          Messages.getString(Message.PARA_IS_NULL));
+      throw new IllegalArgumentException(Messages.getString(Message.PARA_IS_NULL));
     }
     ZipInputStream zin = null;
     FileInputStream fin = null;
@@ -706,17 +682,14 @@ public abstract class FileUtil {
    * @throws Exception
    *           Exception
    */
-  public static String getRelativePath(String fullPath, String basePath)
-      throws IOException {
+  public static String getRelativePath(String fullPath, String basePath) throws IOException {
     String relativePath = EMPTY_STRING;
 
     fullPath = new File(fullPath).getCanonicalPath();
     basePath = new File(basePath).getCanonicalPath();
 
-    String[] splitPath = replaceFileSeparate(fullPath).split(
-        LINUX_FILE_SEPARATE);
-    String[] splitBasePath = replaceFileSeparate(basePath).split(
-        LINUX_FILE_SEPARATE);
+    String[] splitPath = replaceFileSeparate(fullPath).split(LINUX_FILE_SEPARATE);
+    String[] splitBasePath = replaceFileSeparate(basePath).split(LINUX_FILE_SEPARATE);
 
     int length = splitBasePath.length;
     int splitLength = splitPath.length;
@@ -797,8 +770,7 @@ public abstract class FileUtil {
    * @throws Exception
    *           Exception
    */
-  public static List<String> readFileByLine(InputStream is,
-      boolean skipBlankLine, String charset) throws IOException {
+  public static List<String> readFileByLine(InputStream is, boolean skipBlankLine, String charset) throws IOException {
     List<String> lines = new ArrayList<String>();
     Reader isReader = null;
     BufferedReader br = null;
@@ -836,8 +808,7 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static List<String> readFileByLine(String fileName, String charset)
-      throws IOException {
+  public static List<String> readFileByLine(String fileName, String charset) throws IOException {
     return readFileByLine(fileName, true, charset);
   }
 
@@ -894,8 +865,7 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static List<String> readFileByLine(String fileName,
-      boolean skipBlankLine, String charset) throws IOException {
+  public static List<String> readFileByLine(String fileName, boolean skipBlankLine, String charset) throws IOException {
     InputStream is = null;
     try {
       is = new FileInputStream(fileName);
@@ -917,8 +887,7 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static void write2file(byte[] bytes, String fileName)
-      throws IOException {
+  public static void write2file(byte[] bytes, String fileName) throws IOException {
     OutputStream os = null;
     try {
       os = new FileOutputStream(fileName);
@@ -943,11 +912,10 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static void writeLines2file(List<String> lines, String fileName,
-      boolean append) throws IOException {
+  public static void writeLines2file(List<String> lines, String fileName, boolean append) throws IOException {
     writeLines2file(lines, fileName, append, DEFAULT_CHARSET);
   }
-  
+
   /**
    * Write out a file with the specified line.
    * 
@@ -960,11 +928,10 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static void writeLine2file(String line, String fileName,
-      boolean append) throws IOException {
+  public static void writeLine2file(String line, String fileName, boolean append) throws IOException {
     writeLine2file(line, fileName, append, DEFAULT_CHARSET);
   }
-  
+
   /**
    * Write out a file with the specified line.
    * 
@@ -979,13 +946,12 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static void writeLine2file(String line, String fileName,
-      boolean append, String encoding) throws IOException {
+  public static void writeLine2file(String line, String fileName, boolean append, String encoding) throws IOException {
     List<String> lines = new ArrayList<String>();
     lines.add(line);
     writeLines2file(lines, fileName, append, encoding);
   }
-  
+
   /**
    * Write out a file with the specified lines.
    * 
@@ -1000,8 +966,8 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static void writeLines2file(List<String> lines, String fileName,
-      boolean append, String encoding) throws IOException {
+  public static void writeLines2file(List<String> lines, String fileName, boolean append, String encoding)
+      throws IOException {
     if (null == lines) {
       return;
     }
@@ -1039,20 +1005,16 @@ public abstract class FileUtil {
    * @return a list of all absolute file paths
    * @throws Exception
    */
-  public static List<String> listAllAbsoluteFilePath(String folder,
-      boolean searchDeep) throws Exception {
+  public static List<String> listAllAbsoluteFilePath(String folder, boolean searchDeep) throws Exception {
     if (StringUtil.isEmpty(folder)) {
-      throw new IllegalArgumentException(
-          Messages.getString(Message.FOLDER_NAME_IS_NULL));
+      throw new IllegalArgumentException(Messages.getString(Message.FOLDER_NAME_IS_NULL));
     }
     File parentFolder = new File(folder);
     if (!parentFolder.exists()) {
-      throw new FileNotFoundException(Messages.getString(
-          Message.FILE_CANNOT_FOUND, folder));
+      throw new FileNotFoundException(Messages.getString(Message.FILE_CANNOT_FOUND, folder));
     }
     if (!parentFolder.isDirectory()) {
-      throw new IllegalArgumentException(Messages.getString(
-          Message.SOURCE_FILE_IS_FOLDER, folder));
+      throw new IllegalArgumentException(Messages.getString(Message.SOURCE_FILE_IS_FOLDER, folder));
     }
     List<String> rtn = new ArrayList<String>();
     File[] children = parentFolder.listFiles();
@@ -1081,8 +1043,7 @@ public abstract class FileUtil {
    *          the files related path to root folder
    * @throws Exception
    */
-  public static void zipWithManifest(String packagePath, String rootFolder,
-      String... relatedPath) throws Exception {
+  public static void zipWithManifest(String packagePath, String rootFolder, String... relatedPath) throws Exception {
     rootFolder = FileUtil.fixFolderName(rootFolder);
     // create manifest file
     String manifestPath = rootFolder + MANIFEST_FILE_NAME;
@@ -1096,7 +1057,7 @@ public abstract class FileUtil {
         String md5;
         // generate md5
         if (f.isDirectory()) {
-          md5 = EncryptUtil.encryptMD5(input.getBytes(DEFAULT_CHARSET)); //$NON-NLS-1$
+          md5 = EncryptUtil.encryptMD5(input.getBytes(DEFAULT_CHARSET));
         } else {
           is = new FileInputStream(f);
           byte[] content = IOUtil.toByteArray(is);
@@ -1115,9 +1076,8 @@ public abstract class FileUtil {
     writeLines2file(manifestContents, manifestPath, false);
     // create the zip file
 
-    FileUtil.createZip(packagePath, (String[]) ObjectUtil
-        .toObjectArray(CollectionUtil.collection2Array(listAllAbsoluteFilePath(
-            rootFolder, false))));
+    FileUtil.createZip(packagePath, (String[]) ObjectUtil.toObjectArray(CollectionUtil
+        .collection2Array(listAllAbsoluteFilePath(rootFolder, false))));
   }
 
   /**
@@ -1130,8 +1090,7 @@ public abstract class FileUtil {
    * @return a list of all MD5 check for the set of files
    * @throws Exception
    */
-  public static Map<String, CheckResult> unzipWithManifest(String packagePath,
-      String destFolderPath) throws Exception {
+  public static Map<String, CheckResult> unzipWithManifest(String packagePath, String destFolderPath) throws Exception {
     Map<String, CheckResult> rtn = new LinkedHashMap<String, CheckResult>();
     // make sure the path end with /
     destFolderPath = FileUtil.fixFolderName(destFolderPath);
@@ -1162,8 +1121,7 @@ public abstract class FileUtil {
           md5 = EncryptUtil.encryptMD5(content);
         }
         String orignalMd5 = map.get(path);
-        CheckResult result = new CheckResult(path, destFolderPath + path,
-            orignalMd5, md5);
+        CheckResult result = new CheckResult(path, destFolderPath + path, orignalMd5, md5);
         rtn.put(path, result);
       } finally {
         if (null != is) {

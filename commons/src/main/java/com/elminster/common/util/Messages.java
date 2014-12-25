@@ -12,12 +12,10 @@ import java.util.ResourceBundle;
  */
 public class Messages {
   /** the static bundle name. */
-  private static final String BUNDLE_NAME = Messages.class.getPackage()
-      .getName() + ".messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = Messages.class.getPackage().getName() + ".messages"; //$NON-NLS-1$
 
   /** the currently used bundle. */
-  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-      .getBundle(BUNDLE_NAME);
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
   /**
    * Utility.
@@ -53,7 +51,7 @@ public class Messages {
     String pattern = getString(key);
     return MessageFormat.format(pattern, params);
   }
-  
+
   /**
    * The message.
    * 

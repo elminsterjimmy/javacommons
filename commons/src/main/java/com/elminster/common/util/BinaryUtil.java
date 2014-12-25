@@ -18,7 +18,7 @@ public abstract class BinaryUtil {
   private static final int HEX_SIZE = 4;
 
   /** String of Binary(1~16) */
-  private static final String[] BINARY_INDEX = {
+  private static final String[] BINARY_INDEX = { 
       "0000", "0001", "0010", "0011", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       "0100", "0101", "0110", "0111", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       "1000", "1001", "1010", "1011", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -32,7 +32,7 @@ public abstract class BinaryUtil {
   };
 
   /** <code>0</code>. */
-  private static final String ZERO = "0";
+  private static final String ZERO = "0"; //$NON-NLS-1$
 
   /**
    * Convert specified byte array to integer (Big Endian)
@@ -47,12 +47,10 @@ public abstract class BinaryUtil {
    */
   public static int binary2IntInBigEndian(byte[] binary, int offset, int length) {
     if (!checkBound(binary, offset, length)) {
-      throw new IllegalArgumentException(
-          Messages.getString(Message.OUT_OF_BOUND));
+      throw new IllegalArgumentException(Messages.getString(Message.OUT_OF_BOUND));
     }
     if (length * Byte.SIZE > Integer.SIZE) {
-      throw new IllegalArgumentException(
-          Messages.getString(Message.OVER_INTEGER_RANGE));
+      throw new IllegalArgumentException(Messages.getString(Message.OVER_INTEGER_RANGE));
     }
     int intVal = 0;
     for (int i = 0; i < length; i++) {
@@ -75,15 +73,12 @@ public abstract class BinaryUtil {
    *          convert length
    * @return converted long
    */
-  public static long binary2LongInBigEndian(byte[] binary, int offset,
-      int length) {
+  public static long binary2LongInBigEndian(byte[] binary, int offset, int length) {
     if (!checkBound(binary, offset, length)) {
-      throw new IllegalArgumentException(
-          Messages.getString(Message.OUT_OF_BOUND));
+      throw new IllegalArgumentException(Messages.getString(Message.OUT_OF_BOUND));
     }
     if (length * Byte.SIZE > Long.SIZE) {
-      throw new IllegalArgumentException(
-          Messages.getString(Message.OVER_LONG_RANGE));
+      throw new IllegalArgumentException(Messages.getString(Message.OVER_LONG_RANGE));
     }
     long intVal = 0L;
     for (int i = 0; i < length; i++) {
@@ -296,8 +291,7 @@ public abstract class BinaryUtil {
    * @throws Exception
    *           exception
    */
-  public static String binary2String(byte[] binary, int offset, int length,
-      String charset) throws Exception {
+  public static String binary2String(byte[] binary, int offset, int length, String charset) throws Exception {
     byte[] bytes = new byte[length];
     System.arraycopy(binary, offset, bytes, 0, length);
     return new String(bytes, charset);

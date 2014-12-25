@@ -1,6 +1,5 @@
 package com.elminster.common.util;
 
-
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -116,8 +115,7 @@ public abstract class CollectionUtil {
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public static void mergeArray(Collection collection, Object array) {
     if (null == collection) {
-      throw new IllegalArgumentException(
-          Messages.getString(Message.COLLECTION_IS_NULL));
+      throw new IllegalArgumentException(Messages.getString(Message.COLLECTION_IS_NULL));
     }
     Object[] arr = ObjectUtil.toObjectArray(array);
     for (Object elem : arr) {

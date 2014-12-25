@@ -88,8 +88,8 @@ public abstract class ReflectUtil {
    *          the specified method
    */
   public static void makeAccessible(Method method) {
-    if ((!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method
-        .getDeclaringClass().getModifiers())) && !method.isAccessible()) {
+    if ((!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers()))
+        && !method.isAccessible()) {
       method.setAccessible(true);
     }
   }
@@ -101,9 +101,8 @@ public abstract class ReflectUtil {
    *          the specified constructor
    */
   public static void makeAccessible(Constructor<?> constructor) {
-    if ((!Modifier.isPublic(constructor.getModifiers()) || !Modifier
-        .isPublic(constructor.getDeclaringClass().getModifiers()))
-        && !constructor.isAccessible()) {
+    if ((!Modifier.isPublic(constructor.getModifiers()) || !Modifier.isPublic(constructor.getDeclaringClass()
+        .getModifiers())) && !constructor.isAccessible()) {
       constructor.setAccessible(true);
     }
   }
@@ -135,17 +134,19 @@ public abstract class ReflectUtil {
    * @throws IllegalAccessException
    * @throws InvocationTargetException
    */
-  public static Object invoke(Object obj, String methodName, Object[] args)
-      throws NoSuchMethodException, IllegalArgumentException,
-      IllegalAccessException, InvocationTargetException {
+  public static Object invoke(Object obj, String methodName, Object... args) throws NoSuchMethodException,
+      IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+    if (null == args) {
+      args = new Object[] {};
+    }
     int argsCnt = args.length;
     Class<?>[] classArgs = new Class<?>[argsCnt];
     for (int i = 0; i < argsCnt; i++) {
       classArgs[i] = args[i].getClass();
     }
-    
+
     Method method = getDeclaredMethod(obj.getClass(), methodName, classArgs);
-    
+
     if (null == method) {
       throw new NoSuchMethodException();
     }
@@ -167,9 +168,8 @@ public abstract class ReflectUtil {
    * @throws IllegalAccessException
    * @throws InvocationTargetException
    */
-  public static Object invoke(Object obj, Method method, Object[] args)
-      throws IllegalArgumentException, IllegalAccessException,
-      InvocationTargetException {
+  public static Object invoke(Object obj, Method method, Object... args) throws IllegalArgumentException,
+      IllegalAccessException, InvocationTargetException {
     makeAccessible(method);
     return method.invoke(obj, args);
   }
@@ -184,8 +184,8 @@ public abstract class ReflectUtil {
    * @param value
    *          new value
    */
-  public static void setField(Object obj, String fieldName, Object value)
-      throws IllegalArgumentException, IllegalAccessException {
+  public static void setField(Object obj, String fieldName, Object value) throws IllegalArgumentException,
+      IllegalAccessException {
     Class<?> clazz = obj.getClass();
     Field field = getDeclaredField(clazz, fieldName);
     makeAccessible(field);
@@ -202,8 +202,8 @@ public abstract class ReflectUtil {
    * @param value
    *          new value
    */
-  public static void setField(Object obj, Field field, Object value)
-      throws IllegalArgumentException, IllegalAccessException {
+  public static void setField(Object obj, Field field, Object value) throws IllegalArgumentException,
+      IllegalAccessException {
     makeAccessible(field);
     field.set(obj, value);
   }
@@ -219,8 +219,8 @@ public abstract class ReflectUtil {
    * @throws IllegalArgumentException
    * @throws IllegalAccessException
    */
-  public static Object getFieldValue(Object obj, String fieldName)
-      throws IllegalArgumentException, IllegalAccessException {
+  public static Object getFieldValue(Object obj, String fieldName) throws IllegalArgumentException,
+      IllegalAccessException {
     Class<?> clazz = obj.getClass();
     Field field = getDeclaredField(clazz, fieldName);
     return getFieldValue(obj, field);
@@ -237,8 +237,7 @@ public abstract class ReflectUtil {
    * @throws IllegalArgumentException
    * @throws IllegalAccessException
    */
-  public static Object getFieldValue(Object obj, Field field)
-      throws IllegalArgumentException, IllegalAccessException {
+  public static Object getFieldValue(Object obj, Field field) throws IllegalArgumentException, IllegalAccessException {
     Object value = null;
     String getMethod = "get" + StringUtil.capitalize(field.getName()); //$NON-NLS-1$
     try {
@@ -246,8 +245,7 @@ public abstract class ReflectUtil {
     } catch (NoSuchMethodException e) {
     } catch (InvocationTargetException e) {
     }
-    if (null == value && field.getType().equals(Boolean.TYPE)
-        || field.getType().equals(Boolean.class)) {
+    if (null == value && field.getType().equals(Boolean.TYPE) || field.getType().equals(Boolean.class)) {
       getMethod = "is" + StringUtil.capitalize(field.getName()); //$NON-NLS-1$
       try {
         value = invoke(obj, getMethod, new Object[] {});
@@ -261,7 +259,7 @@ public abstract class ReflectUtil {
     }
     return value;
   }
-  
+
   /**
    * Get the specified declared method by method name
    * 
@@ -273,15 +271,17 @@ public abstract class ReflectUtil {
    *          the specified method's arguments type
    * @return the specified declared method
    */
-  public static Method getDeclaredMethod(Class<? extends Object> clazz,
-      String methodName, Object[] args) {
+  public static Method getDeclaredMethod(Class<? extends Object> clazz, String methodName, Object... args) {
+    if (null == args) {
+      args = new Object[] {};
+    }
     Class<?>[] classes = new Class<?>[args.length];
     for (int i = 0; i < args.length; i++) {
       classes[i] = args[i].getClass();
     }
     return getDeclaredMethod(clazz, methodName, classes);
   }
-  
+
   /**
    * Get the specified declared method by method name
    * 
@@ -293,8 +293,10 @@ public abstract class ReflectUtil {
    *          the specified method's arguments type
    * @return the specified declared method
    */
-  public static Method getDeclaredMethod(Class<? extends Object> clazz,
-      String methodName, Class<?>[] args) {
+  public static Method getDeclaredMethod(Class<? extends Object> clazz, String methodName, Class<?>... args) {
+    if (null == args) {
+      args = new Object[] {};
+    }
     Method[] methods = getAllMethod(clazz);
     for (Method method : methods) {
       if (method.getName().equals(methodName)) {
@@ -302,7 +304,7 @@ public abstract class ReflectUtil {
         int argCount = argClasses.length;
         boolean checked = true;
         if (argClasses.length == args.length) {
-          for (int i = 0; i< argCount; i++) {
+          for (int i = 0; i < argCount; i++) {
             if (!checkParamClass(argClasses[i], args[i])) {
               checked = false;
               break;
@@ -318,11 +320,14 @@ public abstract class ReflectUtil {
     }
     return null;
   }
-  
+
   /**
    * Check the actual class is same or assignable from expect class.
-   * @param expectClass the expect class
-   * @param actualClass the actual class
+   * 
+   * @param expectClass
+   *          the expect class
+   * @param actualClass
+   *          the actual class
    * @return the actual class is same or assignable from expect class
    */
   private static boolean checkParamClass(Class<?> expectClass, Class<?> actualClass) {
@@ -348,7 +353,9 @@ public abstract class ReflectUtil {
 
   /**
    * Get the wrap class of primitive type.
-   * @param primitive the primitive class
+   * 
+   * @param primitive
+   *          the primitive class
    * @return the wrapped class
    */
   private static Class<?> getWrappedClass(Class<?> primitive) {
@@ -397,20 +404,19 @@ public abstract class ReflectUtil {
    *          the specified field's type
    * @return the specified declared field
    */
-  public static Field getDeclearedField(Class<?> clazz, String fieldName,
-      Class<?> type) {
+  public static Field getDeclearedField(Class<?> clazz, String fieldName, Class<?> type) {
     Field[] fields = getAllField(clazz);
     for (Field field : fields) {
-      if (field.getName().equals(fieldName)
-          && (null == type || field.getType().equals(type))) {
+      if (field.getName().equals(fieldName) && (null == type || field.getType().equals(type))) {
         return field;
       }
     }
     return null;
   }
-  
+
   /**
    * Get the method name for a depth in call stack.
+   * 
    * @param depth
    *          depth in the call stack (0 means current method, 1 means call
    *          method, ...)
@@ -433,8 +439,7 @@ public abstract class ReflectUtil {
    * @throws NoSuchMethodException
    *           on error
    */
-  public static Constructor<?> getConstructor(Class<?> clazz)
-      throws NoSuchMethodException, SecurityException {
+  public static Constructor<?> getConstructor(Class<?> clazz) throws NoSuchMethodException, SecurityException {
     return getConstructor(clazz, null);
   }
 
@@ -451,8 +456,8 @@ public abstract class ReflectUtil {
    * @throws NoSuchMethodException
    *           on error
    */
-  public static Constructor<?> getConstructor(Class<?> clazz, Class<?>[] args)
-      throws NoSuchMethodException, SecurityException {
+  public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... args) throws NoSuchMethodException,
+      SecurityException {
     Constructor<?> constructor;
     if (null == args) {
       constructor = clazz.getDeclaredConstructor();
@@ -475,20 +480,21 @@ public abstract class ReflectUtil {
    * @throws IllegalAccessException
    * @throws InstantiationException
    */
-  public static Object newInstanceViaReflect(Class<?> clazz)
-      throws NoSuchMethodException, SecurityException, InstantiationException,
-      IllegalAccessException, IllegalArgumentException,
-      InvocationTargetException {
+  public static Object newInstanceViaReflect(Class<?> clazz) throws NoSuchMethodException, SecurityException,
+      InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     Constructor<?> constructor = getConstructor(clazz);
     makeAccessible(constructor);
     return constructor.newInstance();
   }
-  
+
   /**
    * Get the generic type from type.
-   * @param type the type
+   * 
+   * @param type
+   *          the type
    * @return the generic type
-   * @throws ClassNotFoundException on error
+   * @throws ClassNotFoundException
+   *           on error
    */
   public static Class<?>[] getGenericType(Type type) throws ClassNotFoundException {
     Class<?>[] rtn = null;
@@ -510,35 +516,45 @@ public abstract class ReflectUtil {
     }
     return rtn;
   }
-  
+
   /**
    * Get the generic return type of specified method.
-   * @param method the method
+   * 
+   * @param method
+   *          the method
    * @return the generic return type
-   * @throws ClassNotFoundException on error
+   * @throws ClassNotFoundException
+   *           on error
    */
   public static Class<?>[] getGenericReturnType(Method method) throws ClassNotFoundException {
     Type type = method.getGenericReturnType();
     return getGenericType(type);
   }
-  
+
   /**
    * Get the generic parameter type of specified method
-   * @param method the method
-   * @param parIdx the parameter index
+   * 
+   * @param method
+   *          the method
+   * @param parIdx
+   *          the parameter index
    * @return the generic parameter type
-   * @throws ClassNotFoundException on error
+   * @throws ClassNotFoundException
+   *           on error
    */
   public static Class<?>[] getGenericParamType(Method method, int parIdx) throws ClassNotFoundException {
     Type type = method.getGenericParameterTypes()[parIdx];
     return getGenericType(type);
   }
-  
+
   /**
    * Get the generic type of specified field.
-   * @param field the field
+   * 
+   * @param field
+   *          the field
    * @return the generic type
-   * @throws ClassNotFoundException on error
+   * @throws ClassNotFoundException
+   *           on error
    */
   public static Class<?>[] getGenericFieldType(Field field) throws ClassNotFoundException {
     Type type = field.getGenericType();

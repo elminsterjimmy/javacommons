@@ -55,7 +55,11 @@ abstract public class XMLUtil {
   /** the XML extension. */
   public static final String XML_EXTENSION = ".XML"; //$NON-NLS-1$
   /** the XPath. */
-  private static XPath xpath;
+  private static final XPath xpath;
+  /** the text node. */
+  private static final String TEXT_NODE = "#text";
+  /** the attribute node. */
+  private static final String ATTRIBUTE_NODE = "#attribute";
 
   /**
    * static initialization.
@@ -97,15 +101,14 @@ abstract public class XMLUtil {
    * @throws Exception
    *           on error
    */
-  public static Document createDocument(String namespaceURI,
-      String qualifiedName, DocumentType doctype) throws Exception {
+  public static Document createDocument(String namespaceURI, String qualifiedName, DocumentType doctype)
+      throws Exception {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder;
     Document document;
     try {
       builder = factory.newDocumentBuilder();
-      document = builder.getDOMImplementation().createDocument(namespaceURI,
-          qualifiedName, doctype);
+      document = builder.getDOMImplementation().createDocument(namespaceURI, qualifiedName, doctype);
     } catch (Exception e) {
       throw e;
     }
@@ -141,9 +144,8 @@ abstract public class XMLUtil {
     docBuilder.setEntityResolver(new EntityResolver() {
 
       @Override
-      public InputSource resolveEntity(String publicId, String systemId)
-          throws SAXException, IOException {
-        return new InputSource(new StringReader(EMPTY_STRING)); //$NON-NLS-1$
+      public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+        return new InputSource(new StringReader(EMPTY_STRING));
       }
 
     });
@@ -160,8 +162,7 @@ abstract public class XMLUtil {
    * @throws Exception
    *           on error
    */
-  public static Document convert2Document(InputStream inputStream)
-      throws Exception {
+  public static Document convert2Document(InputStream inputStream) throws Exception {
     InputSource is = new InputSource(inputStream);
     return convertToDocument(is);
   }
@@ -199,8 +200,7 @@ abstract public class XMLUtil {
    * @throws Exception
    *           on error
    */
-  public static Node getFirstChildNode(Node parent, String tagName)
-      throws Exception {
+  public static Node getFirstChildNode(Node parent, String tagName) throws Exception {
     if (null != parent) {
       NodeList childrenList = parent.getChildNodes();
       int childrenCnt = childrenList.getLength();
@@ -227,8 +227,7 @@ abstract public class XMLUtil {
    * @throws Exception
    *           on error
    */
-  public static List<Node> getChildNode(Node parent, String tagName,
-      boolean searchDeeper) throws Exception {
+  public static List<Node> getChildNode(Node parent, String tagName, boolean searchDeeper) throws Exception {
     List<Node> list = new ArrayList<Node>();
     if (null != parent) {
       NodeList childrenList = parent.getChildNodes();
@@ -261,8 +260,7 @@ abstract public class XMLUtil {
    * @throws Exception
    *           on error
    */
-  public static String getChildNodeValue(Node parent, String tagName,
-      boolean searchDeeper) throws Exception {
+  public static String getChildNodeValue(Node parent, String tagName, boolean searchDeeper) throws Exception {
     if (null == parent) {
       return null;
     }
@@ -274,10 +272,9 @@ abstract public class XMLUtil {
       if (child.getNodeName().equals(tagName)) {
         Node element = child.getFirstChild();
         if (null != element) {
-          value = (null == element.getNodeValue() ? EMPTY_STRING : element //$NON-NLS-1$
-              .getNodeValue());
+          value = (null == element.getNodeValue() ? EMPTY_STRING : element.getNodeValue());
         } else {
-          return EMPTY_STRING; //$NON-NLS-1$
+          return EMPTY_STRING;
         }
       } else {
         if (searchDeeper) {
@@ -307,8 +304,8 @@ abstract public class XMLUtil {
    * @throws Exception
    *           on error
    */
-  public static String getChildNodeAttribute(Node parent, String tagName,
-      String attributeName, boolean searchDeeper) throws Exception {
+  public static String getChildNodeAttribute(Node parent, String tagName, String attributeName, boolean searchDeeper)
+      throws Exception {
     if (null == parent) {
       return null;
     }
@@ -320,7 +317,7 @@ abstract public class XMLUtil {
       if (child.getNodeName().equals(tagName)) {
         Node node = child.getAttributes().getNamedItem(attributeName);
         if (null == node) {
-          value = EMPTY_STRING; //$NON-NLS-1$
+          value = EMPTY_STRING;
         } else {
           value = node.getNodeValue();
         }
@@ -349,14 +346,12 @@ abstract public class XMLUtil {
    * @throws Exception
    *           on error
    */
-  public static Element createTextNode(Document document, String nodeName,
-      String nodeText) throws Exception {
+  public static Element createTextNode(Document document, String nodeName, String nodeText) throws Exception {
     if (null == document) {
       throw new IllegalArgumentException();
     }
     Element element = document.createElement(nodeName);
-    Text textNode = document.createTextNode(null == nodeText ? EMPTY_STRING
-        : nodeText);
+    Text textNode = document.createTextNode(null == nodeText ? EMPTY_STRING : nodeText);
     element.appendChild(textNode);
     return element;
   }
@@ -372,8 +367,7 @@ abstract public class XMLUtil {
    * @throws Exception
    *           on error
    */
-  public static String convertToString(Node node, boolean withHeader)
-      throws Exception {
+  public static String convertToString(Node node, boolean withHeader) throws Exception {
     return convertToString(node, DEFAULT_ENCODING, withHeader);
   }
 
@@ -390,8 +384,7 @@ abstract public class XMLUtil {
    * @throws Exception
    *           on error
    */
-  public static String convertToString(Node node, String encoding,
-      boolean withHeader) throws Exception {
+  public static String convertToString(Node node, String encoding, boolean withHeader) throws Exception {
     String str = null;
     StringWriter out = null;
     if (StringUtil.isEmpty(encoding)) {
@@ -429,8 +422,7 @@ abstract public class XMLUtil {
    * @throws Exception
    *           on error
    */
-  public static void writeFile(Document document, String outputFilePath)
-      throws Exception {
+  public static void writeFile(Document document, String outputFilePath) throws Exception {
     writeFile(document, outputFilePath, DEFAULT_ENCODING);
   }
 
@@ -446,8 +438,7 @@ abstract public class XMLUtil {
    * @throws Exception
    *           on error
    */
-  public static void writeFile(Document document, String outputFilePath,
-      String encoding) throws Exception {
+  public static void writeFile(Document document, String outputFilePath, String encoding) throws Exception {
     writeFile(document, new File(outputFilePath), encoding, true);
   }
 
@@ -479,8 +470,7 @@ abstract public class XMLUtil {
    * @throws Exception
    *           on error
    */
-  public static void writeFile(Document document, File file, String encoding,
-      boolean indent) throws Exception {
+  public static void writeFile(Document document, File file, String encoding, boolean indent) throws Exception {
     if (StringUtil.isEmpty(encoding)) {
       encoding = DEFAULT_ENCODING;
     }
@@ -517,12 +507,10 @@ abstract public class XMLUtil {
    * @throws Exception
    *           on error
    */
-  public static Document convertEncoding(Document document,
-      String convertEncoding) throws Exception {
+  public static Document convertEncoding(Document document, String convertEncoding) throws Exception {
     String xmlEncoding = document.getXmlEncoding();
     if (StringUtil.isEmpty(xmlEncoding)) {
-      throw new IllegalStateException(
-          Messages.getString(Message.XML_ENCODING_IS_NULL));
+      throw new IllegalStateException(Messages.getString(Message.XML_ENCODING_IS_NULL));
     }
     if (!xmlEncoding.equalsIgnoreCase(convertEncoding)) {
       long now = System.currentTimeMillis();
@@ -585,8 +573,7 @@ abstract public class XMLUtil {
    * @param value
    *          the value
    */
-  public static void setNodeAttributeValue(Node node, String attributeName,
-      String value) {
+  public static void setNodeAttributeValue(Node node, String attributeName, String value) {
     if (null == node) {
       // Do Nothing
       return;
@@ -616,21 +603,18 @@ abstract public class XMLUtil {
    * @param doc
    *          the document
    */
-  public static void setAddNodeAttribute(Node node, String attributeName,
-      String attributeValue, Document doc) {
+  public static void setAddNodeAttribute(Node node, String attributeName, String attributeValue, Document doc) {
     if (null == node) {
       return;
     }
     NamedNodeMap attributes = node.getAttributes();
     Element element = (Element) node;
     if (null == attributes) {
-      element
-          .setAttributeNode(getAttribute(attributeName, attributeValue, doc));
+      element.setAttributeNode(getAttribute(attributeName, attributeValue, doc));
     } else {
       Node n = attributes.getNamedItem(attributeName);
       if (null == n) {
-        element.setAttributeNode(getAttribute(attributeName, attributeValue,
-            doc));
+        element.setAttributeNode(getAttribute(attributeName, attributeValue, doc));
       } else {
         n.setNodeValue(attributeValue);
       }
@@ -648,8 +632,7 @@ abstract public class XMLUtil {
    *          the document
    * @return the attribute
    */
-  private static Attr getAttribute(String attributeName, String attributeValue,
-      Document doc) {
+  private static Attr getAttribute(String attributeName, String attributeValue, Document doc) {
     Attr attr = doc.createAttribute(attributeName);
     attr.setNodeValue(attributeValue);
     return attr;
@@ -705,11 +688,24 @@ abstract public class XMLUtil {
    *          the tag name
    * @return the created node
    */
-  public static Element createNode(Document document, Node parent,
-      String tagName) {
+  public static Element createNode(Document document, Node parent, String tagName) {
     Element node = document.createElement(tagName);
     parent.appendChild(node);
     return node;
+  }
+
+  /**
+   * Replace the old node with the new node.
+   * 
+   * @param parent
+   *          the node parent
+   * @param oldNode
+   *          the old node
+   * @param newNode
+   *          the new node
+   */
+  public static void replaceNode(Node parent, Node oldNode, Node newNode) {
+    parent.replaceChild(newNode, oldNode);
   }
 
   /**
@@ -723,8 +719,7 @@ abstract public class XMLUtil {
    * @throws Exception
    *           exception
    */
-  public static Node xpathEvaluateNode(String expression, Node node)
-      throws Exception {
+  public static Node xpathEvaluateNode(String expression, Node node) throws Exception {
     return (Node) xpath.evaluate(expression, node, XPathConstants.NODE);
   }
 
@@ -739,8 +734,7 @@ abstract public class XMLUtil {
    * @throws Exception
    *           exception
    */
-  public static NodeList xpathEvaluateNodeList(String expression, Node node)
-      throws Exception {
+  public static NodeList xpathEvaluateNodeList(String expression, Node node) throws Exception {
     return (NodeList) xpath.evaluate(expression, node, XPathConstants.NODESET);
   }
 
@@ -755,14 +749,15 @@ abstract public class XMLUtil {
    * @throws Exception
    *           exception
    */
-  public static String xpathEvaluateString(String expression, Node node)
-      throws Exception {
+  public static String xpathEvaluateString(String expression, Node node) throws Exception {
     return (String) xpath.evaluate(expression, node, XPathConstants.STRING);
   }
-  
+
   /**
    * Convert specified Node to Map.
-   * @param node the node
+   * 
+   * @param node
+   *          the node
    * @return the map
    */
   @SuppressWarnings("unchecked")
@@ -773,23 +768,23 @@ abstract public class XMLUtil {
     }
     NodeList children = node.getChildNodes();
     int len = children.getLength();
-    
+
     for (int i = 0; i < len; i++) {
       Node child = children.item(i);
       String childName = child.getNodeName();
-      if ("#text".equals(childName)) {
+      if (TEXT_NODE.equals(childName)) {
         continue;
       }
       List<Object> cl = (List<Object>) map.get(childName);
       if (null == cl) {
-        cl = new ArrayList<Object>(); 
+        cl = new ArrayList<Object>();
       }
       cl.add(node2Map(child));
       map.put(child.getNodeName(), cl);
     }
     String nodeValue = XMLUtil.getNodeValue(node);
     if (null != nodeValue && StringUtil.isNotEmpty(nodeValue.trim())) {
-      map.put("#text", nodeValue);
+      map.put(TEXT_NODE, nodeValue);
     }
     NamedNodeMap attributeMap = node.getAttributes();
     if (null != attributeMap) {
@@ -800,7 +795,7 @@ abstract public class XMLUtil {
           Node att = attributeMap.item(i);
           attMap.put(att.getNodeName(), att.getNodeValue());
         }
-        map.put("#attribute", attMap);
+        map.put(ATTRIBUTE_NODE, attMap);
       }
     }
     return map;
@@ -808,7 +803,9 @@ abstract public class XMLUtil {
 
   /**
    * Convert specified DOM to Map.
-   * @param doc the DOM
+   * 
+   * @param doc
+   *          the DOM
    * @return the map
    */
   public static Map<String, Object> dom2Map(Document doc) {

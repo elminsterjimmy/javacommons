@@ -243,10 +243,9 @@ final public class CSVHelper {
     if (StringUtil.isEmpty(item)) {
       if (enquote) {
         // ""
-        return StringConstants.DOUBLE_QUOTE
-            + StringConstants.DOUBLE_QUOTE;
+        return StringConstants.DOUBLE_QUOTE + StringConstants.DOUBLE_QUOTE;
       } else {
-        return "";
+        return StringConstants.EMPTY_STRING;
       }
     }
 
@@ -261,7 +260,8 @@ final public class CSVHelper {
     sb.append(StringConstants.DOUBLE_QUOTE);
     for (int ind = 0; ind < item.length(); ind++) {
       char ch = item.charAt(ind);
-      if (CharacterConstants.DOUBLE_QUOTE == ch || CharacterConstants.COMMA == ch) {
+      if (CharacterConstants.DOUBLE_QUOTE == ch
+          || CharacterConstants.COMMA == ch) {
         sb.append(CharacterConstants.DOUBLE_QUOTE);
       }
       sb.append(ch);
@@ -282,7 +282,8 @@ final public class CSVHelper {
     StringBuffer sb = new StringBuffer();
     for (int ind = 0; ind < item.length(); ind++) {
       char ch = item.charAt(ind);
-      if ((CharacterConstants.DOUBLE_QUOTE != ch) && (CharacterConstants.COMMA != ch)) {
+      if ((CharacterConstants.DOUBLE_QUOTE != ch)
+          && (CharacterConstants.COMMA != ch)) {
         sb.append(ch);
       }
     }
@@ -356,8 +357,7 @@ final public class CSVHelper {
       boolean closed = true;
 
       // remove "/r", "/n"
-      str = str.replace(StringConstants.LF, "").replace(
-          StringConstants.CR, "");
+      str = StringUtil.chomp(str);
 
       int length = str.length();
 
@@ -377,11 +377,12 @@ final public class CSVHelper {
             // set the close flag
             closed = false;
             // push to the stack
-            signStack.push("#");
+            signStack.push(StringConstants.SHARP);
             // do nothing
           } else {
             // unclosed
-            if (length == i + 1 || CharacterConstants.COMMA == str.charAt(i + 1)) {
+            if (length == i + 1
+                || CharacterConstants.COMMA == str.charAt(i + 1)) {
               // last character or following a ","
               // reset the close flag
               closed = true;

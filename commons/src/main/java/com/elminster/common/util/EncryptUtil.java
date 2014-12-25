@@ -20,7 +20,7 @@ import sun.misc.BASE64Encoder;
  * @version 1.0
  * 
  */
-@SuppressWarnings({"restriction"})
+@SuppressWarnings({ "restriction" })
 public class EncryptUtil {
 
   /** MD5. */

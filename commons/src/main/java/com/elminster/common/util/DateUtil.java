@@ -36,9 +36,11 @@ abstract public class DateUtil {
   public static final long HOUR = TimeUnit.HOUR_IN_MS;
   /** day. */
   public static final long DAY = TimeUnit.DAY_IN_MS;
-  
+
   /**
-   * Get date via specified year, month, date, hours, minutes and second as daily use format
+   * Get date via specified year, month, date, hours, minutes and second as
+   * daily use format
+   * 
    * @param year
    * @param month
    * @param date
@@ -52,21 +54,24 @@ abstract public class DateUtil {
     c.set(year, month - 1, date, hrs, min, sec);
     return c.getTime();
   }
+
   /**
    * Get date via specified year, month, date as daily use format
+   * 
    * @param year
    * @param month
    * @param date
    * @return the Date
-   */  
+   */
   public static Date getDate(int year, int month, int date) {
     Calendar c = Calendar.getInstance();
     c.set(year, month - 1, date);
     return c.getTime();
   }
-  
+
   /**
    * Get current Date.
+   * 
    * @return the current Date
    */
   public static Date getCurrentDate() {
@@ -74,127 +79,162 @@ abstract public class DateUtil {
     Date date = c.getTime();
     return date;
   }
-  
+
   /**
    * Get the String format of the current date.
-   * @param format the format
-   * @param locale the locale
-   * @param tz the timezone
+   * 
+   * @param format
+   *          the format
+   * @param locale
+   *          the locale
+   * @param tz
+   *          the timezone
    * @return the String format of the current date.
    */
   public static String getCurrentDateStr(String format, Locale locale, TimeZone tz) {
     return getDateString(getCurrentDate(), format, locale, tz);
   }
-  
+
   /**
    * Get the String format of the current date.
-   * @param format the format
-   * @param locale the locale
+   * 
+   * @param format
+   *          the format
+   * @param locale
+   *          the locale
    * @return the String format of the current date.
    */
   public static String getCurrentDateStr(String format, Locale locale) {
     return getDateString(getCurrentDate(), format, locale);
   }
-  
+
   /**
    * Get the String format of the current date.
-   * @param format the format
+   * 
+   * @param format
+   *          the format
    * @return the String format of the current date.
    */
   public static String getCurrentDateStr(String format) {
     return getCurrentDateStr(format, Locale.getDefault());
   }
-  
+
   /**
    * Get the String format of the current date.
+   * 
    * @return the String format of the current date.
    */
   public static String getCurrentDateStr() {
     return getCurrentDateStr(DEFAULT_DATETIME_FORMAT);
   }
-  
+
   /**
    * Get the String format of the specified date.
-   * @param date the date
-   * @param format the format
-   * @param locale the locale
-   * @param tz the timezone
+   * 
+   * @param date
+   *          the date
+   * @param format
+   *          the format
+   * @param locale
+   *          the locale
+   * @param tz
+   *          the timezone
    * @return the String format of the specified date
    */
   public static String getDateString(Date date, String format, Locale locale, TimeZone tz) {
     if (null == date) {
-      throw new NullPointerException(
-          Messages.getString(Message.DATE_IS_NULL));
+      throw new NullPointerException(Messages.getString(Message.DATE_IS_NULL));
     }
     SimpleDateFormat sdf = new SimpleDateFormat(format, locale);
     sdf.setTimeZone(tz);
     return sdf.format(date);
   }
-  
+
   /**
    * Get the String format of the specified date.
-   * @param date the date
-   * @param format the format
-   * @param tz the timezone
+   * 
+   * @param date
+   *          the date
+   * @param format
+   *          the format
+   * @param tz
+   *          the timezone
    * @return the String format of the specified date
    */
   public static String getDateString(Date date, String format, TimeZone tz) {
     return getDateString(date, format, Locale.getDefault(), tz);
   }
-  
+
   /**
    * Get the String format of the specified date.
-   * @param date the date
-   * @param format the format
-   * @param locale the locale
+   * 
+   * @param date
+   *          the date
+   * @param format
+   *          the format
+   * @param locale
+   *          the locale
    * @return the String format of the specified date
    */
   public static String getDateString(Date date, String format, Locale locale) {
     return getDateString(date, format, locale, TimeZone.getDefault());
   }
-  
+
   /**
    * Get the String format of the specified date.
-   * @param date the date
-   * @param format the format
+   * 
+   * @param date
+   *          the date
+   * @param format
+   *          the format
    * @return the String format of the specified date
    */
   public static String getDateString(Date date, String format) {
     return getDateString(date, format, Locale.getDefault());
   }
-  
+
   /**
    * Get the String format of the specified date.
-   * @param date the date
+   * 
+   * @param date
+   *          the date
    * @return the String format of the specified date
    */
   public static String getDateString(Date date) {
     return getDateString(date, DEFAULT_DATETIME_FORMAT);
   }
-  
+
   /**
    * Parser the String date into Date.
-   * @param dateStr the String date
-   * @param format the format
-   * @param locale the locale
+   * 
+   * @param dateStr
+   *          the String date
+   * @param format
+   *          the format
+   * @param locale
+   *          the locale
    * @return the Date
-   * @throws ParseException on error
+   * @throws ParseException
+   *           on error
    */
   public static Date parserDateStr(String dateStr, String format, Locale locale) throws ParseException {
     if (null == dateStr) {
-      throw new NullPointerException(
-          Messages.getString(Message.DATE_IS_NULL));
+      throw new NullPointerException(Messages.getString(Message.DATE_IS_NULL));
     }
     SimpleDateFormat sdf = new SimpleDateFormat(format, locale);
     return sdf.parse(dateStr);
   }
-  
+
   /**
    * Parser the String date into Date.
-   * @param dateStr the String date
-   * @param format the format
+   * 
+   * @param dateStr
+   *          the String date
+   * @param format
+   *          the format
    * @return the Date
-   * @throws ParseException on error
+   * @throws ParseException
+   *           on error
    */
   public static Date parserDateStr(String dateStr, String format) throws ParseException {
     return parserDateStr(dateStr, format, Locale.getDefault());
@@ -202,18 +242,24 @@ abstract public class DateUtil {
 
   /**
    * Parser the String date into Date.
-   * @param dateStr the String date
+   * 
+   * @param dateStr
+   *          the String date
    * @return the Date
-   * @throws ParseException on error
+   * @throws ParseException
+   *           on error
    */
   public static Date parserDateStr(String dateStr) throws ParseException {
     return parserDateStr(dateStr, DEFAULT_DATETIME_FORMAT);
   }
-  
+
   /**
    * Add years to original date.
-   * @param original the original date
-   * @param yearCount the year count
+   * 
+   * @param original
+   *          the original date
+   * @param yearCount
+   *          the year count
    * @return the date add years
    */
   public static Date addYear(Date original, int yearCount) {
@@ -222,11 +268,14 @@ abstract public class DateUtil {
     c.add(Calendar.YEAR, yearCount);
     return c.getTime();
   }
-  
+
   /**
    * Add months to original date.
-   * @param original the original date
-   * @param monthCount the month count
+   * 
+   * @param original
+   *          the original date
+   * @param monthCount
+   *          the month count
    * @return the date add months
    */
   public static Date addMonth(Date original, int monthCount) {
@@ -235,11 +284,14 @@ abstract public class DateUtil {
     c.add(Calendar.MONTH, monthCount);
     return c.getTime();
   }
-  
+
   /**
    * Add days to original date.
-   * @param original the original date
-   * @param dayCount the day count
+   * 
+   * @param original
+   *          the original date
+   * @param dayCount
+   *          the day count
    * @return the date add days
    */
   public static Date addDay(Date original, int dayCount) {
@@ -248,11 +300,14 @@ abstract public class DateUtil {
     c.add(Calendar.DATE, dayCount);
     return c.getTime();
   }
-  
+
   /**
    * Add hours to original date.
-   * @param original the original date
-   * @param hourCount the hour count
+   * 
+   * @param original
+   *          the original date
+   * @param hourCount
+   *          the hour count
    * @return the date add hours
    */
   public static Date addHour(Date original, int hourCount) {
@@ -264,8 +319,11 @@ abstract public class DateUtil {
 
   /**
    * Add minutes to original date.
-   * @param original the original date
-   * @param minCount the minute count
+   * 
+   * @param original
+   *          the original date
+   * @param minCount
+   *          the minute count
    * @return the date add minutes
    */
   public static Date addMinute(Date original, int minCount) {
@@ -274,33 +332,38 @@ abstract public class DateUtil {
     c.add(Calendar.MINUTE, minCount);
     return c.getTime();
   }
-  
+
   /**
    * Get the day between start date and end date.
-   * @param start the start date
-   * @param end the end date
+   * 
+   * @param start
+   *          the start date
+   * @param end
+   *          the end date
    * @return the dyas between 2 dates
    */
   public static int getDayBetween(Date start, Date end) {
     Calendar c = Calendar.getInstance();
     c.setTime(start);
-    long startTime = c.getTimeInMillis();    
+    long startTime = c.getTimeInMillis();
     c.setTime(end);
-    long endTime = c.getTimeInMillis();  
+    long endTime = c.getTimeInMillis();
     long betweenDays = (endTime - startTime) / DAY;
     return (new Long(betweenDays)).intValue();
   }
-  
+
   /**
    * Get weekday of given date.
-   * @param date the date
-   * @param locale the locale
+   * 
+   * @param date
+   *          the date
+   * @param locale
+   *          the locale
    * @return the weekday
    */
   public static String getWeekday(Date date, Locale locale) {
     if (null == date) {
-      throw new NullPointerException(
-          Messages.getString(Message.DATE_IS_NULL));
+      throw new NullPointerException(Messages.getString(Message.DATE_IS_NULL));
     }
     SimpleDateFormat sdf = new SimpleDateFormat("E", locale); //$NON-NLS-1$
     return sdf.format(date);
@@ -308,7 +371,9 @@ abstract public class DateUtil {
 
   /**
    * Get weekday of given date.
-   * @param date the date
+   * 
+   * @param date
+   *          the date
    * @return the weekday
    */
   public static String getWeekday(Date date) {
