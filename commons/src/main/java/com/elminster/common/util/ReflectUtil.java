@@ -295,7 +295,7 @@ public abstract class ReflectUtil {
    */
   public static Method getDeclaredMethod(Class<? extends Object> clazz, String methodName, Class<?>... args) {
     if (null == args) {
-      args = new Object[] {};
+      args = new Class<?>[0];
     }
     Method[] methods = getAllMethod(clazz);
     for (Method method : methods) {
