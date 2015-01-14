@@ -15,4 +15,5 @@ public interface RegexConstants {
 	public static final String REGEX_DOLLAR = "\\$";
 	public static final String REGEX_QUEST = "\\?";
 	public static final String REGEX_POWER = "\\^";
+	public static final String REGEX_ANY_INCLUDE_NEWLINE = "((.|\n)*)";
 }

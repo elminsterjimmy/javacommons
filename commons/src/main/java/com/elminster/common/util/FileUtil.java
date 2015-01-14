@@ -185,6 +185,17 @@ public abstract class FileUtil {
       }
     }
   }
+  
+  /**
+   * Create a new file.
+   * @param fileName the file name
+   * @throws IOException on error
+   */
+  public static void createNewFile(String fileName) throws IOException {
+    createFolder(fileName);
+    File file = new File(fileName);
+    file.createNewFile();
+  }
 
   /**
    * Move the specified file to another file (create folder for move to file if
@@ -795,6 +806,19 @@ public abstract class FileUtil {
         isReader.close();
       }
     }
+  }
+  
+  /**
+   * Read a specified file to a list by line (ignore the blank line).
+   * 
+   * @param fileName
+   *          a specified file
+   * @return the list contains all the file contexts
+   * @throws IOException
+   *           on error
+   */
+  public static List<String> readFileByLine(String fileName) throws IOException {
+    return readFileByLine(fileName, DEFAULT_CHARSET);
   }
 
   /**

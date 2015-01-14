@@ -8,14 +8,6 @@ package com.elminster.common.constants;
  */
 public interface Constants {
   
-  public static final String FILE_SEPARATE = StringConstants.SLASH;
-
-  public static final String COMMANT_WORD = StringConstants.SLASH + StringConstants.SLASH;
-
-  public static final String MULTI_COMMENT = StringConstants.SLASH + StringConstants.STAR;
-
-  public static final String DOC_COMMENT = MULTI_COMMENT + StringConstants.STAR;
-
   /***
    * The time unit.
    * 
@@ -75,6 +67,7 @@ public interface Constants {
     public static final char BACKSLASH = '\\'; 
     public static final char AT = '@';
     public static final char DOLLAR = '$';
+    public static final char QUOTE = '\'';
     public static final char DOUBLE_QUOTE = '"';
   }
   
@@ -111,6 +104,7 @@ public interface Constants {
     public static final String BACKSLASH = String.valueOf(CharacterConstants.BACKSLASH);
     public static final String AT = String.valueOf(CharacterConstants.AT);
     public static final String DOLLAR = String.valueOf(CharacterConstants.DOLLAR);
+    public static final String QUOTE = String.valueOf(CharacterConstants.QUOTE);
     public static final String DOUBLE_QUOTE = String.valueOf(CharacterConstants.DOUBLE_QUOTE);
     public static final String EMPTY_STRING = ""; //$NON-NLS-1$
     public static final String NULL_STRING = "null"; //$NON-NLS-1$
