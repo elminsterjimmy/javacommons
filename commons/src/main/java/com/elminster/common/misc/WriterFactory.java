@@ -15,6 +15,7 @@ public class WriterFactory {
     if (null == writer) {
       try {
         writer = new AsynchorizedFileWriter(fileName);
+        new Thread((Runnable)writer).start();
       } catch (IOException e) {
         throw new RuntimeException(e);
       }

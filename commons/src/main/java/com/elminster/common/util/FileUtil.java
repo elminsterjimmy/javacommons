@@ -861,11 +861,13 @@ public abstract class FileUtil {
    * 
    * @param fileName
    *          a specified file
+   * @param skipBlankLine
+   *          skip blank line?
    * @throws IOException
    *           on error
    */
-  public static String readFile2String(InputStream is) throws IOException {
-    List<String> list = readFileByLine(is, true, DEFAULT_CHARSET);
+  public static String readFile2String(InputStream is, boolean skipBlankLine) throws IOException {
+    List<String> list = readFileByLine(is, skipBlankLine, DEFAULT_CHARSET);
     StringBuilder sb = new StringBuilder();
     if (CollectionUtil.isNotEmpty(list)) {
       for (String line : list) {
@@ -874,6 +876,18 @@ public abstract class FileUtil {
       }
     }
     return sb.toString();
+  }
+
+  /**
+   * Read a specified file to a list by line (ignore the blank line).
+   * 
+   * @param fileName
+   *          a specified file
+   * @throws IOException
+   *           on error
+   */
+  public static String readFile2String(InputStream is) throws IOException {
+    return readFile2String(is, true);
   }
 
   /**

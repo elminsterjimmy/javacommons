@@ -510,6 +510,40 @@ public abstract class StringUtil {
         .append(Character.toTitleCase(str.charAt(0))).append(str.substring(1))
         .toString();
   }
+  
+  /**
+   * <p>
+   * Uncapitalizes a String changing the first letter to title case as per
+   * {@link Character#toTitleCase(char)}. No other letters are changed.
+   * </p>
+   * <p>
+   * For a word based algorithm, see {@link WordUtils#uncapitalize(String)}. A
+   * <code>null</code> input String returns <code>null</code>.
+   * </p>
+   * 
+   * <pre>
+   * StringUtils.uncapitalize(null)  = null
+   * StringUtils.uncapitalize("")    = ""
+   * StringUtils.uncapitalize("Cat") = "cat"
+   * StringUtils.uncapitalize("CAt") = "cAt"
+   * </pre>
+   * 
+   * @param str
+   *          the String to capitalize, may be null
+   * @return the uncapitalize String, <code>null</code> if null String input
+   * @see WordUtils#uncapitalize(String)
+   * @see #capitalize(String)
+   * @since 2.0
+   */
+  public static String uncapitalize(String str) {
+    int strLen;
+    if (str == null || (strLen = str.length()) == 0) {
+      return str;
+    }
+    return new StringBuffer(strLen)
+        .append(Character.toLowerCase(str.charAt(0))).append(str.substring(1))
+        .toString();
+  }
 
   /**
    * null object convert ""

@@ -24,12 +24,12 @@ public class CompletionLogTask {
   
   /** the default interval. */
   private static final long DEFAULT_INTERVAL = DateUtil.MINUTE;
-  /** the lock used to ensure the thread safe of read/write unloggedCompletionTasks List. */
-  private static final Object LOCK = new Object();
   /** the logger. */
   private static final Log logger = LogFactory.getLog(CompletionLogTask.class);
   /** the completion log path. */
   protected final String completionLogPath;
+  /** the lock used to ensure the thread safe of read/write unloggedCompletionTasks List. */
+  private Object LOCK = new Object();
   /** the completion tasks. */
   protected List<String> completionTasks;
   /** the unlogged completion tasks. */
@@ -141,10 +141,10 @@ public class CompletionLogTask {
     @Override
     public void run() {
       try {
-        for (String msg : unloggedCompletionTasks) {
-          writer.appendLn(msg);
-        }
         synchronized (LOCK) {
+          for (String msg : unloggedCompletionTasks) {
+            writer.appendLn(msg);
+          }
           unloggedCompletionTasks.clear();
         }
       } catch (IOException e) {

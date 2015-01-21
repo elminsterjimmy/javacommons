@@ -3,6 +3,7 @@ package com.elminster.common.util;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Map;
 
 import com.elminster.common.constants.Constants.StringConstants;
 import com.elminster.common.util.Messages.Message;
@@ -521,5 +522,44 @@ public abstract class ObjectUtil {
       }
     }
     return newArray;
+  }
+  
+  public static Object copyProperties(Object src, Object dest) throws Exception {
+    return copyProperties(src, dest, null, null);
+  }
+  
+  public static Object copyProperties(Object src, Object dest, Map<String, String> fieldNameMapping) throws Exception {
+    return copyProperties(src, dest, fieldNameMapping, null);
+  }
+  
+  public static Object copyProperties(Object src, Object dest, Map<String, String> fieldNameMapping, Map<String, ValueConverter> fieldValueConverter) throws Exception {
+    Class<?> srcClazz = src.getClass();
+    Class<?> destClazz = dest.getClass();
+    
+    Field[] fields = ReflectUtil.getAllField(srcClazz);
+    boolean fieldNameMappingAvaliable = CollectionUtil.isNotEmpty(fieldNameMapping);
+    boolean fieldValueConverterAvaliable = CollectionUtil.isNotEmpty(fieldValueConverter);
+    for (Field field : fields) {
+      String srcFieldName = field.getName();
+      String destFieldName = field.getName();
+      if (fieldNameMappingAvaliable) {
+        String mappingName = fieldNameMapping.get(srcFieldName);
+        if (null != mappingName) {
+          destFieldName = mappingName;
+        }
+      }
+      Field destField = ReflectUtil.getDeclaredField(destClazz, destFieldName);
+      if (null != destField) {
+        Object value = ReflectUtil.getFieldValue(src, field);
+        if (fieldValueConverterAvaliable) {
+          ValueConverter converter = fieldValueConverter.get(srcFieldName);
+          if (null != converter) {
+            value = converter.convert(value);
+          }
+        }
+        ReflectUtil.setField(dest, destField, value);
+      }
+    }
+    return dest;
   }
 }
