@@ -185,11 +185,14 @@ public abstract class FileUtil {
       }
     }
   }
-  
+
   /**
    * Create a new file.
-   * @param fileName the file name
-   * @throws IOException on error
+   * 
+   * @param fileName
+   *          the file name
+   * @throws IOException
+   *           on error
    */
   public static void createNewFile(String fileName) throws IOException {
     createFolder(fileName);
@@ -807,7 +810,7 @@ public abstract class FileUtil {
       }
     }
   }
-  
+
   /**
    * Read a specified file to a list by line (ignore the blank line).
    * 
@@ -939,6 +942,29 @@ public abstract class FileUtil {
   }
 
   /**
+   * Write out a file with the specified bytes.
+   * 
+   * @param bytes
+   *          the specified bytes
+   * @param fileName
+   *          output file path
+   * @param overwirte
+   *          overwrite exist file?
+   * @throws IOException
+   *           on error
+   */
+  public static void write2file(byte[] bytes, String fileName, boolean overwrite) throws IOException {
+    File file = new File(fileName);
+    if (file.exists()) {
+      if (overwrite) {
+        write2file(bytes, fileName);
+      }
+    } else {
+      write2file(bytes, fileName);
+    }
+  }
+
+  /**
    * Write out a file with the specified lines.
    * 
    * @param lines
@@ -952,6 +978,32 @@ public abstract class FileUtil {
    */
   public static void writeLines2file(List<String> lines, String fileName, boolean append) throws IOException {
     writeLines2file(lines, fileName, append, DEFAULT_CHARSET);
+  }
+
+  /**
+   * Write out a file with the specified lines.
+   * 
+   * @param lines
+   *          the specified lines
+   * @param fileName
+   *          output file path
+   * @param append
+   *          append mode on/off
+   * @param overwirte
+   *          overwrite exist file?
+   * @throws IOException
+   *           on error
+   */
+  public static void writeLines2file(List<String> lines, String fileName, boolean append, boolean overwrite)
+      throws IOException {
+    File file = new File(fileName);
+    if (file.exists()) {
+      if (overwrite) {
+        writeLines2file(lines, fileName, append);
+      }
+    } else {
+      writeLines2file(lines, fileName, append);
+    }
   }
 
   /**
@@ -979,6 +1031,31 @@ public abstract class FileUtil {
    *          output file path
    * @param append
    *          append mode on/off
+   * @param overwrite
+   *          overwrite the exist file?
+   * @throws IOException
+   *           on error
+   */
+  public static void writeLine2file(String line, String fileName, boolean append, boolean overwrite) throws IOException {
+    File file = new File(fileName);
+    if (file.exists()) {
+      if (overwrite) {
+        writeLine2file(line, fileName, append);
+      }
+    } else {
+      writeLine2file(line, fileName, append);
+    }
+  }
+
+  /**
+   * Write out a file with the specified line.
+   * 
+   * @param line
+   *          the specified line
+   * @param fileName
+   *          output file path
+   * @param append
+   *          append mode on/off
    * @param encoding
    *          the encoding
    * @throws IOException
@@ -988,6 +1065,34 @@ public abstract class FileUtil {
     List<String> lines = new ArrayList<String>();
     lines.add(line);
     writeLines2file(lines, fileName, append, encoding);
+  }
+
+  /**
+   * Write out a file with the specified line.
+   * 
+   * @param line
+   *          the specified line
+   * @param fileName
+   *          output file path
+   * @param append
+   *          append mode on/off
+   * @param encoding
+   *          the encoding
+   * @param overwrite
+   *          overwrite the exist file?
+   * @throws IOException
+   *           on error
+   */
+  public static void writeLine2file(String line, String fileName, boolean append, String encoding, boolean overwrite)
+      throws IOException {
+    File file = new File(fileName);
+    if (file.exists()) {
+      if (overwrite) {
+        writeLine2file(line, fileName, append, encoding);
+      }
+    } else {
+      writeLine2file(line, fileName, append, encoding);
+    }
   }
 
   /**
@@ -1030,6 +1135,34 @@ public abstract class FileUtil {
       if (null != os) {
         os.close();
       }
+    }
+  }
+
+  /**
+   * Write out a file with the specified lines.
+   * 
+   * @param lines
+   *          the specified lines
+   * @param fileName
+   *          output file path
+   * @param append
+   *          append mode on/off
+   * @param encoding
+   *          the encoding
+   * @param overwrite
+   *          overwrite the exist file?
+   * @throws IOException
+   *           on error
+   */
+  public static void writeLines2file(List<String> lines, String fileName, boolean append, String encoding,
+      boolean overwrite) throws IOException {
+    File file = new File(fileName);
+    if (file.exists()) {
+      if (overwrite) {
+        writeLines2file(lines, fileName, append, encoding);
+      }
+    } else {
+      writeLines2file(lines, fileName, append, encoding);
     }
   }
 
