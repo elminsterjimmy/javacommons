@@ -210,7 +210,7 @@ public abstract class FileUtil {
    *          the file to move to
    */
   public static void moveFile(String srcFile, String destFile) throws IllegalArgumentException {
-    if (isFileExist(srcFile)) {
+    if (!isFileExist(srcFile)) {
       throw new IllegalArgumentException(Messages.getString(Message.SOURCE_FILE_ISNT_EXIST, srcFile));
     }
     File src = new File(srcFile);
@@ -954,8 +954,7 @@ public abstract class FileUtil {
    *           on error
    */
   public static void write2file(byte[] bytes, String fileName, boolean overwrite) throws IOException {
-    File file = new File(fileName);
-    if (file.exists()) {
+    if (isFileExist(fileName)) {
       if (overwrite) {
         write2file(bytes, fileName);
       }
@@ -996,8 +995,7 @@ public abstract class FileUtil {
    */
   public static void writeLines2file(List<String> lines, String fileName, boolean append, boolean overwrite)
       throws IOException {
-    File file = new File(fileName);
-    if (file.exists()) {
+    if (isFileExist(fileName)) {
       if (overwrite) {
         writeLines2file(lines, fileName, append);
       }
@@ -1037,8 +1035,7 @@ public abstract class FileUtil {
    *           on error
    */
   public static void writeLine2file(String line, String fileName, boolean append, boolean overwrite) throws IOException {
-    File file = new File(fileName);
-    if (file.exists()) {
+    if (isFileExist(fileName)) {
       if (overwrite) {
         writeLine2file(line, fileName, append);
       }
@@ -1085,8 +1082,7 @@ public abstract class FileUtil {
    */
   public static void writeLine2file(String line, String fileName, boolean append, String encoding, boolean overwrite)
       throws IOException {
-    File file = new File(fileName);
-    if (file.exists()) {
+    if (isFileExist(fileName)) {
       if (overwrite) {
         writeLine2file(line, fileName, append, encoding);
       }
@@ -1156,8 +1152,7 @@ public abstract class FileUtil {
    */
   public static void writeLines2file(List<String> lines, String fileName, boolean append, String encoding,
       boolean overwrite) throws IOException {
-    File file = new File(fileName);
-    if (file.exists()) {
+    if (isFileExist(fileName)) {
       if (overwrite) {
         writeLines2file(lines, fileName, append, encoding);
       }
