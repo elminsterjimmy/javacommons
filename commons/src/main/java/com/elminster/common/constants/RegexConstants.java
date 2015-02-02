@@ -12,8 +12,10 @@ public interface RegexConstants {
 	public static final String REGEX_PLUS = "\\+";
 	public static final String REGEX_LEFT_SQUARE_BRACKETS = "\\[";
 	public static final String REGEX_RIGHT_SQUARE_BRACKETS = "\\]";
+	public static final String REGEX_LEFT_PARENTHESES = "\\(";
+	public static final String REGEX_RIGHT_PARENTHESES = "\\)";
 	public static final String REGEX_DOLLAR = "\\$";
-	public static final String REGEX_QUEST = "\\?";
-	public static final String REGEX_POWER = "\\^";
+	public static final String REGEX_QUESTION = "\\?";
+	public static final String REGEX_CARET = "\\^";
 	public static final String REGEX_ANY_INCLUDE_NEWLINE = "((.|\n)*)";
 }

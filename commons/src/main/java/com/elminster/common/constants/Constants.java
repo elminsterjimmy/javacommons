@@ -50,13 +50,18 @@ public interface Constants {
     public static final char UNDER_LINE = '_'; 
     public static final char LF = '\n'; 
     public static final char CR = '\r'; 
-    public static final char TAB = '\t'; 
+    public static final char TAB = '\t';
+    public static final char BACKSPACE = '\b';
     public static final char AND = '&'; 
     public static final char QUESTION = '?';
+    public static final char EXCLAMATION = '!';
+    public static final char TILDE = '~';
+    public static final char GRAVE_ACCENT = '`';
     public static final char EQUAL = '=';
     public static final char STAR = '*'; 
     public static final char SPACE = ' '; 
     public static final char HYPHEN = '-'; 
+    public static final char PLUS = '+'; 
     public static final char COMMA = ','; 
     public static final char DOT = '.'; 
     public static final char COLON = ':'; 
@@ -67,6 +72,7 @@ public interface Constants {
     public static final char BACKSLASH = '\\'; 
     public static final char AT = '@';
     public static final char DOLLAR = '$';
+    public static final char CARET = '^';
     public static final char QUOTE = '\'';
     public static final char DOUBLE_QUOTE = '"';
   }
@@ -88,12 +94,17 @@ public interface Constants {
     public static final String LF = String.valueOf(CharacterConstants.LF);
     public static final String CR = String.valueOf(CharacterConstants.CR);
     public static final String TAB = String.valueOf(CharacterConstants.TAB);
+    public static final String BACKSPACE = String.valueOf(CharacterConstants.BACKSPACE);
     public static final String AND = String.valueOf(CharacterConstants.AND);
     public static final String QUESTION = String.valueOf(CharacterConstants.QUESTION);
+    public static final String EXCLAMATION = String.valueOf(CharacterConstants.EXCLAMATION);
+    public static final String TILDE = String.valueOf(CharacterConstants.TILDE);
+    public static final String GRAVE_ACCENT = String.valueOf(CharacterConstants.GRAVE_ACCENT);
     public static final String EQUAL = String.valueOf(CharacterConstants.EQUAL);
     public static final String STAR = String.valueOf(CharacterConstants.STAR);
     public static final String SPACE = String.valueOf(CharacterConstants.SPACE);
     public static final String HYPHEN = String.valueOf(CharacterConstants.HYPHEN);
+    public static final String PLUS = String.valueOf(CharacterConstants.PLUS);
     public static final String COMMA = String.valueOf(CharacterConstants.COMMA);
     public static final String DOT = String.valueOf(CharacterConstants.DOT);
     public static final String COLON = String.valueOf(CharacterConstants.COLON);
@@ -104,6 +115,7 @@ public interface Constants {
     public static final String BACKSLASH = String.valueOf(CharacterConstants.BACKSLASH);
     public static final String AT = String.valueOf(CharacterConstants.AT);
     public static final String DOLLAR = String.valueOf(CharacterConstants.DOLLAR);
+    public static final String CARET = String.valueOf(CharacterConstants.CARET);
     public static final String QUOTE = String.valueOf(CharacterConstants.QUOTE);
     public static final String DOUBLE_QUOTE = String.valueOf(CharacterConstants.DOUBLE_QUOTE);
     public static final String EMPTY_STRING = ""; //$NON-NLS-1$
