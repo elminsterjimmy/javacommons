@@ -1,8 +1,7 @@
 package com.elminster.common.util.test;
 
+import org.junit.Assert;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 import com.elminster.common.util.BinaryUtil;
 

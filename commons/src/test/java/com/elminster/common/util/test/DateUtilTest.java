@@ -3,8 +3,7 @@ package com.elminster.common.util.test;
 import java.util.Date;
 import java.util.Locale;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.elminster.common.util.DateUtil;

@@ -5,10 +5,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.elminster.common.constants.Constants.StringConstants;
 
@@ -20,6 +20,36 @@ import com.elminster.common.constants.Constants.StringConstants;
  * 
  */
 public abstract class ReflectUtil {
+
+  /**
+   * Maps primitive {@code Class}es to their corresponding wrapper {@code Class}.
+   */
+  private static final Map<Class<?>, Class<?>> primitiveWrapperMap = new HashMap<Class<?>, Class<?>>();
+
+  static {
+    primitiveWrapperMap.put(Boolean.TYPE, Boolean.class);
+    primitiveWrapperMap.put(Byte.TYPE, Byte.class);
+    primitiveWrapperMap.put(Character.TYPE, Character.class);
+    primitiveWrapperMap.put(Short.TYPE, Short.class);
+    primitiveWrapperMap.put(Integer.TYPE, Integer.class);
+    primitiveWrapperMap.put(Long.TYPE, Long.class);
+    primitiveWrapperMap.put(Double.TYPE, Double.class);
+    primitiveWrapperMap.put(Float.TYPE, Float.class);
+    primitiveWrapperMap.put(Void.TYPE, Void.TYPE);
+  }
+
+  /**
+   * Maps wrapper {@code Class}es to their corresponding primitive types.
+   */
+  private static final Map<Class<?>, Class<?>> wrapperPrimitiveMap = new HashMap<Class<?>, Class<?>>();
+  static {
+    for (final Class<?> primitiveClass : primitiveWrapperMap.keySet()) {
+      final Class<?> wrapperClass = primitiveWrapperMap.get(primitiveClass);
+      if (!primitiveClass.equals(wrapperClass)) {
+        wrapperPrimitiveMap.put(wrapperClass, primitiveClass);
+      }
+    }
+  }
 
   /**
    * Get all interfaces the specified class implemented.
@@ -39,8 +69,7 @@ public abstract class ReflectUtil {
   }
 
   /**
-   * Get all fields the specified class declared (include the declared field in
-   * super class).
+   * Get all fields the specified class declared (include the declared field in super class).
    * 
    * @param clazz
    *          the specified class
@@ -57,8 +86,7 @@ public abstract class ReflectUtil {
   }
 
   /**
-   * Get all methods the specified class declared (include the declared methods
-   * in super class).
+   * Get all methods the specified class declared (include the declared methods in super class).
    * 
    * @param clazz
    *          the specified class
@@ -259,7 +287,7 @@ public abstract class ReflectUtil {
     }
     return value;
   }
-
+  
   /**
    * Get the specified declared method by method name
    * 
@@ -272,14 +300,24 @@ public abstract class ReflectUtil {
    * @return the specified declared method
    */
   public static Method getDeclaredMethod(Class<? extends Object> clazz, String methodName, Object... args) {
-    if (null == args) {
-      args = new Object[] {};
-    }
     Class<?>[] classes = new Class<?>[args.length];
     for (int i = 0; i < args.length; i++) {
       classes[i] = args[i].getClass();
     }
     return getDeclaredMethod(clazz, methodName, classes);
+  }
+  
+  /**
+   * Get the specified declared method by method name
+   * 
+   * @param clazz
+   *          the class declared the specified method
+   * @param methodName
+   *          the specified method's name
+   * @return the specified declared method
+   */
+  public static Method getDeclaredMethod(Class<? extends Object> clazz, String methodName) {
+    return getDeclaredMethod(clazz, methodName, new Class<?>[0]);
   }
 
   /**
@@ -294,9 +332,6 @@ public abstract class ReflectUtil {
    * @return the specified declared method
    */
   public static Method getDeclaredMethod(Class<? extends Object> clazz, String methodName, Class<?>... args) {
-    if (null == args) {
-      args = new Class<?>[0];
-    }
     Method[] methods = getAllMethod(clazz);
     for (Method method : methods) {
       if (method.getName().equals(methodName)) {
@@ -359,25 +394,7 @@ public abstract class ReflectUtil {
    * @return the wrapped class
    */
   private static Class<?> getWrappedClass(Class<?> primitive) {
-    Class<?> c = primitive;
-    if (Integer.TYPE == primitive) {
-      c = Integer.class;
-    } else if (Long.TYPE == primitive) {
-      c = Long.class;
-    } else if (Short.TYPE == primitive) {
-      c = Short.class;
-    } else if (Float.TYPE == primitive) {
-      c = Float.class;
-    } else if (Double.TYPE == primitive) {
-      c = Double.class;
-    } else if (Character.TYPE == primitive) {
-      c = Character.class;
-    } else if (Boolean.TYPE == primitive) {
-      c = Boolean.class;
-    } else if (Byte.TYPE == primitive) {
-      c = Byte.class;
-    }
-    return c;
+    return primitiveWrapperMap.get(primitive);
   }
 
   /**
@@ -418,8 +435,7 @@ public abstract class ReflectUtil {
    * Get the method name for a depth in call stack.
    * 
    * @param depth
-   *          depth in the call stack (0 means current method, 1 means call
-   *          method, ...)
+   *          depth in the call stack (0 means current method, 1 means call method, ...)
    * @return method name
    */
   public static String getCallMethodName(int depth) {
@@ -440,7 +456,7 @@ public abstract class ReflectUtil {
    *           on error
    */
   public static Constructor<?> getConstructor(Class<?> clazz) throws NoSuchMethodException, SecurityException {
-    return getConstructor(clazz, null);
+    return getConstructor(clazz, new Class<?>[0]);
   }
 
   /**
@@ -459,7 +475,7 @@ public abstract class ReflectUtil {
   public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... args) throws NoSuchMethodException,
       SecurityException {
     Constructor<?> constructor;
-    if (null == args) {
+    if (0 == args.length) {
       constructor = clazz.getDeclaredConstructor();
     } else {
       constructor = clazz.getDeclaredConstructor(args);
@@ -485,79 +501,5 @@ public abstract class ReflectUtil {
     Constructor<?> constructor = getConstructor(clazz);
     makeAccessible(constructor);
     return constructor.newInstance();
-  }
-
-  /**
-   * Get the generic type from type.
-   * 
-   * @param type
-   *          the type
-   * @return the generic type
-   * @throws ClassNotFoundException
-   *           on error
-   */
-  public static Class<?>[] getGenericType(Type type) throws ClassNotFoundException {
-    Class<?>[] rtn = null;
-    if (type instanceof ParameterizedType) {
-      ParameterizedType pt = (ParameterizedType) type;
-      Type[] actualTypes = pt.getActualTypeArguments();
-      rtn = new Class<?>[actualTypes.length];
-      for (int i = 0; i < actualTypes.length; i++) {
-        Type actualType = actualTypes[i];
-        String[] split = actualType.toString().split(StringConstants.SPACE);
-        String className;
-        if (split.length > 1) {
-          className = split[1];
-        } else {
-          return null;
-        }
-        rtn[i] = Class.forName(className);
-      }
-    }
-    return rtn;
-  }
-
-  /**
-   * Get the generic return type of specified method.
-   * 
-   * @param method
-   *          the method
-   * @return the generic return type
-   * @throws ClassNotFoundException
-   *           on error
-   */
-  public static Class<?>[] getGenericReturnType(Method method) throws ClassNotFoundException {
-    Type type = method.getGenericReturnType();
-    return getGenericType(type);
-  }
-
-  /**
-   * Get the generic parameter type of specified method
-   * 
-   * @param method
-   *          the method
-   * @param parIdx
-   *          the parameter index
-   * @return the generic parameter type
-   * @throws ClassNotFoundException
-   *           on error
-   */
-  public static Class<?>[] getGenericParamType(Method method, int parIdx) throws ClassNotFoundException {
-    Type type = method.getGenericParameterTypes()[parIdx];
-    return getGenericType(type);
-  }
-
-  /**
-   * Get the generic type of specified field.
-   * 
-   * @param field
-   *          the field
-   * @return the generic type
-   * @throws ClassNotFoundException
-   *           on error
-   */
-  public static Class<?>[] getGenericFieldType(Field field) throws ClassNotFoundException {
-    Type type = field.getGenericType();
-    return getGenericType(type);
   }
 }

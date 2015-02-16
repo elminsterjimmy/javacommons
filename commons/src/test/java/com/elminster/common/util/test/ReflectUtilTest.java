@@ -1,7 +1,6 @@
 package com.elminster.common.util.test;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.elminster.common.util.ObjectUtil;
@@ -53,7 +52,7 @@ public class ReflectUtilTest {
         "com.elminster.common.util.test.ReflectUtilTest#testGetCallMethodName",
         ReflectUtil.getCallMethodName(1));
   }
-
+  
   class TestGetFieldClass {
     private Boolean b1 = false;
     private boolean b2 = true;

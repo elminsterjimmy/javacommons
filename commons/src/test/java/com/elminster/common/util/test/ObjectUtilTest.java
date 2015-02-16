@@ -1,7 +1,6 @@
 package com.elminster.common.util.test;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.elminster.common.util.ObjectUtil;
