@@ -487,7 +487,7 @@ public abstract class ReflectUtil {
    * Create new instance of specified class from reflect.
    * 
    * @param clazz
-   *          the class name
+   *          the class
    * @return the new instance
    * @throws SecurityException
    * @throws NoSuchMethodException
@@ -501,5 +501,25 @@ public abstract class ReflectUtil {
     Constructor<?> constructor = getConstructor(clazz);
     makeAccessible(constructor);
     return constructor.newInstance();
+  }
+  
+  /**
+   * Create new instance of specified class from reflect.
+   * 
+   * @param className
+   *          the class name
+   * @return the new instance
+   * @throws SecurityException
+   * @throws NoSuchMethodException
+   * @throws InvocationTargetException
+   * @throws IllegalArgumentException
+   * @throws IllegalAccessException
+   * @throws InstantiationException
+   * @throws ClassNotFoundException 
+   */
+  public static Object newInstanceViaReflect(String className) throws NoSuchMethodException, SecurityException,
+      InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException {
+    Class<?> clazz = Class.forName(className);
+    return newInstanceViaReflect(clazz);
   }
 }
