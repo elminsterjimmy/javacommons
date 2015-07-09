@@ -2,7 +2,9 @@ package com.elminster.common.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 
 import com.elminster.common.constants.Constants.StringConstants;
@@ -490,8 +492,7 @@ public abstract class ObjectUtil {
   }
 
   /**
-   * Convert the given array (which may be a primitive array) to an object
-   * array.
+   * Convert the given array (which may be a primitive array) to an object array.
    * 
    * @param array
    *          the array to convert
@@ -523,19 +524,30 @@ public abstract class ObjectUtil {
     }
     return newArray;
   }
-  
+
   public static Object copyProperties(Object src, Object dest) throws Exception {
     return copyProperties(src, dest, null, null);
+  }
+
+  public static Object copyPropertiesSkipCollection(Object src, Object dest) throws Exception {
+    return copyProperties(src, dest, null, null, false);
   }
   
   public static Object copyProperties(Object src, Object dest, Map<String, String> fieldNameMapping) throws Exception {
     return copyProperties(src, dest, fieldNameMapping, null);
   }
-  
-  public static Object copyProperties(Object src, Object dest, Map<String, String> fieldNameMapping, Map<String, ValueConverter> fieldValueConverter) throws Exception {
+
+  public static <T, K> Object copyProperties(Object src, Object dest, Map<String, String> fieldNameMapping,
+      Map<String, IValueConverter<T, K>> fieldValueConverter) throws Exception {
+    return copyProperties(src, dest, fieldNameMapping, fieldValueConverter, true);
+  }
+
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  public static <T, K> Object copyProperties(Object src, Object dest, Map<String, String> fieldNameMapping,
+      Map<String, IValueConverter<T, K>> fieldValueConverter, boolean copyCollection) throws Exception {
     Class<?> srcClazz = src.getClass();
     Class<?> destClazz = dest.getClass();
-    
+
     Field[] fields = ReflectUtil.getAllField(srcClazz);
     boolean fieldNameMappingAvaliable = CollectionUtil.isNotEmpty(fieldNameMapping);
     boolean fieldValueConverterAvaliable = CollectionUtil.isNotEmpty(fieldValueConverter);
@@ -550,14 +562,27 @@ public abstract class ObjectUtil {
       }
       Field destField = ReflectUtil.getDeclaredField(destClazz, destFieldName);
       if (null != destField) {
+        if (0 != (destField.getModifiers() & Modifier.FINAL)) {
+          // don't copy final field
+          continue;
+        }
+
+        if (!copyCollection
+            && (Collection.class.isAssignableFrom(destField.getDeclaringClass()) || Collection.class
+                .isAssignableFrom(field.getDeclaringClass()))) {
+          continue;
+        }
         Object value = ReflectUtil.getFieldValue(src, field);
         if (fieldValueConverterAvaliable) {
-          ValueConverter converter = fieldValueConverter.get(srcFieldName);
+          IValueConverter converter = fieldValueConverter.get(srcFieldName);
           if (null != converter) {
             value = converter.convert(value);
           }
         }
-        ReflectUtil.setField(dest, destField, value);
+
+        if (null != value) {
+          ReflectUtil.setField(dest, destField, value);
+        }
       }
     }
     return dest;

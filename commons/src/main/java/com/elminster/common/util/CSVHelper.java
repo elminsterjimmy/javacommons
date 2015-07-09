@@ -249,10 +249,8 @@ final public class CSVHelper {
       }
     }
 
-    if (item.indexOf(StringConstants.LF) < 0
-        && item.indexOf(StringConstants.CR) < 0
-        && item.indexOf(StringConstants.DOUBLE_QUOTE) < 0
-        && item.indexOf(StringConstants.COMMA) < 0 && !enquote) {
+    if (item.indexOf(StringConstants.LF) < 0 && item.indexOf(StringConstants.CR) < 0
+        && item.indexOf(StringConstants.DOUBLE_QUOTE) < 0 && item.indexOf(StringConstants.COMMA) < 0 && !enquote) {
       return item;
     }
 
@@ -260,8 +258,7 @@ final public class CSVHelper {
     sb.append(StringConstants.DOUBLE_QUOTE);
     for (int ind = 0; ind < item.length(); ind++) {
       char ch = item.charAt(ind);
-      if (CharacterConstants.DOUBLE_QUOTE == ch
-          || CharacterConstants.COMMA == ch) {
+      if (CharacterConstants.DOUBLE_QUOTE == ch || CharacterConstants.COMMA == ch) {
         sb.append(CharacterConstants.DOUBLE_QUOTE);
       }
       sb.append(ch);
@@ -274,16 +271,14 @@ final public class CSVHelper {
     if (item.length() == 0) {
       return item;
     }
-    if (item.indexOf(StringConstants.DOUBLE_QUOTE) < 0
-        && item.indexOf(StringConstants.COMMA) < 0) {
+    if (item.indexOf(StringConstants.DOUBLE_QUOTE) < 0 && item.indexOf(StringConstants.COMMA) < 0) {
       return item;
     }
 
     StringBuffer sb = new StringBuffer();
     for (int ind = 0; ind < item.length(); ind++) {
       char ch = item.charAt(ind);
-      if ((CharacterConstants.DOUBLE_QUOTE != ch)
-          && (CharacterConstants.COMMA != ch)) {
+      if ((CharacterConstants.DOUBLE_QUOTE != ch) && (CharacterConstants.COMMA != ch)) {
         sb.append(ch);
       }
     }
@@ -301,11 +296,8 @@ final public class CSVHelper {
    * @throws Exception
    *           if write error
    */
-  @SuppressWarnings("unchecked")
   public static void write(String file, String[] csvLines) throws Exception {
-    FileUtil.writeLines2file(
-        (List<String>) CollectionUtil.array2List(csvLines), file, true,
-        ENCODING);
+    FileUtil.writeLines2file(CollectionUtil.array2List(csvLines), file, true, ENCODING);
   }
 
   /**
@@ -381,8 +373,7 @@ final public class CSVHelper {
             // do nothing
           } else {
             // unclosed
-            if (length == i + 1
-                || CharacterConstants.COMMA == str.charAt(i + 1)) {
+            if (length == i + 1 || CharacterConstants.COMMA == str.charAt(i + 1)) {
               // last character or following a ","
               // reset the close flag
               closed = true;

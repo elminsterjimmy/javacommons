@@ -498,9 +498,13 @@ public abstract class ReflectUtil {
    */
   public static Object newInstanceViaReflect(Class<?> clazz) throws NoSuchMethodException, SecurityException,
       InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-    Constructor<?> constructor = getConstructor(clazz);
-    makeAccessible(constructor);
-    return constructor.newInstance();
+    try {
+      Constructor<?> constructor = getConstructor(clazz);
+      makeAccessible(constructor);
+      return constructor.newInstance();
+    } catch (NoSuchMethodException nsme) {
+      return clazz.newInstance();
+    }
   }
   
   /**

@@ -66,26 +66,24 @@ public abstract class CollectionUtil {
   }
 
   /**
-   * Convert the specified array to a list which contains all elements in the
-   * array
+   * Convert the specified array to a list which contains all elements in the array
    * 
    * @param array
    *          the specified array
    * @return a list which contains all elements in the array
    */
-  public static List<?> array2List(Object array) {
-    return Arrays.asList(ObjectUtil.toObjectArray(array));
+  public static <T> List<T> array2List(T[] array) {
+    return Arrays.asList(array);
   }
 
   /**
-   * Convert the specified collection to an array which contains all elements in
-   * the collection
+   * Convert the specified collection to an array which contains all elements in the collection.
    * 
    * @param collection
    *          the specified collection
    * @return an array which contains all elements in the collection
    */
-  public static Object collection2Array(Collection<?> collection) {
+  public static Object[] collection2Array(Collection<?> collection) {
     if (null == collection) {
       return new Object[0];
     }
@@ -105,26 +103,24 @@ public abstract class CollectionUtil {
   }
 
   /**
-   * Merge an array to specified collection
+   * Merge an array to specified collection.
    * 
    * @param collection
    *          specified collection
    * @param array
    *          an array
    */
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public static void mergeArray(Collection collection, Object array) {
+  public static <T> void mergeArray(Collection<T> collection, T[] array) {
     if (null == collection) {
       throw new IllegalArgumentException(Messages.getString(Message.COLLECTION_IS_NULL));
     }
-    Object[] arr = ObjectUtil.toObjectArray(array);
-    for (Object elem : arr) {
+    for (T elem : array) {
       collection.add(elem);
     }
   }
 
   /**
-   * Deep clone a map.
+   * Deep clone a map, dependent on Cloneable interface.
    * 
    * @param map
    *          map to clone
@@ -142,13 +138,11 @@ public abstract class CollectionUtil {
           Entry entry = it.next();
           Object key = entry.getKey();
           Object value = entry.getValue();
+          Object clone = value;
           if (value instanceof Cloneable) {
-            Object clone;
             // try to call clone()
             try {
               clone = ReflectUtil.invoke(value, "clone", new Object[] {}); // $NONNLS1$
-              // if successful
-              value = clone;
             } catch (IllegalArgumentException e) {
               // ignore
             } catch (NoSuchMethodException e) {
@@ -158,8 +152,12 @@ public abstract class CollectionUtil {
             } catch (Exception e) {
               // ignore
             }
+          } else if (value instanceof Collection) {
+            clone = cloneCollection((Collection) value);
+          } else if (value instanceof Map) {
+            clone = cloneMap((Map) value);
           }
-          cloned.put(key, value);
+          cloned.put(key, clone);
         }
       } catch (InstantiationException e) {
         throw new RuntimeException(e);
@@ -171,7 +169,7 @@ public abstract class CollectionUtil {
   }
 
   /**
-   * Deep clone a collection.
+   * Deep clone a collection, dependent on Cloneable interface.
    * 
    * @param map
    *          collection to clone
@@ -202,6 +200,10 @@ public abstract class CollectionUtil {
             } catch (Exception e) {
               // ignore
             }
+          } else if (entry instanceof Collection) {
+            cloned.add(CollectionUtil.cloneCollection((Collection) entry));
+          } else if (entry instanceof Map) {
+            cloned.add(CollectionUtil.cloneMap((Map) entry));
           }
           cloned.add(entry);
         }
@@ -212,5 +214,106 @@ public abstract class CollectionUtil {
       }
     }
     return cloned;
+  }
+
+  /**
+   * Get the map value with default null replace.
+   * 
+   * @param map
+   *          the map to get value
+   * @param key
+   *          the key
+   * @param defaultValue
+   *          the null place value
+   * @return the map value with the specified key or the default value if null
+   */
+  public static <T, K> K mapGetWithNullPlace(Map<T, K> map, T key, K defaultValue) {
+    K value = map.get(key);
+    if (null == value) {
+      value = defaultValue;
+    }
+    return value;
+  }
+
+  /**
+   * Join the collection with the conjunction.
+   * 
+   * @param collection
+   *          the collection
+   * @param conjunction
+   *          the conjunction
+   * @return the joined String
+   */
+  public static <T> String join(Iterable<T> collection, String conjunction) {
+    StringBuilder sb = new StringBuilder();
+    boolean isFirst = true;
+    for (T item : collection) {
+      if (isFirst) {
+        isFirst = false;
+      } else {
+        sb.append(conjunction);
+      }
+      sb.append(item);
+    }
+    return sb.toString();
+  }
+
+  /**
+   * Join the array with the conjunction.
+   * 
+   * @param array
+   *          the array
+   * @param conjunction
+   *          the conjunction
+   * @return the joined String
+   */
+  public static <T> String join(T[] array, String conjunction) {
+    StringBuilder sb = new StringBuilder();
+    boolean isFirst = true;
+    for (T item : array) {
+      if (isFirst) {
+        isFirst = false;
+      } else {
+        sb.append(conjunction);
+      }
+      sb.append(item);
+    }
+    return sb.toString();
+  }
+
+  /**
+   * Get the sub collection.
+   * @param collection the origin collection
+   * @param start the start index (included)
+   * @param end the end index (excluded)
+   * @return the sub collection
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> Collection<T> subCollection(Collection<T> collection, int start, int end) {
+    if (end >= start) {
+      try {
+        Collection<T> cloned = (Collection<T>) collection.getClass().newInstance();
+        int i = 0;
+        Iterator<T> it = collection.iterator();
+        while (it.hasNext()) {
+          T next = it.next();
+          if (i < start) {
+            continue;
+          }
+          if (i >= end) {
+            break;
+          }
+          cloned.add(next);
+          i++;
+        }
+        return cloned;
+      } catch (InstantiationException e) {
+        throw new RuntimeException(e);
+      } catch (IllegalAccessException e) {
+        throw new RuntimeException(e);
+      }
+    } else {
+      throw new IllegalArgumentException(Messages.getString(Message.START_SHOULD_NOT_GREAT_THAN_END));
+    }
   }
 }

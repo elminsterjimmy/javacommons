@@ -133,7 +133,7 @@ public abstract class FileUtil {
   }
 
   /**
-   * Get random String.
+   * Get random String only contains [0-9][a-z][A-Z].
    * 
    * @param length
    *          the String length

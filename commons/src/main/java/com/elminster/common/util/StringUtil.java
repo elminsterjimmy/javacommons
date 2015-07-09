@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.elminster.common.constants.Constants.CharacterConstants;
+import com.elminster.common.constants.Constants.JavaSystemProperty;
 import com.elminster.common.constants.Constants.StringConstants;
 
 /**
@@ -40,6 +41,12 @@ public abstract class StringUtil {
    * </p>
    */
   private static final int PAD_LIMIT = 8192;
+
+  /** the default pad <code> </code>*/
+  private static final char DEFAULT_PAD_CHAR = CharacterConstants.SPACE;
+  
+  /** the default pad <code> </code>*/
+  private static final String DEFAULT_PAD_STRING = StringConstants.SPACE;
 
   /**
    * <p>
@@ -686,7 +693,7 @@ public abstract class StringUtil {
    * @return left padded String or original String if no padding is necessary, <code>null</code> if null String input
    */
   public static String leftPad(String str, int size) {
-    return leftPad(str, size, ' ');
+    return leftPad(str, size, DEFAULT_PAD_CHAR);
   }
 
   /**
@@ -764,7 +771,7 @@ public abstract class StringUtil {
       return null;
     }
     if (isEmpty(padStr)) {
-      padStr = " ";
+      padStr = DEFAULT_PAD_STRING;
     }
     int padLen = padStr.length();
     int strLen = str.length();
@@ -815,7 +822,7 @@ public abstract class StringUtil {
    * @return right padded String or original String if no padding is necessary, <code>null</code> if null String input
    */
   public static String rightPad(String str, int size) {
-    return rightPad(str, size, ' ');
+    return rightPad(str, size, DEFAULT_PAD_CHAR);
   }
 
   /**
@@ -893,7 +900,7 @@ public abstract class StringUtil {
       return null;
     }
     if (isEmpty(padStr)) {
-      padStr = " ";
+      padStr = DEFAULT_PAD_STRING;
     }
     int padLen = padStr.length();
     int strLen = str.length();
@@ -1104,6 +1111,6 @@ public abstract class StringUtil {
    * @return the new line in system
    */
   public static String newline() {
-    return System.getProperty("line.separator");
+    return System.getProperty(JavaSystemProperty.LINE_SEPARATOR);
   }
 }

@@ -139,7 +139,22 @@ public abstract class BinaryUtil {
     }
     return sb.toString();
   }
-
+  
+  /**
+   * Return a String representation of the specified byte as binary
+   * 
+   * @param val
+   *          the specified byte
+   * @return string representation of the specified byte as binary
+   */
+  public static String getBinary(final byte val) {
+    StringBuilder sb = new StringBuilder(Integer.SIZE);
+    for (int i = Byte.SIZE - 1; i >= 0; i--) {
+      sb.append((val >> i) & 0x01);
+    }
+    return sb.toString();
+  }
+  
   /**
    * Return a String representation of the specified integer as binary
    * 
