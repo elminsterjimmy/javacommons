@@ -27,7 +27,6 @@ import com.elminster.common.constants.Constants.StringConstants;
 
 import static com.elminster.common.constants.Constants.StringConstants.EMPTY_STRING;
 import static com.elminster.common.constants.Constants.StringConstants.TAB;
-import static com.elminster.common.constants.Constants.StringConstants.LF;
 import static com.elminster.common.constants.Constants.StringConstants.UNDER_LINE;
 import com.elminster.common.util.Messages.Message;
 
@@ -836,11 +835,11 @@ public abstract class FileUtil {
    *           on error
    */
   public static List<String> readFileByLine(String fileName, String charset) throws IOException {
-    return readFileByLine(fileName, true, charset);
+    return readFileByLine(fileName, false, charset);
   }
-
+  
   /**
-   * Read a specified file to a list by line (ignore the blank line).
+   * Read a specified file to a String (ignore the blank line).
    * 
    * @param fileName
    *          a specified file
@@ -848,19 +847,33 @@ public abstract class FileUtil {
    *           on error
    */
   public static String readFile2String(String fileName) throws IOException {
-    List<String> list = readFileByLine(fileName, DEFAULT_CHARSET);
+    return readFile2String(fileName, true);
+  }
+
+  /**
+   * Read a specified file to a String.
+   * 
+   * @param fileName
+   *          a specified file
+   * @param skipBlankLine
+   *          skip blank line?
+   * @throws IOException
+   *           on error
+   */
+  public static String readFile2String(String fileName, boolean skipBlankLine) throws IOException {
+    List<String> list = readFileByLine(fileName, skipBlankLine, DEFAULT_CHARSET);
     StringBuilder sb = new StringBuilder();
     if (CollectionUtil.isNotEmpty(list)) {
       for (String line : list) {
         sb.append(line);
-        sb.append(LF);
+        sb.append(StringUtil.newline());
       }
     }
     return sb.toString();
   }
 
   /**
-   * Read a specified file to a list by line (ignore the blank line).
+   * Read a specified file to a String.
    * 
    * @param fileName
    *          a specified file
@@ -875,14 +888,14 @@ public abstract class FileUtil {
     if (CollectionUtil.isNotEmpty(list)) {
       for (String line : list) {
         sb.append(line);
-        sb.append(LF);
+        sb.append(StringUtil.newline());
       }
     }
     return sb.toString();
   }
 
   /**
-   * Read a specified file to a list by line (ignore the blank line).
+   * Read a specified file to a String (ignore the blank line).
    * 
    * @param fileName
    *          a specified file

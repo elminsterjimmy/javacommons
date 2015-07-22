@@ -667,6 +667,45 @@ public abstract class StringUtil {
     return "1".equals(string) || Boolean.TRUE.toString().equalsIgnoreCase(string) || "yes".equalsIgnoreCase(string)
         || "on".equalsIgnoreCase(string);
   }
+  
+  /**
+   * Replace last matched string (No Regex).
+   * 
+   * @param string
+   *          the origin String
+   * @param toReplace
+   *          the String to replace
+   * @param replacement
+   *          the replacement
+   * @return the replaced String
+   */
+  public static String replaceLast(String string, String toReplace, String replacement) {
+    int pos = string.lastIndexOf(toReplace);
+    if (pos > -1) {
+      return new StringBuilder(string.substring(0, pos)).append(replacement)
+          .append(string.substring(pos + toReplace.length(), string.length())).toString();
+    } else {
+      return string;
+    }
+  }
+  
+  /**
+   * Replace string by the indexes (No Regex).
+   * 
+   * @param string
+   *          the origin String
+   * @param replaceStart
+   *          where start to replace
+   * @param replaceEnd
+   *          where end to replace
+   * @param replacement
+   *          the replacement
+   * @return the replaced String
+   */
+  public static String replaceByIndexes(String string, int replaceStart, int replaceEnd, String replacement) {
+    return new StringBuilder(string.substring(0, replaceStart)).append(replacement)
+          .append(string.substring(replaceEnd, string.length())).toString();
+  }
 
   /**
    * <p>
