@@ -76,40 +76,68 @@ public interface Constants {
    * @version 1.0
    */
   public interface CharacterConstants {
+    /** <code>{</code> */
     public static final char LEFT_BRACES = '{'; 
+    /** <code>}</code> */
     public static final char RIGHT_BRACES = '}'; 
+    /** <code>[</code> */
     public static final char LEFT_SQUARE_BRACKETS = '['; 
+    /** <code>]</code> */
     public static final char RIGHT_SQUARE_BRACKETS = ']'; 
+    /** <code>(</code> */
     public static final char LEFT_PARENTHESES = '('; 
+    /** <code>)</code> */
     public static final char RIGHT_PARENTHESES = ')'; 
+    /** <code>_</code> */
     public static final char UNDER_LINE = '_'; 
+    /** <code>\n</code> */
     public static final char LF = '\n'; 
+    /** <code>\r</code> */
     public static final char CR = '\r'; 
-    public static final char TAB = '\t';
-    public static final char BACKSPACE = '\b';
+    /** <code>\t</code> */
+    public static final char TAB = '\t'; 
+    /** <code>&</code> */
     public static final char AND = '&'; 
+    /** <code>?</code> */
     public static final char QUESTION = '?';
-    public static final char EXCLAMATION = '!';
-    public static final char TILDE = '~';
-    public static final char GRAVE_ACCENT = '`';
+    /** <code>=</code> */
     public static final char EQUAL = '=';
+    /** <code>*</code> */
     public static final char STAR = '*'; 
+    /** <code> </code> */
     public static final char SPACE = ' '; 
+    /** <code>-</code> */
     public static final char HYPHEN = '-'; 
-    public static final char PLUS = '+'; 
+    /** <code>,</code> */
     public static final char COMMA = ','; 
+    /** <code>.</code> */
     public static final char DOT = '.'; 
+    /** <code>:</code> */
     public static final char COLON = ':'; 
+    /** <code>+</code> */
+    public static final char PLUS = '+'; 
+    /** <code>|</code> */
     public static final char VERTICAL_BAR = '|'; 
+    /** <code>#</code> */
     public static final char SHARP = '#';
+    /** <code>;</code> */
     public static final char SEMICOLON = ';'; 
+    /** <code>/</code> */
     public static final char SLASH = '/'; 
+    /** <code>\</code> */
     public static final char BACKSLASH = '\\'; 
+    /** <code>@</code> */
     public static final char AT = '@';
+    /** <code>$</code> */
     public static final char DOLLAR = '$';
-    public static final char CARET = '^';
+    /** <code>%</code> */
+    public static final char PERCENT = '%';
+    /** <code>'</code> */
     public static final char QUOTE = '\'';
+    /** <code>"</code> */
     public static final char DOUBLE_QUOTE = '"';
+    /** <code>^</code> */
+    public static final char CARET = '^';
   }
   
   /**
@@ -119,41 +147,71 @@ public interface Constants {
    * @version 1.0
    */
   public interface StringConstants {
+    /** <code>{</code> */
     public static final String LEFT_BRACES = String.valueOf(CharacterConstants.LEFT_BRACES);
+    /** <code>}</code> */
     public static final String RIGHT_BRACES = String.valueOf(CharacterConstants.RIGHT_BRACES);
+    /** <code>[</code> */
     public static final String LEFT_SQUARE_BRACKETS = String.valueOf(CharacterConstants.LEFT_SQUARE_BRACKETS);
+    /** <code>]</code> */
     public static final String RIGHT_SQUARE_BRACKETS = String.valueOf(CharacterConstants.RIGHT_SQUARE_BRACKETS);
+    /** <code>(</code> */
     public static final String LEFT_PARENTHESES = String.valueOf(CharacterConstants.LEFT_PARENTHESES);
+    /** <code>)</code> */
     public static final String RIGHT_PARENTHESES = String.valueOf(CharacterConstants.RIGHT_PARENTHESES);
+    /** <code>_</code> */
     public static final String UNDER_LINE = String.valueOf(CharacterConstants.UNDER_LINE);
+    /** <code>\n</code> */
     public static final String LF = String.valueOf(CharacterConstants.LF);
+    /** <code>\r</code> */
     public static final String CR = String.valueOf(CharacterConstants.CR);
+    /** <code>\t</code> */
     public static final String TAB = String.valueOf(CharacterConstants.TAB);
-    public static final String BACKSPACE = String.valueOf(CharacterConstants.BACKSPACE);
+    /** <code>&</code> */
     public static final String AND = String.valueOf(CharacterConstants.AND);
+    /** <code>?</code> */
     public static final String QUESTION = String.valueOf(CharacterConstants.QUESTION);
-    public static final String EXCLAMATION = String.valueOf(CharacterConstants.EXCLAMATION);
-    public static final String TILDE = String.valueOf(CharacterConstants.TILDE);
-    public static final String GRAVE_ACCENT = String.valueOf(CharacterConstants.GRAVE_ACCENT);
+    /** <code>=</code> */
     public static final String EQUAL = String.valueOf(CharacterConstants.EQUAL);
+    /** <code>*</code> */
     public static final String STAR = String.valueOf(CharacterConstants.STAR);
+    /** <code> </code> */
     public static final String SPACE = String.valueOf(CharacterConstants.SPACE);
+    /** <code>-</code> */
     public static final String HYPHEN = String.valueOf(CharacterConstants.HYPHEN);
-    public static final String PLUS = String.valueOf(CharacterConstants.PLUS);
+    /** <code>,</code> */
     public static final String COMMA = String.valueOf(CharacterConstants.COMMA);
+    /** <code>.</code> */
     public static final String DOT = String.valueOf(CharacterConstants.DOT);
+    /** <code>:</code> */
     public static final String COLON = String.valueOf(CharacterConstants.COLON);
+    /** <code>+</code> */
+    public static final String PLUS = String.valueOf(CharacterConstants.PLUS);
+    /** <code>|</code> */
     public static final String VERTICAL_BAR = String.valueOf(CharacterConstants.VERTICAL_BAR);
+    /** <code>#</code> */
     public static final String SHARP = String.valueOf(CharacterConstants.SHARP);
+    /** <code>;</code> */
     public static final String SEMICOLON = String.valueOf(CharacterConstants.SEMICOLON);
+    /** <code>/</code> */
     public static final String SLASH = String.valueOf(CharacterConstants.SLASH);
+    /** <code>\</code> */
     public static final String BACKSLASH = String.valueOf(CharacterConstants.BACKSLASH);
+    /** <code>@</code> */
     public static final String AT = String.valueOf(CharacterConstants.AT);
+    /** <code>$</code> */
     public static final String DOLLAR = String.valueOf(CharacterConstants.DOLLAR);
-    public static final String CARET = String.valueOf(CharacterConstants.CARET);
+    /** <code>%</code> */
+    public static final String PERCENT = String.valueOf(CharacterConstants.PERCENT);
+    /** <code>'</code> */
     public static final String QUOTE = String.valueOf(CharacterConstants.QUOTE);
+    /** <code>"</code> */
     public static final String DOUBLE_QUOTE = String.valueOf(CharacterConstants.DOUBLE_QUOTE);
+    /** <code>^</code> */
+    public static final String CARET = String.valueOf(CharacterConstants.CARET);
+    /** <code></code> */
     public static final String EMPTY_STRING = ""; //$NON-NLS-1$
+    /** <code>null</code> */
     public static final String NULL_STRING = "null"; //$NON-NLS-1$
   }
 }

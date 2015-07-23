@@ -1152,4 +1152,34 @@ public abstract class StringUtil {
   public static String newline() {
     return System.getProperty(JavaSystemProperty.LINE_SEPARATOR);
   }
+  
+  /**
+   * Remove all newlines and space from leading or tailing in the String.
+   * @param str the String
+   * @return chompTrimed String
+   */
+  public static String chompTrim(String str) {
+    String rtn = str;
+    if (null != rtn) {
+      int i = 0;
+      int j = str.length() - 1;
+      while (i < j) {
+        char head = rtn.charAt(i);
+        char tail = rtn.charAt(j);
+        if (CharacterConstants.SPACE == head || CharacterConstants.LF == head
+            || CharacterConstants.CR == head || CharacterConstants.TAB == head) {
+          i++;
+        } else {
+          if (CharacterConstants.SPACE == tail || CharacterConstants.LF == tail
+              || CharacterConstants.CR == tail || CharacterConstants.TAB == tail) {
+            j--;
+          } else {
+            break;
+          }
+        }
+      }
+      rtn = rtn.substring(i, j + 1);
+    }
+    return rtn;
+  }
 }
