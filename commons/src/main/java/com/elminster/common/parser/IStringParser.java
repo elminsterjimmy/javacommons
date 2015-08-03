@@ -7,6 +7,6 @@ package com.elminster.common.parser;
  * @version 1.0
  * @param <T> the parsed type
  */
-public interface IStringParser<T> extends IParser<T, String> {
+public interface IStringParser<T> extends IParser<String, T> {
 
 }

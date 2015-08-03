@@ -26,6 +26,8 @@ abstract public class DateUtil {
   public static final String SIMPLE_DATE_FORMAT = "yyyyMMdd"; //$NON-NLS-1$
   /** the default time format <code>HH:mm:ss</code>. */
   public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss"; //$NON-NLS-1$
+  /** the ISO 8601 date format <code>yyyy-MM-dd'T'hh:mm:ssX</code>. */
+  public static final String ISO8601_FORMAT = "yyyy-MM-dd'T'hh:mm:ssX"; //$NON-NLS-1$
   /** million second. */
   public static final long MILLION_SECOND = TimeUnit.MILLION_SECOND;
   /** second. */

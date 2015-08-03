@@ -442,56 +442,6 @@ public abstract class ObjectUtil {
   }
 
   /**
-   * Is array empty?
-   * 
-   * @param array
-   *          the array
-   * @return is empty?
-   */
-  public static boolean isArrayEmpty(Object[] array) {
-    return null == array || 0 == array.length;
-  }
-
-  /**
-   * Is array not empty?
-   * 
-   * @param array
-   *          the array
-   * @return is not empty?
-   */
-  public static boolean isArrayNotEmpty(Object[] array) {
-    return !isArrayEmpty(array);
-  }
-
-  /**
-   * Join specified arrays to a new array
-   * 
-   * @param o1
-   *          the fist array to join
-   * @param o2
-   *          the second array to join
-   * @return a new array contains all elements in specified arrays
-   */
-  public static Object[] joinArray(Object[] o1, Object[] o2) {
-    if (isArrayEmpty(o1)) {
-      return o2;
-    }
-    if (isArrayEmpty(o2)) {
-      return o1;
-    }
-    Class<?> type1 = o1[0].getClass();
-    Class<?> type2 = o2[0].getClass();
-    if (!type1.equals(type2)) {
-      throw new IllegalArgumentException(Messages.getString(Message.ARRAY_TYPE_UNMATCH, new Object[] {
-          type1.toString(), type2.toString() }));
-    }
-    Object[] result = (Object[]) Array.newInstance(type1, o1.length + o2.length);
-    System.arraycopy(o1, 0, result, 0, o1.length);
-    System.arraycopy(o2, 0, result, o1.length, o2.length);
-    return result;
-  }
-
-  /**
    * Convert the given array (which may be a primitive array) to an object array.
    * 
    * @param array

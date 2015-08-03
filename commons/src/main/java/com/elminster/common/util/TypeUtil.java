@@ -169,10 +169,10 @@ public class TypeUtil {
     if (null != genericInterfaces) {
       for (Type genericInterface : genericInterfaces) {
         ClassTypeDef[] ifgc = getClassGenericDef(genericInterface);
-        interfaceGenericClass = (ClassTypeDef[]) ObjectUtil.joinArray(interfaceGenericClass, ifgc);
+        interfaceGenericClass = (ClassTypeDef[]) ArrayUtil.joinArray(interfaceGenericClass, ifgc);
       }
     }
-    ClassTypeDef[] classTypeClass = (ClassTypeDef[]) ObjectUtil
+    ClassTypeDef[] classTypeClass = (ClassTypeDef[]) ArrayUtil
         .joinArray(superClassGenericClass, interfaceGenericClass);
     classCache.put(clazz, classTypeClass);
     return classTypeClass;

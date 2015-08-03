@@ -14,14 +14,6 @@ public class ObjectUtilTest {
   }
 
   @Test
-  public void testJoinArray() {
-    String[] s1 = { "1", "2", "3" };
-    String[] s2 = { "4", "5", "6" };
-    String[] s3 = { "1", "2", "3", "4", "5", "6" };
-    Assert.assertTrue(ObjectUtil.isEqual(ObjectUtil.joinArray(s1, s2), s3));
-  }
-
-  @Test
   public void testToString() {
     String s = "abc";
     System.out.print(ObjectUtil.buildToStringByReflect(s));

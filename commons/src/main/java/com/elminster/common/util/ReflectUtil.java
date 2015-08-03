@@ -393,7 +393,7 @@ public abstract class ReflectUtil {
    *          the primitive class
    * @return the wrapped class
    */
-  private static Class<?> getWrappedClass(Class<?> primitive) {
+  public static Class<?> getWrappedClass(Class<?> primitive) {
     return primitiveWrapperMap.get(primitive);
   }
 
