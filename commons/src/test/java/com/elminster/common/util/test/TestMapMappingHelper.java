@@ -23,9 +23,9 @@ public class TestMapMappingHelper {
     map.put("shortKey", st);
     map.put("floatKey", 1.5f);
     map.put("doubleKey", 15.4d);
-    Test1 test1 = new Test1();
+    Class1 test1 = new Class1();
     MapMappingHelper.mappingMapToObject(map, test1);
-    Test1 expected = new Test1();
+    Class1 expected = new Class1();
     expected.setBoolKey(true);
     expected.setByteKey(b);
     expected.setDoubleKey(15.4d);
@@ -50,9 +50,9 @@ public class TestMapMappingHelper {
     map.put("shortKey", 15);
     map.put("floatKey", 1.5);
     map.put("doubleKey", 15.4);
-    Test1 test1 = new Test1();
+    Class1 test1 = new Class1();
     MapMappingHelper.mappingMapToObject(map, test1);
-    Test1 expected = new Test1();
+    Class1 expected = new Class1();
     expected.setBoolKey(true);
     expected.setByteKey(b);
     expected.setDoubleKey(15.4d);
@@ -79,10 +79,10 @@ public class TestMapMappingHelper {
     sbMap.put("doubleKey", 15.4d);
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("test1", sbMap);
-    Test2 t2 = new Test2();
+    Class2 t2 = new Class2();
     MapMappingHelper.mappingMapToObject(map, t2);
-    Test2 expected = new Test2();
-    Test1 t1 = new Test1();
+    Class2 expected = new Class2();
+    Class1 t1 = new Class1();
     t1.setBoolKey(true);
     t1.setByteKey(b);
     t1.setDoubleKey(15.4d);
@@ -100,7 +100,7 @@ public class TestMapMappingHelper {
     Map<String, Object> map = new HashMap<String, Object>();
     byte b = 5;
     short st = 15;
-    Test1 t1 = new Test1();
+    Class1 t1 = new Class1();
     t1.setBoolKey(true);
     t1.setByteKey(b);
     t1.setDoubleKey(15.4d);
@@ -110,9 +110,9 @@ public class TestMapMappingHelper {
     t1.setShortKey(st);
     t1.setStrKey("string");
     map.put("test1", t1);
-    Test2 t2 = new Test2();
+    Class2 t2 = new Class2();
     MapMappingHelper.mappingMapToObject(map, t2);
-    Test2 expected = new Test2();
+    Class2 expected = new Class2();
     expected.setTest1(t1);
     Assert.assertEquals(expected, t2);
   }

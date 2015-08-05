@@ -942,6 +942,7 @@ public abstract class FileUtil {
    *           on error
    */
   public static void write2file(byte[] bytes, String fileName) throws IOException {
+    createFolder(fileName);
     OutputStream os = null;
     try {
       os = new FileOutputStream(fileName);
@@ -1123,6 +1124,7 @@ public abstract class FileUtil {
     if (null == lines) {
       return;
     }
+    createFolder(fileName);
     OutputStream os = null;
     OutputStreamWriter writer = null;
     try {

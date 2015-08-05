@@ -1,6 +1,6 @@
 package com.elminster.common.util.test;
 
-public class Test1 {
+public class Class1 {
   private String strKey;
   private int intKey;
   private boolean boolKey;
@@ -9,7 +9,7 @@ public class Test1 {
   private short shortKey;
   private float floatKey;
   private double doubleKey;
-  public Test1() {
+  public Class1() {
     
   }
   /**
@@ -138,7 +138,7 @@ public class Test1 {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Test1 other = (Test1) obj;
+    Class1 other = (Class1) obj;
     if (boolKey != other.boolKey)
       return false;
     if (byteKey != other.byteKey)

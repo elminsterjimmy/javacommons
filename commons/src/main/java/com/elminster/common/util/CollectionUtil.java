@@ -114,8 +114,10 @@ public abstract class CollectionUtil {
     if (null == collection) {
       throw new IllegalArgumentException(Messages.getString(Message.COLLECTION_IS_NULL));
     }
-    for (T elem : array) {
-      collection.add(elem);
+    if (null != array) {
+      for (T elem : array) {
+        collection.add(elem);
+      }
     }
   }
 

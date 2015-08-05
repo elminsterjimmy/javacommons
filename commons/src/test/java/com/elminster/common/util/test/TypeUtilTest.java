@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.elminster.common.util.ReflectUtil;
@@ -52,6 +53,7 @@ public class TypeUtilTest {
     Assert.assertTrue(String.class == TypeClassLS.get(1));
   }
   
+  @Ignore
   @Test
   public void testGetMethodReturnTypeClass() {
     Class<?> clazz = CT3.class;
@@ -69,6 +71,7 @@ public class TypeUtilTest {
     Assert.assertTrue(Short.class == TypeUtil.INSTANCE.getMethodReturnTypeClass(clazz, methodCT2).get(1));
   }
   
+  @Ignore
   @Test
   public void testgetMethodParameterTypeClass() {
     Class<?> clazz = CT3.class;

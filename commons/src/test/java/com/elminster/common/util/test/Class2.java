@@ -1,18 +1,18 @@
 package com.elminster.common.util.test;
 
-public class Test2 {
-  private Test1 test1;
+public class Class2 {
+  private Class1 test1;
 
   /**
    * @return the test1
    */
-  public Test1 getTest1() {
+  public Class1 getTest1() {
     return test1;
   }
   /**
    * @param test1 the test1 to set
    */
-  public void setTest1(Test1 test1) {
+  public void setTest1(Class1 test1) {
     this.test1 = test1;
   }
   /* (non-Javadoc)
@@ -36,7 +36,7 @@ public class Test2 {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Test2 other = (Test2) obj;
+    Class2 other = (Class2) obj;
     if (test1 == null) {
       if (other.test1 != null)
         return false;
