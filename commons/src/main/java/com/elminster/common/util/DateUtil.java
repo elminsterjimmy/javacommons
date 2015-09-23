@@ -38,6 +38,8 @@ abstract public class DateUtil {
   public static final long HOUR = TimeUnit.HOUR_IN_MS;
   /** day. */
   public static final long DAY = TimeUnit.DAY_IN_MS;
+  /** week. */
+  public static final long WEEK = TimeUnit.WEEK_IN_MS;
 
   /**
    * Get date via specified year, month, date, hours, minutes and second as

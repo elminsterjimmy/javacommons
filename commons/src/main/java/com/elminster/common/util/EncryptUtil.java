@@ -10,9 +10,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
-
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  * Encrypt Utilities
@@ -21,7 +19,6 @@ import sun.misc.BASE64Encoder;
  * @version 1.0
  * 
  */
-@SuppressWarnings({ "restriction" })
 public class EncryptUtil {
 
   /** MD5. */
@@ -40,7 +37,7 @@ public class EncryptUtil {
    * @throws Exception on error
    */
   public static String encryptBASE64(byte[] data) throws Exception {
-    return (new BASE64Encoder()).encodeBuffer(data);
+    return DatatypeConverter.printBase64Binary(data);
   }
 
   /**
@@ -50,7 +47,7 @@ public class EncryptUtil {
    * @throws Exception on error
    */
   public static byte[] decryptBASE64(String data) throws Exception {
-    return (new BASE64Decoder()).decodeBuffer(data);
+    return DatatypeConverter.parseBase64Binary(data);
   }
 
   /**
