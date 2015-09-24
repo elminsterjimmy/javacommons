@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -32,18 +33,9 @@ public class CsrfTokenFilter extends OncePerRequestFilter {
   /** the CSRF token name in header. */
   private static final String X_CSRF_TOKEN = "X-CSRF-TOKEN";
   /** the request matcher. */
-  private RequestMatcher requireCsrfProtectionMatcher;
+  private static final RequestMatcher requireCsrfProtectionMatcher = new DefaultCsrfProtectionMatcher();
   /** the access denied handler. */
-  @Autowired
-  private AccessDeniedHandler accessDeniedHandler;
-
-  /**
-   * @param requireCsrfProtectionMatcher the requireCsrfProtectionMatcher to set
-   */
-  @Autowired
-  public void setRequireCsrfProtectionMatcher(RequestMatcher requireCsrfProtectionMatcher) {
-    this.requireCsrfProtectionMatcher = requireCsrfProtectionMatcher;
-  }
+  private AccessDeniedHandler accessDeniedHandler = new AccessDeniedHandlerImpl();
 
   /**
    * {@inheritDoc}
@@ -57,7 +49,7 @@ public class CsrfTokenFilter extends OncePerRequestFilter {
       final Cookie[] cookies = request.getCookies();
       
       String csrfCookieValue = null;
-      if (cookies != null) {
+      if (null != cookies) {
         for (Cookie cookie : cookies) {
           if (CSRF_TOKEN.equals(cookie.getName())) {
             csrfCookieValue = cookie.getValue();

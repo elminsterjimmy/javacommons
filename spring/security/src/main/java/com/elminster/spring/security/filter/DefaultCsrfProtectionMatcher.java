@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.stereotype.Service;
 
 /**
  * The default CSRF protection matcher.
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
  * @author jgu
  * @version 1.0
  */
-@Service
 public class DefaultCsrfProtectionMatcher implements RequestMatcher {
   /** the allow methods. */
   private final Pattern allowedMethods = Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$");
