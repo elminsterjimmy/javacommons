@@ -322,14 +322,42 @@ public abstract class BinaryUtil {
   public static String binary2Hex(byte[] binary) {
     String hs = EMPTY_STRING;
     String stmp = EMPTY_STRING;
-    for (byte bt : binary) {
-      stmp = Integer.toHexString(bt & 0xFF);
-      if (stmp.length() == 1) {
-        hs = hs + ZERO + stmp;
-      } else {
-        hs = hs + stmp;
+    if (null != binary) {
+      for (byte bt : binary) {
+        stmp = Integer.toHexString(bt & 0xFF);
+        if (stmp.length() == 1) {
+          hs = hs + ZERO + stmp;
+        } else {
+          hs = hs + stmp;
+        }
       }
     }
     return hs.toUpperCase();
+  }
+  
+  /**
+   * Convert String in 16-Hex to byte array.
+   * 
+   * @param hex
+   *          specified String in 16-Hex
+   * @return byte array
+   */
+  public static byte[] hex2Binary(String hex) {
+    byte[] binary = null;
+    if (null != hex) {
+      int length = hex.length();
+      if (0 != length % 2) {
+        // add 0 at the header
+        hex = "0" + hex;
+      }
+      binary = new byte[length / 2];
+      for (int i = 0; i < hex.length(); i = i + 2) {
+        char high = hex.charAt(i);
+        char low = hex.charAt(i + 1);
+        byte b = ((Integer)Integer.parseInt("" + high + low, 16)).byteValue();
+        binary[i / 2] = b;
+      }
+    }
+    return binary;
   }
 }

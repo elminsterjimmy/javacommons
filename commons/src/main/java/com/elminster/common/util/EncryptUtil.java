@@ -10,6 +10,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 /**
@@ -25,10 +26,22 @@ public class EncryptUtil {
   public static final String MD5 = "MD5"; //$NON-NLS-1$
 
   /** SHA-1. */
-  public static final String SHA = "SHA-1"; //$NON-NLS-1$
+  public static final String SHA = "SHA"; //$NON-NLS-1$
+  
+  /** SHA-256. */
+  public static final String SHA256 = "SHA-256"; //$NON-NLS-1$
+
+  /** SHA-512. */
+  public static final String SHA512 = "SHA-512"; //$NON-NLS-1$
 
   /** DES. */
   public static final String DES = "DES"; //$NON-NLS-1$
+  
+  /** AES. */
+  public static final String AES = "AES"; //$NON-NLS-1$
+  
+  /** AES CIPHER ALGORITHM. */
+  private static final String AES_CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding"; //$NON-NLS-1$
 
   /**
    * Encrypt data with BASE64.
@@ -53,17 +66,17 @@ public class EncryptUtil {
   /**
    * Encrypt the data with MD5.
    * @param data the data
-   * @return encrypt the data
+   * @return encrypt the data (16bytes)
    * @throws Exception on error
    */
   public static String encryptMD5(byte[] data) throws Exception {
     return digest(data, MD5);
   }
-
+  
   /**
    * Encrypt the data with MD5.
    * @param in the data
-   * @return encrypt the data
+   * @return encrypt the data (16bytes)
    * @throws Exception on error
    */
   public static String encryptMD5(InputStream in) throws Exception {
@@ -73,21 +86,61 @@ public class EncryptUtil {
   /**
    * Encrypt the data with SHA.
    * @param data the data
-   * @return encrypt the data
+   * @return encrypt the data (20bytes)
    * @throws Exception on error
    */
   public static String encryptSHA(byte[] data) throws Exception {
     return digest(data, SHA);
   }
-
+  
   /**
    * Encrypt the data with SHA.
    * @param in the data
-   * @return encrypt the data
+   * @return encrypt the data (20bytes)
    * @throws Exception on error
    */
   public static String encryptSHA(InputStream in) throws Exception {
     return digest(in, SHA);
+  }
+  
+  /**
+   * Encrypt the data with SHA-256.
+   * @param data the data
+   * @return encrypt the data (32bytes)
+   * @throws Exception on error
+   */
+  public static String encryptSHA256(byte[] data) throws Exception {
+    return digest(data, SHA256);
+  }
+
+  /**
+   * Encrypt the data with SHA-256.
+   * @param in the data
+   * @return encrypt the data (32bytes)
+   * @throws Exception on error
+   */
+  public static String encryptSHA256(InputStream in) throws Exception {
+    return digest(in, SHA256);
+  }
+  
+  /**
+   * Encrypt the data with SHA-512.
+   * @param data the data
+   * @return encrypt the data (64bytes)
+   * @throws Exception on error
+   */
+  public static String encryptSHA512(byte[] data) throws Exception {
+    return digest(data, SHA512);
+  }
+
+  /**
+   * Encrypt the data with SHA-512.
+   * @param in the data
+   * @return encrypt the data (64bytes)
+   * @throws Exception on error
+   */
+  public static String encryptSHA512(InputStream in) throws Exception {
+    return digest(in, SHA512);
   }
 
   /**
@@ -100,8 +153,8 @@ public class EncryptUtil {
   public static String digest(byte[] data, String type) throws Exception {
     MessageDigest digester = MessageDigest.getInstance(type);
     digester.update(data);
-    byte[] digest = digester.digest();
-    return BinaryUtil.binary2Hex(digest);
+    byte[] dested = digester.digest();
+    return BinaryUtil.binary2Hex(dested);
   }
   
   /**
@@ -128,7 +181,7 @@ public class EncryptUtil {
    * @return the key
    * @throws Exception on error
    */
-  private static Key toKey(byte[] key) throws Exception {
+  private static Key toDESKey(byte[] key) throws Exception {
     DESKeySpec dks = new DESKeySpec(key);
     SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(DES);
     SecretKey secretKey = keyFactory.generateSecret(dks);
@@ -143,7 +196,7 @@ public class EncryptUtil {
    * @throws Exception on error
    */
   public static byte[] encryptDES(byte[] data, String key) throws Exception {
-    Key k = toKey(decryptBASE64(key));
+    Key k = toDESKey(decryptBASE64(key));
     Cipher cipher = Cipher.getInstance(DES);
     cipher.init(Cipher.ENCRYPT_MODE, k);
     return cipher.doFinal(data);
@@ -157,19 +210,19 @@ public class EncryptUtil {
    * @throws Exception on error
    */
   public static byte[] decryptDES(byte[] data, String key) throws Exception {
-    Key k = toKey(decryptBASE64(key));
+    Key k = toDESKey(decryptBASE64(key));
     Cipher cipher = Cipher.getInstance(DES);
     cipher.init(Cipher.DECRYPT_MODE, k);
     return cipher.doFinal(data);
   }
 
   /**
-   * Generate a key.
+   * Generate a DES key.
    * @param seed the seed
    * @return generated key
    * @throws Exception on error
    */
-  public static String initKey(String seed) throws Exception {
+  public static String initDESKey(String seed) throws Exception {
     SecureRandom secureRandom = null;
     if (null != seed) {
       secureRandom = new SecureRandom(decryptBASE64(seed));
@@ -180,5 +233,50 @@ public class EncryptUtil {
     kg.init(secureRandom);
     SecretKey secretKey = kg.generateKey();
     return encryptBASE64(secretKey.getEncoded());
+  }
+  
+  /**
+   * Generate a AES key.
+   * @return generated key
+   * @throws Exception on error
+   */
+  public static byte[] initAESKey(String seed) throws Exception {
+    KeyGenerator kg = null;
+    kg = KeyGenerator.getInstance(AES);
+    // AES needs 128 bit (16 byte) key use MD5 to generate it. 
+    if (null != seed) {
+      SecureRandom secureRandom = new SecureRandom(BinaryUtil.hex2Binary(encryptMD5(seed.getBytes())));
+      kg.init(secureRandom);
+    } else {
+      kg.init(128);
+    }
+    SecretKey secretKey = kg.generateKey();
+    return secretKey.getEncoded();
+  }
+  
+  /**
+   * Encrypt the data with AES by the specified key.
+   * @param data the data
+   * @param key the key
+   * @return encrypted data
+   * @throws Exception on error
+   */
+  public static byte[] encryptAES(byte[] data, byte[] key) throws Exception {
+    Cipher cipher = Cipher.getInstance(AES_CIPHER_ALGORITHM);
+    cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, AES));
+    return cipher.doFinal(data);
+  }
+  
+  /**
+   * Decrypt the data with AES by the specified key.
+   * @param data the data
+   * @param key the key
+   * @return decrypted data
+   * @throws Exception on error
+   */
+  public static byte[] decryptAES(byte[] data, byte[] key) throws Exception {
+    Cipher cipher = Cipher.getInstance(AES_CIPHER_ALGORITHM);
+    cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, AES));
+    return cipher.doFinal(data);
   }
 }

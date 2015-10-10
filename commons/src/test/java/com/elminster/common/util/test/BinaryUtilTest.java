@@ -19,5 +19,6 @@ public class BinaryUtilTest {
     long exceptLong = 0xFF20FFFF;
     Assert.assertEquals(exceptLong, i);
     Assert.assertEquals("00000000FF20FFFF", BinaryUtil.binary2Hex(BinaryUtil.getBinary(l)));
+    Assert.assertArrayEquals(b, BinaryUtil.hex2Binary(BinaryUtil.binary2Hex(b)));
 	}
 }
