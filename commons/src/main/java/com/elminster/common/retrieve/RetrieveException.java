@@ -1,6 +1,7 @@
 package com.elminster.common.retrieve;
 
 import com.elminster.common.exception.BaseException;
+import com.elminster.common.exception.ErrorCode;
 
 public class RetrieveException extends BaseException {
 
@@ -13,19 +14,19 @@ public class RetrieveException extends BaseException {
     super();
   }
 
-  public RetrieveException(int code, String message, Throwable cause) {
+  public RetrieveException(ErrorCode code, String message, Throwable cause) {
     super(code, message, cause);
   }
 
-  public RetrieveException(int code, String message) {
+  public RetrieveException(ErrorCode code, String message) {
     super(code, message);
   }
 
-  public RetrieveException(int code, Throwable cause) {
+  public RetrieveException(ErrorCode code, Throwable cause) {
     super(code, cause);
   }
 
-  public RetrieveException(int code) {
+  public RetrieveException(ErrorCode code) {
     super(code);
   }
 

@@ -160,8 +160,9 @@ public abstract class ObjectUtil {
         Object value;
         value = ReflectUtil.getFieldValue(obj, field);
         builder.append(field.getName() + StringConstants.EQUAL + toString(value));
-        builder.append(StringConstants.LF);
+        builder.append(StringConstants.COMMA);
       }
+      builder.setLength(builder.length() - 1);
       builder.append(ARRAY_END);
     } catch (IllegalArgumentException e) {
       e.printStackTrace();

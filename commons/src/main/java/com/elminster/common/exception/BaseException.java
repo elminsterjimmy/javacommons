@@ -13,16 +13,16 @@ public class BaseException extends Exception {
    */
   private static final long serialVersionUID = 4004318643050048268L;
   
-  public static final int UNKNOWN_CODE = 0xFFFF;
+  public static final ErrorCode UNKNOWN_CODE = new ErrorCode("0xFFFFFFFFFF", "UNKNOWN");
 
   /** the exception code. */
-  protected int exceptionCode;
+  protected ErrorCode exceptionCode;
   
   protected BaseException() {
     this(UNKNOWN_CODE);
   }
   
-  public BaseException(int code) {
+  public BaseException(ErrorCode code) {
     this.exceptionCode = code;
   }
   
@@ -30,7 +30,7 @@ public class BaseException extends Exception {
     this(UNKNOWN_CODE, message);
   }
   
-  public BaseException(int code, String message) {
+  public BaseException(ErrorCode code, String message) {
     super(message);
     this.exceptionCode = code;
   }
@@ -39,7 +39,7 @@ public class BaseException extends Exception {
     this(UNKNOWN_CODE, message, cause);
   }
   
-  public BaseException(int code, String message, Throwable cause) {
+  public BaseException(ErrorCode code, String message, Throwable cause) {
     super(message, cause);
     this.exceptionCode = code;
   }
@@ -48,7 +48,7 @@ public class BaseException extends Exception {
     this(UNKNOWN_CODE, cause);
   }
 
-  public BaseException(int code, Throwable cause) {
+  public BaseException(ErrorCode code, Throwable cause) {
     super(cause);
   }
 
@@ -56,7 +56,7 @@ public class BaseException extends Exception {
    * Get the exception code.
    * @return the exception code
    */
-  public int getExceptionCode() {
+  public ErrorCode getExceptionCode() {
     return exceptionCode;
   }
 }

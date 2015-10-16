@@ -1,6 +1,7 @@
 package com.elminster.common.processor;
 
 import com.elminster.common.exception.BaseException;
+import com.elminster.common.exception.ErrorCode;
 
 public class ProcessException extends BaseException {
 
@@ -13,19 +14,19 @@ public class ProcessException extends BaseException {
     super();
   }
 
-  public ProcessException(int code, String message, Throwable cause) {
+  public ProcessException(ErrorCode code, String message, Throwable cause) {
     super(code, message, cause);
   }
 
-  public ProcessException(int code, String message) {
+  public ProcessException(ErrorCode code, String message) {
     super(code, message);
   }
 
-  public ProcessException(int code, Throwable cause) {
+  public ProcessException(ErrorCode code, Throwable cause) {
     super(code, cause);
   }
 
-  public ProcessException(int code) {
+  public ProcessException(ErrorCode code) {
     super(code);
   }
 
