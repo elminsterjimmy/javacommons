@@ -19,6 +19,7 @@ import com.elminster.spring.security.domain.CookieUser;
 import com.elminster.spring.security.domain.User;
 import com.elminster.spring.security.exception.TokenGenerateException;
 import com.elminster.spring.security.model.UserDetailsImpl;
+import com.elminster.web.commons.util.IpFinder;
 
 /**
  * The token authentication service.
@@ -88,9 +89,23 @@ public class TokenAuthenticationService {
         if (current - lastLogin.getTime() > expirationPeriod) {
           cookieUserDao.delete(cookieUser);
         } else {
-          // update last login date
-          cookieUser.setLastLogin(new Date(current));
-          cookieUserDao.save(cookieUser);
+          // update last login date?
+          String ipAddress = cookieUser.getIpaddr();
+          String requestIp = IpFinder.getRequestIpAddress(request);
+          boolean update = false;
+          if (ipAddress.equals(ipAddress)) {
+            if (current - lastLogin.getTime() > 24 * DateUtil.HOUR) {
+              cookieUser.setLastLogin(new Date(current));
+              update = true;
+            }
+          } else {
+            cookieUser.setIpaddr(requestIp);
+            cookieUser.setLastLogin(new Date(current));
+            update = true;
+          }
+          if (update) {
+            cookieUserDao.save(cookieUser);
+          }
           
           User user = cookieUser.getUser();
           UserDetails userDetails = new UserDetailsImpl(user);
@@ -105,13 +120,19 @@ public class TokenAuthenticationService {
 
   private String generateToken4User(User user) throws TokenGenerateException {
     try {
-      String token = EncryptUtil.encryptSHA512((user.toString() + System.currentTimeMillis()).getBytes());
-      CookieUser cookieUser = new CookieUser();
-      cookieUser.setCookie(token);
-      cookieUser.setUser(user);
-      cookieUser.setIpaddr(user.getLastLoginIp());
-      cookieUser.setLastLogin(user.getLastLoginDate());
-      cookieUserDao.save(cookieUser);
+      CookieUser cookieUser = cookieUserDao.findByUserId(user.getId());
+      String token = null;
+      if (null != cookieUser) {
+        token = cookieUser.getCookie();
+      } else {
+        cookieUser = new CookieUser();
+        token = EncryptUtil.encryptSHA512((user.toString() + System.currentTimeMillis()).getBytes());
+        cookieUser.setCookie(token);
+        cookieUser.setUser(user);
+        cookieUser.setIpaddr(user.getLastLoginIp());
+        cookieUser.setLastLogin(user.getLastLoginDate());
+        cookieUserDao.save(cookieUser);
+      }
       return token;
     } catch (Exception e) {
       throw new TokenGenerateException(e);

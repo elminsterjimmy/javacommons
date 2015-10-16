@@ -8,4 +8,5 @@ import com.elminster.spring.security.domain.Role;
 @Repository
 public interface RoleDao extends JpaRepository<Role, Integer> {
 
+  Role findByName(String roleName);
 }

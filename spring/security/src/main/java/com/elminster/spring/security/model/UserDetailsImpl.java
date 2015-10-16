@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -40,7 +41,7 @@ public class UserDetailsImpl implements UserDetails {
     if (null != user.getAuthorities()) {
       authRes.addAll(user.getAuthorities());
     }
-    List<Role> roles = user.getRoles();
+    Set<Role> roles = user.getRoles();
     if (CollectionUtil.isNotEmpty(roles)) {
       for (Role role : roles) {
         if (null != role.getAuthorities()) {

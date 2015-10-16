@@ -8,4 +8,6 @@ import com.elminster.spring.security.domain.AuthorityResource;
 @Repository
 public interface AuthorityResourceDao extends JpaRepository<AuthorityResource, Integer> {
 
+  AuthorityResource findByName(String authName);
+
 }

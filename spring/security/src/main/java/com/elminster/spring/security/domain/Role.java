@@ -1,6 +1,6 @@
 package com.elminster.spring.security.domain;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,7 +18,7 @@ import org.hibernate.annotations.Parameter;
 @Entity
 @Table(name="auth_roles")
 public class Role {
-
+  
   //@formatter:off
   @Id
   @GeneratedValue(generator="id_gen")
@@ -44,13 +44,13 @@ public class Role {
   private boolean enable = true;
   
   @ManyToMany(mappedBy="roles")
-  private List<User> users;
+  private Set<User> users;
   
   @ManyToMany(cascade = CascadeType.PERSIST)
   @JoinTable(name = "auth_role_authority",
     joinColumns = @JoinColumn(name = "roleId"),
     inverseJoinColumns = @JoinColumn(name = "authResLinkId"))
-  private List<AuthorityResource> authorities;
+  private Set<AuthorityResource> authorities;
   
   /**
    * @return the id
@@ -111,28 +111,28 @@ public class Role {
   /**
    * @return the users
    */
-  public List<User> getUsers() {
+  public Set<User> getUsers() {
     return users;
   }
 
   /**
    * @param users the users to set
    */
-  public void setUsers(List<User> users) {
+  public void setUsers(Set<User> users) {
     this.users = users;
   }
 
   /**
    * @return the authorities
    */
-  public List<AuthorityResource> getAuthorities() {
+  public Set<AuthorityResource> getAuthorities() {
     return authorities;
   }
 
   /**
    * @param authorities the authorities to set
    */
-  public void setAuthorities(List<AuthorityResource> authorities) {
+  public void setAuthorities(Set<AuthorityResource> authorities) {
     this.authorities = authorities;
   }
 }

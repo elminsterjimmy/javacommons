@@ -1,6 +1,6 @@
 package com.elminster.spring.security.domain;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -53,7 +53,7 @@ public class Resource {
   private Resource parent;
   
   @OneToMany(mappedBy="parent")
-  private List<Resource> children;
+  private Set<Resource> children;
   
   /**
    * @return the id
@@ -156,14 +156,14 @@ public class Resource {
   /**
    * @return the children
    */
-  public List<Resource> getChildren() {
+  public Set<Resource> getChildren() {
     return children;
   }
 
   /**
    * @param children the children to set
    */
-  public void setChildren(List<Resource> children) {
+  public void setChildren(Set<Resource> children) {
     this.children = children;
   }
 }

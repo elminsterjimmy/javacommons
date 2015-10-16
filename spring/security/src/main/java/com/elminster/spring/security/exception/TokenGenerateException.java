@@ -1,6 +1,7 @@
 package com.elminster.spring.security.exception;
 
 import com.elminster.common.exception.BaseException;
+import com.elminster.common.exception.ErrorCode;
 
 public class TokenGenerateException extends BaseException {
 
@@ -11,22 +12,21 @@ public class TokenGenerateException extends BaseException {
 
   public TokenGenerateException() {
     super();
-    // TODO Auto-generated constructor stub
   }
 
-  public TokenGenerateException(int code, String message, Throwable cause) {
+  public TokenGenerateException(ErrorCode code, String message, Throwable cause) {
     super(code, message, cause);
   }
 
-  public TokenGenerateException(int code, String message) {
+  public TokenGenerateException(ErrorCode code, String message) {
     super(code, message);
   }
 
-  public TokenGenerateException(int code, Throwable cause) {
+  public TokenGenerateException(ErrorCode code, Throwable cause) {
     super(code, cause);
   }
 
-  public TokenGenerateException(int code) {
+  public TokenGenerateException(ErrorCode code) {
     super(code);
   }
 

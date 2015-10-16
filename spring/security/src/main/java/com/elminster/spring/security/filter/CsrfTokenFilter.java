@@ -28,9 +28,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class CsrfTokenFilter extends OncePerRequestFilter {
 
   /** the CSRF token name in cookie. */
-  private static final String CSRF_TOKEN = "CSRF-TOKEN";
+  public static final String CSRF_TOKEN = "CSRF-TOKEN";
   /** the CSRF token name in header. */
-  private static final String X_CSRF_TOKEN = "X-CSRF-TOKEN";
+  public static final String X_CSRF_TOKEN = "X-CSRF-TOKEN";
   /** the request matcher. */
   private static final RequestMatcher requireCsrfProtectionMatcher = new DefaultCsrfProtectionMatcher();
   /** the access denied handler. */

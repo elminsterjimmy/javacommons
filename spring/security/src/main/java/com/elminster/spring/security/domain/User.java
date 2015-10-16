@@ -1,7 +1,8 @@
 package com.elminster.spring.security.domain;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -65,24 +66,21 @@ public class User {
   @Temporal(TemporalType.TIMESTAMP)
   private Date createdDate;
 
-  @Column
-  @Temporal(TemporalType.TIMESTAMP)
   private Date lastLoginDate;
 
-  @Column(length=15)
   private String lastLoginIp;
 
   @ManyToMany(cascade = CascadeType.PERSIST)
   @JoinTable(name = "auth_role_member",
     joinColumns = @JoinColumn(name = "userId"),
     inverseJoinColumns = @JoinColumn(name = "roleId"))
-  private List<Role> roles;
+  private Set<Role> roles;
   
   @ManyToMany(cascade = CascadeType.PERSIST)
   @JoinTable(name = "auth_user_authority",
     joinColumns = @JoinColumn(name = "userId"),
     inverseJoinColumns = @JoinColumn(name = "authResLinkId"))
-  private List<AuthorityResource> authorities;
+  private Set<AuthorityResource> authorities;
 
   /**
    * @return the id
@@ -110,8 +108,9 @@ public class User {
    * @param username
    *          the username to set
    */
-  public void setUsername(String username) {
+  public User setUsername(String username) {
     this.username = username;
+    return this;
   }
 
   /**
@@ -125,8 +124,9 @@ public class User {
    * @param password
    *          the password to set
    */
-  public void setPassword(String password) {
+  public User setPassword(String password) {
     this.password = password;
+    return this;
   }
 
   /**
@@ -140,8 +140,9 @@ public class User {
    * @param email
    *          the email to set
    */
-  public void setEmail(String email) {
+  public User setEmail(String email) {
     this.email = email;
+    return this;
   }
 
   /**
@@ -155,8 +156,9 @@ public class User {
    * @param enable
    *          the enable to set
    */
-  public void setEnable(boolean enable) {
+  public User setEnable(boolean enable) {
     this.enable = enable;
+    return this;
   }
 
   /**
@@ -170,8 +172,9 @@ public class User {
    * @param status
    *          the status to set
    */
-  public void setStatus(int status) {
+  public User setStatus(int status) {
     this.status = status;
+    return this;
   }
 
   /**
@@ -179,13 +182,6 @@ public class User {
    */
   public Date getCreatedDate() {
     return createdDate;
-  }
-
-  /**
-   * @param createdDate the createdDate to set
-   */
-  public void setCreatedDate(Date createdDate) {
-    this.createdDate = createdDate;
   }
 
   /**
@@ -198,8 +194,9 @@ public class User {
   /**
    * @param lastLoginDate the lastLoginDate to set
    */
-  public void setLastLoginDate(Date lastLoginDate) {
+  public User setLastLoginDate(Date lastLoginDate) {
     this.lastLoginDate = lastLoginDate;
+    return this;
   }
 
   /**
@@ -213,14 +210,15 @@ public class User {
    * @param lastLoginIp
    *          the lastLoginIp to set
    */
-  public void setLastLoginIp(String lastLoginIp) {
+  public User setLastLoginIp(String lastLoginIp) {
     this.lastLoginIp = lastLoginIp;
+    return this;
   }
 
   /**
    * @return the roles
    */
-  public List<Role> getRoles() {
+  public Set<Role> getRoles() {
     return roles;
   }
 
@@ -228,22 +226,58 @@ public class User {
    * @param roles
    *          the roles to set
    */
-  public void setRoles(List<Role> roles) {
+  public User setRoles(Set<Role> roles) {
     this.roles = roles;
+    return this;
+  }
+  
+  public User addRole(Role role) {
+    if (null != role) {
+      if (null == this.roles) {
+        this.roles = new TreeSet<Role>();
+      }
+      roles.add(role);
+    }
+    return this;
+  }
+  
+  public User removeRole(Role role) {
+    if (null != this.roles) {
+      this.roles.remove(role);
+    }
+    return this;
   }
   
   /**
    * @return the authorities
    */
-  public List<AuthorityResource> getAuthorities() {
+  public Set<AuthorityResource> getAuthorities() {
     return authorities;
   }
 
   /**
    * @param authorities the authorities to set
    */
-  public void setAuthorities(List<AuthorityResource> authorities) {
+  public User setAuthorities(Set<AuthorityResource> authorities) {
     this.authorities = authorities;
+    return this;
+  }
+  
+  public User addAuthorities(AuthorityResource authority) {
+    if (null != authority) {
+      if (null == this.authorities) {
+        this.authorities = new TreeSet<AuthorityResource>();
+      }
+      authorities.add(authority);
+    }
+    return this;
+  }
+  
+  public User removeAuthorities(AuthorityResource authority) {
+    if (null != this.authorities) {
+      authorities.remove(authority);
+    }
+    return this;
   }
   
   @PrePersist

@@ -2,11 +2,17 @@ package com.elminster.spring.security.filter;
 
 import java.io.IOException;
 
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -14,20 +20,20 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.elminster.spring.security.service.TokenAuthenticationService;
 
 /**
  * The filter that uses token to retrieve the user info.
- * Use once per request filter to avoid spring call this filter twice.
  * 
  * @author jgu
  * @version 1.0
  */
 @Component
-public class StatelessAuthenticationFilter extends OncePerRequestFilter {
+public class StatelessAuthenticationFilter implements Filter {
 
+  /** the logger. */
+  private static final Log logger = LogFactory.getLog(StatelessAuthenticationFilter.class);
   /** the token authentication service. */
   private final TokenAuthenticationService tokenAuthenticationService;
   /** the access denied handler. */
@@ -43,18 +49,41 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
     this.tokenAuthenticationService = tokenAuthenticationService;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-      throws ServletException, IOException {
-    try {
-      Authentication authentication = tokenAuthenticationService
-          .getAuthenticationFromRequest((HttpServletRequest) request);
-      SecurityContextHolder.getContext().setAuthentication(authentication);
-    } catch (Exception e) {
-      accessDeniedHandler.handle((HttpServletRequest) request, (HttpServletResponse) response,
-          new AccessDeniedException("request authentication failed.", e));
-      return;
+  public void init(FilterConfig filterConfig) throws ServletException {
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+      ServletException {
+    if (null == SecurityContextHolder.getContext().getAuthentication()) {
+      try {
+        Authentication authentication = tokenAuthenticationService
+            .getAuthenticationFromRequest((HttpServletRequest) request);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+      } catch (Exception e) {
+        if (logger.isDebugEnabled()) {
+          logger.debug("request authentication filter failed.", e);
+        }
+        accessDeniedHandler.handle((HttpServletRequest) request, (HttpServletResponse) response,
+            new AccessDeniedException("request authentication failed.", e));
+        return;
+      }
     }
+    chain.doFilter(request, response); // always continue
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void destroy() {
   }
 
 }

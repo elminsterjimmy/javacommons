@@ -9,4 +9,6 @@ import com.elminster.spring.security.domain.CookieUser;
 public interface CookieUserDao extends JpaRepository<CookieUser, Integer> {
 
   public CookieUser findByCookie(String cookie);
+  
+  public CookieUser findByUserId(int userId);
 }
