@@ -1,6 +1,7 @@
 package com.elminster.spring.security.filter;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -35,6 +36,8 @@ public class CsrfTokenFilter extends OncePerRequestFilter {
   private static final RequestMatcher requireCsrfProtectionMatcher = new DefaultCsrfProtectionMatcher();
   /** the access denied handler. */
   private AccessDeniedHandler accessDeniedHandler = new AccessDeniedHandlerImpl();
+  /** random cookie generator. */
+  private SecureRandom random = new SecureRandom();
 
   /**
    * {@inheritDoc}
@@ -44,7 +47,6 @@ public class CsrfTokenFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
 
     if (requireCsrfProtectionMatcher.matches(request)) {
-      final String csrfTokenValue = request.getHeader(X_CSRF_TOKEN);
       final Cookie[] cookies = request.getCookies();
       
       String csrfCookieValue = null;
@@ -56,9 +58,17 @@ public class CsrfTokenFilter extends OncePerRequestFilter {
         }
       }
       
-      if (null == csrfTokenValue || !csrfTokenValue.equals(csrfCookieValue)) {
-        accessDeniedHandler.handle(request, response, new AccessDeniedException("Missing or non-matching CSRF-token"));
-        return;
+      if (null == csrfCookieValue) {
+        // OK, first request.
+        // generate new cookie
+        Cookie cookie = new Cookie(CSRF_TOKEN, String.valueOf(random.nextLong()));
+        response.addCookie(cookie);
+      } else {
+        final String csrfTokenValue = request.getHeader(X_CSRF_TOKEN);
+        if (!csrfCookieValue.equals(csrfTokenValue)) {
+          accessDeniedHandler.handle(request, response, new AccessDeniedException("Missing or non-matching CSRF-token"));
+          return;
+        }
       }
     }
     filterChain.doFilter(request, response);
