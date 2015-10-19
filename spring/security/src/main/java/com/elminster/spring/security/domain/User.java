@@ -22,7 +22,7 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.validator.constraints.Email;
 
 /**
- * The default details. To extend this user details to fit your application.
+ * The default user. To extend this user to fit your application.
  * 
  * @author jgu
  * @version 1.0
