@@ -17,7 +17,7 @@ import com.elminster.common.util.StringUtil;
 abstract public class CommonConfiguration implements IConfigProvider, IConfigPersister {
   
   /** the logger. */
-  private static final Log logger = LogFactory.getLog(CommonConfiguration.class);
+  protected static final Log logger = LogFactory.getLog(CommonConfiguration.class);
 
   /** the properties. */
   protected Properties properties = new Properties();

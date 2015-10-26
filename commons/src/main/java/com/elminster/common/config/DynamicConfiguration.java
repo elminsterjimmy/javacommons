@@ -1,6 +1,9 @@
 package com.elminster.common.config;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -9,8 +12,8 @@ import com.elminster.common.pool.ThreadPool;
 import com.elminster.common.pool.ThreadPoolListener;
 
 /**
- * The dynamic configuration that using configuration files. All files will be watched by a 
- * thread to invoke the update if the file's last modify date is changed. 
+ * The dynamic configuration that using configuration files. All files will be watched by a thread to invoke the update
+ * if the file's last modify date is changed.
  * 
  * @author jgu
  * @version 1.0
@@ -19,10 +22,12 @@ public class DynamicConfiguration extends StandardConfiguration implements Obser
 
   /** the file watchers. */
   protected FileWatcher[] fileWatchers;
-  
+
   /**
    * Constructor.
-   * @param configurationFiles the configuration files
+   * 
+   * @param configurationFiles
+   *          the configuration files
    */
   public DynamicConfiguration(String... configurationFiles) {
     super(configurationFiles);
@@ -34,10 +39,30 @@ public class DynamicConfiguration extends StandardConfiguration implements Obser
   @Override
   public void update(Observable o, Object arg) {
     if (arg instanceof FileWatcher) {
-      
+      FileWatcher fw = (FileWatcher) arg;
+      File file = fw.getFile();
+      if (logger.isDebugEnabled()) {
+        logger.debug(String.format("Update Configuration file [%s]", file.getName()));
+      }
+      InputStream is = null;
+      try {
+        is = new FileInputStream(file);
+        this.properties.load(is);
+      } catch (IOException e) {
+        throw new RuntimeException(String.format("exception while reloading configuration [%s] at [%s].",
+            file.getName(), file.getAbsoluteFile()), e);
+      } finally {
+        if (null != is) {
+          try {
+            is.close();
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        }
+      }
     }
   }
-  
+
   /**
    * Load the resource files.
    */
@@ -55,7 +80,7 @@ public class DynamicConfiguration extends StandardConfiguration implements Obser
             }
           }
         }
-        
+
       });
       fileWatchers = new FileWatcher[configurationFiles.length];
       int i = 0;
@@ -66,5 +91,5 @@ public class DynamicConfiguration extends StandardConfiguration implements Obser
       }
     }
   }
-  
+
 }
