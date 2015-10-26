@@ -3,6 +3,9 @@ package com.elminster.common.observable;
 import java.io.File;
 import java.util.Observable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.elminster.common.util.DateUtil;
 
 /**
@@ -24,6 +27,8 @@ public class FileWatcher extends Observable implements Runnable {
   
   /** Watch interval. Set to 10 seconds as default. */
   private static final long DEFAULT_WATCH_INTERVAL = 10 * DateUtil.SECOND;
+  /** the logger. */
+  private static final Log logger = LogFactory.getLog(FileWatcher.class);
   
   /** the file to watch. */
   protected File file;
@@ -32,7 +37,7 @@ public class FileWatcher extends Observable implements Runnable {
   /** watch interval. */
   protected long watchInterval = DEFAULT_WATCH_INTERVAL;
   /** watch stop flag. */
-  protected boolean stop;
+  protected volatile boolean stop;
   
   /**
    * Constructor.
@@ -79,10 +84,26 @@ public class FileWatcher extends Observable implements Runnable {
         stopWatch();
         throw new RuntimeException("Watched file: " + file.getAbsolutePath() + " is not exist.");
       }
+      
+      if (Thread.currentThread().isInterrupted()) {
+        if (logger.isDebugEnabled()) {
+          logger.debug("File watcher interrupted! ");
+        }
+        stop = true;
+      }
+      
       long lastModified = file.lastModified();
       if (lastModified != lastModifyTime) {
         lastModifyTime = lastModified;
         notifyObservers(this);
+      }
+      try {
+        Thread.sleep(watchInterval);
+      } catch (InterruptedException e) {
+        if (logger.isDebugEnabled()) {
+          logger.debug("File watcher interrupted! ", e);
+        }
+        stop = true;
       }
     }
   }

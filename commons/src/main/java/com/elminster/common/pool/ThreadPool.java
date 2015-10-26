@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -40,6 +42,8 @@ final public class ThreadPool {
   private static ThreadPool pool = new ThreadPool();
   /** the thread pool executor. */
   private ThreadPoolExecutor executor;
+  /** the thread pool listener. */
+  private List<ThreadPoolListener> listeners;
   /**
    * the scheduled thread pool executor. Don't want to make the core thread pool too large, so use an additional
    * scheduled thread pool for scheduled works.
@@ -90,6 +94,28 @@ final public class ThreadPool {
         10), cfg.getLongProperty(KEEP_ALIVE_TIME, 0L), TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(
         cfg.getIntegerProperty(CORE_POOL_SIZE, 10)));
     scheduledExecutor = new ScheduledThreadPoolExecutor(cfg.getIntegerProperty(CORE_POOL_SIZE, 10));
+    listeners = new ArrayList<ThreadPoolListener>();
+    // the shutdown hook for JVM.
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      public void run() {
+        shutdown();
+        // interrupt all running runnables
+        try {
+          if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+            logger.debug("Executor did not terminate in the specified time.");
+            List<Runnable> droppedTasks = executor.shutdownNow();
+            logger.debug("Executor was abruptly shut down. " + droppedTasks.size() + " tasks will not be executed.");
+          }
+          if (!scheduledExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+            logger.debug("Scheduled Executor did not terminate in the specified time.");
+            List<Runnable> droppedTasks = scheduledExecutor.shutdownNow();
+            logger.debug("Scheduled Executor was abruptly shut down. " + droppedTasks.size() + " tasks will not be executed.");
+          }
+        } catch (InterruptedException e) {
+          logger.warn("interrupted while shudown executors", e);
+        }
+      }
+    });
   }
 
   /**
@@ -221,7 +247,18 @@ final public class ThreadPool {
    * Shutdown the pool.
    */
   public void shutdown() {
+    for (ThreadPoolListener listener : listeners) {
+      listener.onShutdown();
+    }
     executor.shutdown();
     scheduledExecutor.shutdown();
+  }
+  
+  /**
+   * Add thread pool listener.
+   * @param listener the thread pool listener
+   */
+  public void addThreadPoolListener(ThreadPoolListener listener) {
+    this.listeners.add(listener);
   }
 }
