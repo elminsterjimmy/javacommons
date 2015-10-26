@@ -15,6 +15,9 @@ import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.elminster.web.commons.response.JsonResponseBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * The CSRF token filter, that will use cookie to store the CSRF token.
  * Check if the CSRF token equals to the one in header.
@@ -34,8 +37,6 @@ public class CsrfTokenFilter extends OncePerRequestFilter {
   public static final String X_CSRF_TOKEN = "X-CSRF-TOKEN";
   /** the request matcher. */
   private static final RequestMatcher requireCsrfProtectionMatcher = new DefaultCsrfProtectionMatcher();
-  /** the access denied handler. */
-  private AccessDeniedHandler accessDeniedHandler = new AccessDeniedHandlerImpl();
   /** random cookie generator. */
   private SecureRandom random = new SecureRandom();
 
@@ -62,11 +63,17 @@ public class CsrfTokenFilter extends OncePerRequestFilter {
         // OK, first request.
         // generate new cookie
         Cookie cookie = new Cookie(CSRF_TOKEN, String.valueOf(random.nextLong()));
+        cookie.setHttpOnly(false);
         response.addCookie(cookie);
       } else {
         final String csrfTokenValue = request.getHeader(X_CSRF_TOKEN);
         if (!csrfCookieValue.equals(csrfTokenValue)) {
-          accessDeniedHandler.handle(request, response, new AccessDeniedException("Missing or non-matching CSRF-token"));
+          Exception e = new AccessDeniedException("Missing or non-matching CSRF-token");
+          response.setContentType("application/json");
+          response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+          ObjectMapper mapper = new ObjectMapper();
+          String jsonInString = mapper.writeValueAsString(JsonResponseBuilder.INSTANCE.buildErrorJsonResponse(e));
+          response.getOutputStream().print(jsonInString);
           return;
         }
       }
