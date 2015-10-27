@@ -4,14 +4,21 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The general JSON response.
+ * 
+ * @author jgu
+ * @version 1.0
+ */
 public class JsonResponse implements Serializable {
   
   /**
    * 
    */
   private static final long serialVersionUID = -6882544319032795924L;
-  
+  /** the response status: OK. */
   public static final String STATUS_OK = "OK";
+  /** the response status: ERROR. */
   public static final String STATUS_ERROR = "ERROR";
   
   /**
@@ -26,6 +33,14 @@ public class JsonResponse implements Serializable {
    * The json data.
    */
   private Object data;
+  /**
+   * The created / updated resource URI.
+   */
+  private String resource;
+  /**
+   * The next Page URI.
+   */
+  private String nextPage;
   
   public JsonResponse() {
     this.status = STATUS_OK;
@@ -78,6 +93,36 @@ public class JsonResponse implements Serializable {
    */
   public JsonResponse setData(Object data) {
     this.data = data;
+    return this;
+  }
+
+  /**
+   * @return the resource
+   */
+  public String getResource() {
+    return resource;
+  }
+
+  /**
+   * @param resource the resource to set
+   */
+  public JsonResponse setResource(String resource) {
+    this.resource = resource;
+    return this;
+  }
+
+  /**
+   * @return the nextPage
+   */
+  public String getNextPage() {
+    return nextPage;
+  }
+
+  /**
+   * @param nextPage the nextPage to set
+   */
+  public JsonResponse setNextPage(String nextPage) {
+    this.nextPage = nextPage;
     return this;
   }
 }
