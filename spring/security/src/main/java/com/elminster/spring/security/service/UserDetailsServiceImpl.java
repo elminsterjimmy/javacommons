@@ -20,7 +20,7 @@ import com.elminster.spring.security.model.UserDetailsImpl;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-  private UserService userService;
+  private AuthUserService userService;
 
   public UserDetailsServiceImpl() {
   }
@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
    *          the defaultUserDetailsDao to set
    */
   @Autowired
-  public void setDefaultUserDetailsDao(UserService userService) {
+  public void setDefaultUserDetailsDao(AuthUserService userService) {
     this.userService = userService;
   }
 

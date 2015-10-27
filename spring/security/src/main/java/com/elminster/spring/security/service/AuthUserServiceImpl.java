@@ -13,14 +13,14 @@ import com.elminster.spring.security.domain.Role;
 import com.elminster.spring.security.domain.User;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class AuthUserServiceImpl implements AuthUserService {
   
   private final UserDao userDao;
   private final RoleDao roleDao;
   private AuthorityResourceDao authDao;
   
   @Autowired
-  public UserServiceImpl(UserDao userDao, RoleDao roleDao, AuthorityResourceDao authDao) {
+  public AuthUserServiceImpl(UserDao userDao, RoleDao roleDao, AuthorityResourceDao authDao) {
     this.userDao = userDao;
     this.roleDao = roleDao;
     this.authDao = authDao;

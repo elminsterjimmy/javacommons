@@ -2,7 +2,7 @@ package com.elminster.spring.security.service;
 
 import com.elminster.spring.security.domain.User;
 
-public interface UserService {
+public interface AuthUserService {
 
   public User findUserByUsername(String username);
   
