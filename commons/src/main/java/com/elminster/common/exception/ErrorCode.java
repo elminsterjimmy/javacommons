@@ -29,4 +29,11 @@ final public class ErrorCode {
   public String getCode() {
     return code;
   }
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    return "ErrorCode [code=" + code + ", codeName=" + codeName + "]";
+  }
 }
