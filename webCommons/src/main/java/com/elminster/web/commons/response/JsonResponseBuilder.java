@@ -68,7 +68,7 @@ public class JsonResponseBuilder {
   public ResponseError generateResponseError(Exception e) {
     ResponseError error = new ResponseError();
     if (e instanceof BaseException) {
-      error.setErrorCode(((BaseException)e).getExceptionCode().getCode());
+      error.setErrorCode(((BaseException)e).getErrorCode().getCode());
     } else {
       error.setErrorCode(BaseException.UNKNOWN_CODE.getCode());
     }
