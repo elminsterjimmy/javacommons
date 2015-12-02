@@ -35,7 +35,7 @@ public abstract class BinaryUtil {
   private static final String ZERO = "0"; //$NON-NLS-1$
 
   /**
-   * Convert specified byte array to integer (Big Endian)
+   * Convert specified byte array to integer (Big Endian).
    * 
    * @param binary
    *          byte array
@@ -63,7 +63,7 @@ public abstract class BinaryUtil {
   }
 
   /**
-   * Convert byte array to long (Big Endian)
+   * Convert byte array to long (Big Endian).
    * 
    * @param binary
    *          byte array
@@ -91,7 +91,7 @@ public abstract class BinaryUtil {
   }
 
   /**
-   * Check the specified byte array whether out of array bound
+   * Check the specified byte array whether out of array bound.
    * 
    * @param binary
    *          specified byte array
@@ -110,7 +110,7 @@ public abstract class BinaryUtil {
   }
 
   /**
-   * Convert binary string to 16 hex string
+   * Convert binary string to 16 hex string.
    * 
    * @param binaryString
    *          binary string
@@ -141,7 +141,7 @@ public abstract class BinaryUtil {
   }
   
   /**
-   * Return a String representation of the specified byte as binary
+   * Return a String representation of the specified byte as binary.
    * 
    * @param val
    *          the specified byte
@@ -156,7 +156,7 @@ public abstract class BinaryUtil {
   }
   
   /**
-   * Return a String representation of the specified integer as binary
+   * Return a String representation of the specified integer as binary.
    * 
    * @param val
    *          the specified integer
@@ -171,7 +171,7 @@ public abstract class BinaryUtil {
   }
 
   /**
-   * Return a String representation of the specified long as binary
+   * Return a String representation of the specified long as binary.
    * 
    * @param val
    *          the specified long
@@ -186,7 +186,7 @@ public abstract class BinaryUtil {
   }
 
   /**
-   * Reverse the specified position bit in an integer
+   * Reverse the specified position bit in an integer.
    * 
    * @param val
    *          specified integer what to be reverse
@@ -200,7 +200,7 @@ public abstract class BinaryUtil {
   }
 
   /**
-   * Reverse the specified position bit in a long
+   * Reverse the specified position bit in a long.
    * 
    * @param val
    *          specified long what to be reverse
@@ -212,9 +212,9 @@ public abstract class BinaryUtil {
     long v = setBit((long) 0, position);
     return val ^ v;
   }
-
+  
   /**
-   * Check whether the bit at the specified position in an integer is "1"
+   * Check whether the bit at the specified position in an integer is "1".
    * 
    * @param val
    *          specified integer what to be checked
@@ -227,7 +227,7 @@ public abstract class BinaryUtil {
   }
 
   /**
-   * Check whether the bit at the specified position in a long is "1"
+   * Check whether the bit at the specified position in a long is "1".
    * 
    * @param val
    *          specified long what to be checked
@@ -240,7 +240,7 @@ public abstract class BinaryUtil {
   }
 
   /**
-   * Set the specified position in an integer to "0"
+   * Set the specified position in an integer to "0".
    * 
    * @param val
    *          an integer what to be set
@@ -253,7 +253,7 @@ public abstract class BinaryUtil {
   }
 
   /**
-   * Set the specified position in a long to "0"
+   * Set the specified position in a long to "0".
    * 
    * @param val
    *          a long what to be set
@@ -266,7 +266,7 @@ public abstract class BinaryUtil {
   }
 
   /**
-   * Set the specified position in an integer to "1"
+   * Set the specified position in an integer to "1".
    * 
    * @param val
    *          an integer what to be set
@@ -277,9 +277,9 @@ public abstract class BinaryUtil {
   public static int setBit(final int val, final int position) {
     return val | (0x01 << position);
   }
-
+  
   /**
-   * Set the specified position in a long to "1"
+   * Set the specified position in a long to "1".
    * 
    * @param val
    *          a long what to be set
@@ -292,7 +292,7 @@ public abstract class BinaryUtil {
   }
 
   /**
-   * Convert byte array to String
+   * Convert byte array to String.
    * 
    * @param binary
    *          specified byte array
@@ -313,7 +313,7 @@ public abstract class BinaryUtil {
   }
 
   /**
-   * Convert byte array to String in 16-Hex
+   * Convert byte array to String in 16-Hex.
    * 
    * @param binary
    *          specified byte array
