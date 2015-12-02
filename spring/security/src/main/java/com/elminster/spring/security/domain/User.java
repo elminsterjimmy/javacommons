@@ -1,5 +1,6 @@
 package com.elminster.spring.security.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
@@ -29,7 +30,12 @@ import org.hibernate.validator.constraints.Email;
  */
 @Entity
 @Table(name = "auth_users")
-public class User {
+public class User implements Serializable {
+
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -471347410507676225L;
 
   // @formatter:off
   @Id
