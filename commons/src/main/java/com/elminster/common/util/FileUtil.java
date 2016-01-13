@@ -471,20 +471,26 @@ public abstract class FileUtil {
    * @return the file name without extension
    */
   public static String getFileNameExcludeExtension(String path) {
-
-    String fileName = null;
     File file = new File(path);
-
+    return getFileNameExcludeExtension(file);
+  }
+  
+  /**
+   * Get the file name of the specified absolute path without extension.
+   * 
+   * @param file
+   *          the specified file
+   * @return the file name without extension
+   */
+  public static String getFileNameExcludeExtension(File file) {
+    String fileName = null;
     if (file.isFile()) {
-      fileName = path.substring(getPath(path).length());
+      fileName = file.getName();
       fileName = fileName.substring(0, fileName.lastIndexOf(EXTENSION_SPLIT));
-      if (fileName.startsWith(FILE_SEPARATOR)) {
-        fileName = fileName.substring(1);
-      }
     }
     return fileName;
   }
-
+  
   /**
    * Delete the specified folder unless it's empty.
    * 
