@@ -42,7 +42,7 @@ public class User implements Serializable {
   @GeneratedValue(generator="id_gen")
   @GenericGenerator(name="id_gen", strategy="enhanced-table", 
     parameters = {
-      @Parameter(name="table_name", value="sequence_id_gen"), 
+      @Parameter(name="table_name", value="auth_sequence_id_gen"), 
       @Parameter(name="value_column_name", value="next"), 
       @Parameter(name="segment_column_name",value="segment_name"), 
       @Parameter(name="segment_value", value="user_seq"),
@@ -50,7 +50,7 @@ public class User implements Serializable {
       @Parameter(name="optimizer", value="pooled-lo") 
     })
   // @formatter:on
-  private int id;
+  private Integer id;
 
   @Column(unique=true, nullable=false, length=64)
   private String username;
@@ -61,12 +61,18 @@ public class User implements Serializable {
   @Column(nullable=false, length=255)
   @Email
   private String email;
+  
+  @Column(nullable=false, length=1)
+  private Integer emailstatus;
+  
+  @Column(length=15)
+  private String mobile;
 
   @Column(nullable=false, length=1)
   private boolean enable = true;
 
   @Column(nullable=false)
-  private int status = 0;
+  private Integer status = 0;
 
   @Column(updatable=false)
   @Temporal(TemporalType.TIMESTAMP)
@@ -91,7 +97,7 @@ public class User implements Serializable {
   /**
    * @return the id
    */
-  public int getId() {
+  public Integer getId() {
     return id;
   }
 
@@ -99,7 +105,7 @@ public class User implements Serializable {
    * @param id
    *          the id to set
    */
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
@@ -170,7 +176,7 @@ public class User implements Serializable {
   /**
    * @return the status
    */
-  public int getStatus() {
+  public Integer getStatus() {
     return status;
   }
 
@@ -178,7 +184,7 @@ public class User implements Serializable {
    * @param status
    *          the status to set
    */
-  public User setStatus(int status) {
+  public User setStatus(Integer status) {
     this.status = status;
     return this;
   }
@@ -286,6 +292,20 @@ public class User implements Serializable {
     return this;
   }
   
+  /**
+   * @return the mobile
+   */
+  public String getMobile() {
+    return mobile;
+  }
+
+  /**
+   * @param mobile the mobile to set
+   */
+  public void setMobile(String mobile) {
+    this.mobile = mobile;
+  }
+
   @PrePersist
   public void setDefaultValue() {
     if (null == createdDate) {

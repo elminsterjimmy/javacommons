@@ -18,7 +18,7 @@ public class Authority {
   @GeneratedValue(generator="id_gen")
   @GenericGenerator(name="id_gen", strategy="enhanced-table", 
     parameters = {
-      @Parameter(name="table_name", value="sequence_id_gen"), 
+      @Parameter(name="table_name", value="auth_sequence_id_gen"), 
       @Parameter(name="value_column_name", value="next"), 
       @Parameter(name="segment_column_name",value="segment_name"), 
       @Parameter(name="segment_value", value="authority_seq"),
@@ -35,7 +35,7 @@ public class Authority {
   private String description;
   
   @Column(nullable=false, length=1)
-  private boolean enable = true;
+  private Boolean enable = true;
 
   /**
    * @return the id
@@ -82,14 +82,14 @@ public class Authority {
   /**
    * @return the enable
    */
-  public boolean isEnable() {
+  public Boolean isEnable() {
     return enable;
   }
 
   /**
    * @param enable the enable to set
    */
-  public void setEnable(boolean enable) {
+  public void setEnable(Boolean enable) {
     this.enable = enable;
   }
 }

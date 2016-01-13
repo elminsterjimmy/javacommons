@@ -25,7 +25,7 @@ public class CookieUser {
   @GeneratedValue(generator="id_gen")
   @GenericGenerator(name="id_gen", strategy="enhanced-table", 
     parameters = {
-      @Parameter(name="table_name", value="sequence_id_gen"), 
+      @Parameter(name="table_name", value="auth_sequence_id_gen"), 
       @Parameter(name="value_column_name", value="next"), 
       @Parameter(name="segment_column_name",value="segment_name"), 
       @Parameter(name="segment_value", value="cookie_user_seq"),
