@@ -1,5 +1,9 @@
 package com.elminster.common.util;
 
+import static com.elminster.common.constants.Constants.StringConstants.EMPTY_STRING;
+import static com.elminster.common.constants.Constants.StringConstants.TAB;
+import static com.elminster.common.constants.Constants.StringConstants.UNDER_LINE;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +18,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -24,10 +29,6 @@ import java.util.zip.ZipOutputStream;
 
 import com.elminster.common.constants.Constants.EncodingConstants;
 import com.elminster.common.constants.Constants.StringConstants;
-
-import static com.elminster.common.constants.Constants.StringConstants.EMPTY_STRING;
-import static com.elminster.common.constants.Constants.StringConstants.TAB;
-import static com.elminster.common.constants.Constants.StringConstants.UNDER_LINE;
 import com.elminster.common.util.Messages.Message;
 
 /**
@@ -466,13 +467,25 @@ public abstract class FileUtil {
   /**
    * Get the file name of the specified absolute path without extension.
    * 
-   * @param path
+   * @param absolutePath
    *          the specified absolute path
    * @return the file name without extension
    */
-  public static String getFileNameExcludeExtension(String path) {
-    File file = new File(path);
+  public static String getFileNameExcludeExtensionByAbsolutePath(String absolutePath) {
+    File file = new File(absolutePath);
     return getFileNameExcludeExtension(file);
+  }
+  
+  /**
+   * Get the file name of the specified filename without extension.
+   * 
+   * @param filename
+   *          the specified filename
+   * @return the file name without extension
+   */
+  public static String getFileNameExcludeExtension(String filename) {
+    Assert.notNull(filename);
+    return filename.substring(0, filename.lastIndexOf(EXTENSION_SPLIT));
   }
   
   /**
@@ -1317,5 +1330,45 @@ public abstract class FileUtil {
       }
     }
     return rtn;
+  }
+
+  /**
+   * Check if the directory contains the file with specified filename.
+   * @param directory the directory
+   * @param filename the filename
+   * @param includedExtension included extension
+   * @param recursion if recursion
+   * @return if the directory contains the file with specified filename
+   */
+  public static boolean contains(File directory, String filename, boolean includedExtension, boolean recursion) {
+    Assert.notNull(directory, "directory cannot be null.");
+    Assert.notNull(filename, "filename cannot be null.");
+    if (!directory.isDirectory()) {
+      throw new IllegalArgumentException(String.format("parameter [%s] is not a directory.", directory.getAbsolutePath()));
+    }
+    File[] listFiles = directory.listFiles();
+    List<File> subDirectories = new LinkedList<>();
+    for (File listFile : listFiles) {
+      String compareFileName = filename;
+      String listFileName = listFile.getName();
+      if (!includedExtension) {
+        listFileName = getFileNameExcludeExtension(listFile);
+        compareFileName = getFileNameExcludeExtension(filename);
+      }
+      if (listFileName.equals(compareFileName)) {
+        return true;
+      }
+      if (listFile.isDirectory()) {
+        subDirectories.add(listFile);
+      }
+    }
+    if (recursion) {
+      for (File subDirectory : subDirectories) {
+        if (contains(subDirectory, filename, includedExtension, recursion)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }

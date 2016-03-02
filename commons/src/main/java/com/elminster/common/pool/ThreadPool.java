@@ -41,14 +41,15 @@ final public class ThreadPool {
   /** the singleton. */
   private static ThreadPool pool = new ThreadPool();
   /** the thread pool executor. */
-  private ThreadPoolExecutor executor;
+  protected ThreadPoolExecutor executor;
   /** the thread pool listener. */
   private List<ThreadPoolListener> listeners;
+  
   /**
    * the scheduled thread pool executor. Don't want to make the core thread pool too large, so use an additional
    * scheduled thread pool for scheduled works.
    */
-  private ScheduledThreadPoolExecutor scheduledExecutor;
+  protected ScheduledThreadPoolExecutor scheduledExecutor;
 
   /**
    * Singleton
@@ -95,27 +96,6 @@ final public class ThreadPool {
         cfg.getIntegerProperty(CORE_POOL_SIZE, 10)));
     scheduledExecutor = new ScheduledThreadPoolExecutor(cfg.getIntegerProperty(CORE_POOL_SIZE, 10));
     listeners = new ArrayList<ThreadPoolListener>();
-    // the shutdown hook for JVM.
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      public void run() {
-        shutdown();
-        // interrupt all running runnables
-        try {
-          if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
-            logger.debug("Executor did not terminate in the specified time.");
-            List<Runnable> droppedTasks = executor.shutdownNow();
-            logger.debug("Executor was abruptly shut down. " + droppedTasks.size() + " tasks will not be executed.");
-          }
-          if (!scheduledExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
-            logger.debug("Scheduled Executor did not terminate in the specified time.");
-            List<Runnable> droppedTasks = scheduledExecutor.shutdownNow();
-            logger.debug("Scheduled Executor was abruptly shut down. " + droppedTasks.size() + " tasks will not be executed.");
-          }
-        } catch (InterruptedException e) {
-          logger.warn("interrupted while shudown executors", e);
-        }
-      }
-    });
   }
 
   /**

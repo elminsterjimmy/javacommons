@@ -41,6 +41,18 @@ public class JsonResponse implements Serializable {
    * The next Page URI.
    */
   private String nextPage;
+  /**
+   * The page Number.
+   */
+  private int pageNumber;
+  /**
+   * The page size.
+   */
+  private int pageSize;
+  /**
+   * The total pages.
+   */
+  private int totalPages;
   
   public JsonResponse() {
     this.status = STATUS_OK;
@@ -123,6 +135,51 @@ public class JsonResponse implements Serializable {
    */
   public JsonResponse setNextPage(String nextPage) {
     this.nextPage = nextPage;
+    return this;
+  }
+
+  /**
+   * @return the pageNumber
+   */
+  public int getPageNumber() {
+    return pageNumber;
+  }
+
+  /**
+   * @param pageNumber the pageNumber to set
+   */
+  public JsonResponse setPageNumber(int pageNumber) {
+    this.pageNumber = pageNumber;
+    return this;
+  }
+
+  /**
+   * @return the pageSize
+   */
+  public int getPageSize() {
+    return pageSize;
+  }
+
+  /**
+   * @param pageSize the pageSize to set
+   */
+  public JsonResponse setPageSize(int pageSize) {
+    this.pageSize = pageSize;
+    return this;
+  }
+
+  /**
+   * @return the totalPages
+   */
+  public int getTotalPages() {
+    return totalPages;
+  }
+
+  /**
+   * @param totalPages the totalPages to set
+   */
+  public JsonResponse setTotalPages(int totalPages) {
+    this.totalPages = totalPages;
     return this;
   }
 }
