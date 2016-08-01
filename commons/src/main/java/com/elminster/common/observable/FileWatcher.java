@@ -95,6 +95,7 @@ public class FileWatcher extends Observable implements Runnable {
       long lastModified = file.lastModified();
       if (lastModified != lastModifyTime) {
         lastModifyTime = lastModified;
+        setChanged();
         notifyObservers(this);
       }
       try {
