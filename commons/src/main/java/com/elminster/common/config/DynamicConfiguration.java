@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Properties;
 
 import com.elminster.common.observable.FileWatcher;
 import com.elminster.common.pool.ThreadPool;
@@ -23,6 +26,8 @@ public class DynamicConfiguration extends StandardConfiguration implements Obser
   /** the file watchers. */
   protected FileWatcher[] fileWatchers;
 
+  protected Map<File, Properties> propMap = new HashMap<>();
+  
   /**
    * Constructor.
    * 
@@ -47,7 +52,13 @@ public class DynamicConfiguration extends StandardConfiguration implements Obser
       InputStream is = null;
       try {
         is = new FileInputStream(file);
-        this.properties.load(is);
+        Properties prop = propMap.get(file);
+        if (null == prop) {
+          prop = new Properties();
+        }
+        prop.clear();
+        prop.load(is);
+        propMap.put(file, prop);
       } catch (IOException e) {
         throw new RuntimeException(String.format("exception while reloading configuration [%s] at [%s].",
             file.getName(), file.getAbsoluteFile()), e);
