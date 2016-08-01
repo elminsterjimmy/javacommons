@@ -1371,4 +1371,19 @@ public abstract class FileUtil {
     }
     return false;
   }
+  
+  /**
+   * Change the file's extension to specified extension.
+   * @param fullName the file's full name.
+   * @param extension2ChangeTo the extension to change to
+   * @return the full name with changed extension
+   */
+  public static String changeFileExtension(String fullName, String extension2ChangeTo) {
+    int idx = fullName.lastIndexOf(EXTENSION_SPLIT);
+    if (-1 == idx) {
+      return fullName + (extension2ChangeTo.startsWith(EXTENSION_SPLIT) ? extension2ChangeTo : EXTENSION_SPLIT + extension2ChangeTo);
+    } else {
+      return fullName.substring(0, idx) + (extension2ChangeTo.startsWith(EXTENSION_SPLIT) ? extension2ChangeTo : EXTENSION_SPLIT + extension2ChangeTo);
+    }
+  }
 }
