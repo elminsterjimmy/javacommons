@@ -604,7 +604,7 @@ public abstract class StringUtil {
         break;
       }
     }
-    return current.substring(whiteSpacesLen + 1);
+    return current.substring(whiteSpacesLen);
   }
 
   /**
