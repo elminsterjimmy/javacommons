@@ -55,5 +55,9 @@ public interface IJob extends Runnable {
    */
   public static enum JobStatus {
     CREATED, RUNNING, ERROR, CANCELLED, DONE;
+    
+    public boolean isDone() {
+      return JobStatus.DONE == this;
+    }
   }
 }
