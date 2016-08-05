@@ -132,7 +132,7 @@ abstract public class Job implements IJob {
   public void run() {
     jobStarted = System.currentTimeMillis();
     if (logger.isDebugEnabled()) {
-      logger.debug(String.format("Job %s [%d] started at %tc.", name, id, new Date(jobStarted)));
+      logger.debug(String.format("Job {%X}-{%s} started at %tc.", id, name, new Date(jobStarted)));
     }
     try {
       status = JobStatus.RUNNING;
@@ -145,7 +145,7 @@ abstract public class Job implements IJob {
       if (logger.isDebugEnabled()) {
         long finishedTs = System.currentTimeMillis();
         long delta = finishedTs - jobStarted;
-        logger.debug(String.format("Job %s [%d] finished at %tc. Time delta = %dms. Status = %s", name, id, new Date(
+        logger.debug(String.format("Job {%X}-{%s} finished at %tc. Time delta = %dms. Status = %s", id, name, new Date(
             finishedTs), delta, status.toString()));
       }
     }
