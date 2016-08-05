@@ -110,7 +110,7 @@ public abstract class BinaryUtil {
   }
 
   /**
-   * Convert binary string to 16 hex string.
+   * Convert binary string to hex string.
    * 
    * @param binaryString
    *          binary string
@@ -156,6 +156,17 @@ public abstract class BinaryUtil {
   }
   
   /**
+   * Return a String representation of the specified byte as hex.
+   * 
+   * @param val
+   *          the specified byte
+   * @return string representation of the specified byte as hex
+   */
+  public static String getHex(final byte val) {
+    return binary2Hex(getBinary(val));
+  }
+  
+  /**
    * Return a String representation of the specified integer as binary.
    * 
    * @param val
@@ -168,6 +179,17 @@ public abstract class BinaryUtil {
       sb.append((val >> i) & 0x01);
     }
     return sb.toString();
+  }
+  
+  /**
+   * Return a String representation of the specified integer as hex.
+   * 
+   * @param val
+   *          the specified byte
+   * @return string representation of the specified byte as hex
+   */
+  public static String getHex(final int val) {
+    return binary2Hex(getBinary(val));
   }
 
   /**
@@ -183,6 +205,17 @@ public abstract class BinaryUtil {
       sb.append((val >> i) & 0x01);
     }
     return sb.toString();
+  }
+  
+  /**
+   * Return a String representation of the specified long as hex.
+   * 
+   * @param val
+   *          the specified byte
+   * @return string representation of the specified byte as hex
+   */
+  public static String getHex(final long val) {
+    return binary2Hex(getBinary(val));
   }
 
   /**
