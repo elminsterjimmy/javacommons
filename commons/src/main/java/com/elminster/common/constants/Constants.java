@@ -138,6 +138,10 @@ public interface Constants {
     public static final char DOUBLE_QUOTE = '"';
     /** <code>^</code> */
     public static final char CARET = '^';
+    /** <code>></code> */
+    public static final char GREAT_THAN = '>';
+    /** <code><</code> */
+    public static final char LESS_THAN = '<';
   }
   
   /**
@@ -209,6 +213,10 @@ public interface Constants {
     public static final String DOUBLE_QUOTE = String.valueOf(CharacterConstants.DOUBLE_QUOTE);
     /** <code>^</code> */
     public static final String CARET = String.valueOf(CharacterConstants.CARET);
+    /** <code>></code> */
+    public static final String GREAT_THAN = String.valueOf(CharacterConstants.GREAT_THAN);
+    /** <code><</code> */
+    public static final String LESS_THAN = String.valueOf(CharacterConstants.LESS_THAN);
     /** <code></code> */
     public static final String EMPTY_STRING = ""; //$NON-NLS-1$
     /** <code>null</code> */
