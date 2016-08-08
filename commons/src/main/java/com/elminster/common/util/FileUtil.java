@@ -27,6 +27,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import com.elminster.common.constants.Constants.CharacterConstants;
 import com.elminster.common.constants.Constants.EncodingConstants;
 import com.elminster.common.constants.Constants.StringConstants;
 import com.elminster.common.util.Messages.Message;
@@ -65,6 +66,21 @@ public abstract class FileUtil {
   public static final String FILE_SEPARATOR = System.getProperty("file.separator"); //$NON-NLS-1$
   /** the temporary directory specified in OS. */
   public static final String TEMPORARY_DIR = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
+
+  /** the illegal filename characters. */
+  private static final char[] ILLEGAL_FILENAME_CHARACTERS = {
+      CharacterConstants.SLASH,
+      CharacterConstants.BACKSLASH,
+      CharacterConstants.COLON,
+      CharacterConstants.STAR,
+      CharacterConstants.QUESTION,
+      CharacterConstants.VERTICAL_BAR,
+      CharacterConstants.GREAT_THAN,
+      CharacterConstants.LESS_THAN,
+      CharacterConstants.DOUBLE_QUOTE,
+      CharacterConstants.CR,
+      CharacterConstants.LF
+  };
 
   /**
    * Get the system temporary folder.
@@ -1385,5 +1401,73 @@ public abstract class FileUtil {
     } else {
       return fullName.substring(0, idx) + (extension2ChangeTo.startsWith(EXTENSION_SPLIT) ? extension2ChangeTo : EXTENSION_SPLIT + extension2ChangeTo);
     }
+  }
+  
+  /**
+   * Get the safe file name by replacing <code>*?<>/\|</code> to <code>#HEX</code> presentation.
+   * @param filename the original filename
+   * @return the safe file name
+   */
+  public static String toSafeFileName(final String filename) {
+    StringBuilder safeFileName = new StringBuilder();
+    if (null != filename) {
+      for (int i = 0; i < filename.length(); i++) {
+        char c = filename.charAt(i);
+        if (isIllegalFileNameCharacter(c)) {
+          safeFileName.append(StringConstants.SHARP);
+          safeFileName.append(BinaryUtil.getHex((byte)c));
+        } else {
+          if (CharacterConstants.SHARP == c) {
+            safeFileName.append(StringConstants.SHARP);
+          }
+          safeFileName.append(c);
+        }
+      }
+    }
+    return safeFileName.toString();
+  }
+  
+  /**
+   * Restore the filename from safe filename.
+   * @param safeFileName the safe filename
+   * @return the original filename
+   */
+  public static String restoreFromSafeFileName(final String safeFileName) {
+    StringBuilder fileName = new StringBuilder();
+    if (null != safeFileName) {
+      for (int i = 0; i < safeFileName.length(); i++) {
+        char c = safeFileName.charAt(i);
+        if (CharacterConstants.SHARP == c) {
+          try {
+            char nextChar = safeFileName.charAt(++i);
+            if (CharacterConstants.SHARP == nextChar) {
+              fileName.append(nextChar);
+            } else {
+              char nextnextChar = safeFileName.charAt(++i);
+              fileName.append((char)(Byte.parseByte(String.valueOf(nextChar) + String.valueOf(nextnextChar), 16)));
+            }
+          } catch (StringIndexOutOfBoundsException | NumberFormatException ex) {
+            throw new RuntimeException(String.format("Failed to parse safeFileName [%s].", safeFileName));
+          }
+        } else {
+          fileName.append(c);
+        }
+      }
+    }
+    return fileName.toString();
+  }
+
+  /**
+   * Check if the character is an illegal file name character.
+   * @param c the character
+   * @return is an illegal file name character
+   */
+  private static boolean isIllegalFileNameCharacter(char c) {
+    for (char ch : ILLEGAL_FILENAME_CHARACTERS) {
+      if (ch == c) {
+        return true;
+      }
+    }
+    return false;
   }
 }
