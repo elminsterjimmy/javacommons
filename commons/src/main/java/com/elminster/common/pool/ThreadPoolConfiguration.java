@@ -18,11 +18,11 @@ public class ThreadPoolConfiguration extends CommonConfiguration {
   private static final String CONFIG_NAME = "threadpool.properties";
   
   /** the thread pool core size. */
-  public static final String CORE_POOL_SIZE = "threadpool.core.size";
+  public static final IntegerKey CORE_POOL_SIZE = new IntegerKey("threadpool.core.size", 10);
   /** the thread pool max size. */
-  public static final String MAX_POOL_SIZE = "threadpool.max.size";
+  public static final IntegerKey MAX_POOL_SIZE = new IntegerKey("threadpool.max.size", 10);
   /** the thread pool keep alive time (unit ms). */
-  public static final String KEEP_ALIVE_TIME = "threadpool.keep.alive.time";
+  public static final LongKey KEEP_ALIVE_TIME = new LongKey("threadpool.keep.alive.time", 1000L);
   
   public static final ThreadPoolConfiguration INSTANCE = new ThreadPoolConfiguration();
   

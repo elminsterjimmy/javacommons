@@ -6,6 +6,7 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.elminster.common.config.key.Key;
 import com.elminster.common.util.StringUtil;
 
 /**
@@ -15,13 +16,13 @@ import com.elminster.common.util.StringUtil;
  * @version 1.0
  */
 abstract public class CommonConfiguration implements IConfigProvider, IConfigPersister {
-  
+
   /** the logger. */
   protected static final Log logger = LogFactory.getLog(CommonConfiguration.class);
 
   /** the properties. */
   protected Properties properties = new Properties();
-  
+
   /**
    * Constructor.
    */
@@ -62,7 +63,18 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
   public String getStringProperty(String key, String defaultValue) {
     return properties.getProperty(key, defaultValue);
   }
-  
+
+  /**
+   * Get String property.
+   * 
+   * @param key
+   *          the String key
+   * @return the property.
+   */
+  public String getStringProperty(StringKey key) {
+    return properties.getProperty(key.getKey(), key.getDefaultValue());
+  }
+
   /**
    * Get Integer property. Will throw a NFE if the property cannot cast to Integer.
    * 
@@ -80,7 +92,7 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
     }
     return rtn;
   }
-  
+
   /**
    * Get Integer property.
    * 
@@ -102,7 +114,18 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
     }
     return rtn;
   }
-  
+
+  /**
+   * Get Integer property.
+   * 
+   * @param key
+   *          the integer key
+   * @return the property.
+   */
+  public Integer getIntegerProperty(IntegerKey key) {
+    return getIntegerProperty(key.getKey(), key.getDefaultValue());
+  }
+
   /**
    * Get Long property. Will throw a NFE if the property cannot cast to Long.
    * 
@@ -120,7 +143,7 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
     }
     return rtn;
   }
-  
+
   /**
    * Get Long property.
    * 
@@ -142,7 +165,18 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
     }
     return rtn;
   }
-  
+
+  /**
+   * Get Long property.
+   * 
+   * @param key
+   *          the long key
+   * @return the property.
+   */
+  public Long getLongProperty(LongKey key) {
+    return getLongProperty(key.getKey(), key.getDefaultValue());
+  }
+
   /**
    * Get Float property. Will throw a NFE if the property cannot cast to Float.
    * 
@@ -160,7 +194,7 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
     }
     return rtn;
   }
-  
+
   /**
    * Get Float property.
    * 
@@ -182,7 +216,18 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
     }
     return rtn;
   }
-  
+
+  /**
+   * Get Float property.
+   * 
+   * @param key
+   *          the float key
+   * @return the property.
+   */
+  public Float getFloatProperty(FloatKey key) {
+    return getFloatProperty(key.getKey(), key.getDefaultValue());
+  }
+
   /**
    * Get Double property. Will throw a NFE if the property cannot cast to Double.
    * 
@@ -200,7 +245,7 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
     }
     return rtn;
   }
-  
+
   /**
    * Get Double property.
    * 
@@ -222,7 +267,18 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
     }
     return rtn;
   }
-  
+
+  /**
+   * Get Double property.
+   * 
+   * @param key
+   *          the double key
+   * @return the property.
+   */
+  public Double getDoubleProperty(DoubleKey key) {
+    return getDoubleProperty(key.getKey(), key.getDefaultValue());
+  }
+
   /**
    * Get Boolean property.
    * 
@@ -240,7 +296,7 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
     }
     return rtn;
   }
-  
+
   /**
    * Get Integer property.
    * 
@@ -262,7 +318,18 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
     }
     return rtn;
   }
-  
+
+  /**
+   * Get Boolean property.
+   * 
+   * @param key
+   *          the boolean key
+   * @return the property.
+   */
+  public Boolean getBooleanProperty(BooleanKey key) {
+    return getBooleanProperty(key.getKey(), key.getDefaultValue());
+  }
+
   /**
    * @see com.elminster.common.config.IConfigProvider#setProperty(java.lang.String, java.lang.String)
    */
@@ -320,7 +387,9 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
 
   /**
    * Get the missing key message.
-   * @param key the key
+   * 
+   * @param key
+   *          the key
    * @return the missing key message
    */
   private String getMissingKeyMessage(String key) {

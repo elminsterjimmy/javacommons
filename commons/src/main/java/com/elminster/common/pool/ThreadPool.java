@@ -1,9 +1,5 @@
 package com.elminster.common.pool;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -18,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.elminster.common.config.CommonConfiguration;
 import com.elminster.common.config.IConfigProvider;
 
 /**
@@ -57,12 +52,12 @@ final public class ThreadPool {
    *          the config
    */
   private void quickInit(IConfigProvider cfg) {
-    executor = new ThreadPoolExecutor(cfg.getIntegerProperty(ThreadPoolConfiguration.CORE_POOL_SIZE, 10),
-        cfg.getIntegerProperty(ThreadPoolConfiguration.MAX_POOL_SIZE, 10),
-        cfg.getLongProperty(ThreadPoolConfiguration.KEEP_ALIVE_TIME, 0L),
-        TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(cfg.getIntegerProperty(ThreadPoolConfiguration.CORE_POOL_SIZE, 10)));
+    executor = new ThreadPoolExecutor(cfg.getIntegerProperty(ThreadPoolConfiguration.CORE_POOL_SIZE),
+        cfg.getIntegerProperty(ThreadPoolConfiguration.MAX_POOL_SIZE),
+        cfg.getLongProperty(ThreadPoolConfiguration.KEEP_ALIVE_TIME),
+        TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(cfg.getIntegerProperty(ThreadPoolConfiguration.CORE_POOL_SIZE)));
     scheduledExecutor = new ScheduledThreadPoolExecutor(
-        cfg.getIntegerProperty(ThreadPoolConfiguration.CORE_POOL_SIZE, 10));
+        cfg.getIntegerProperty(ThreadPoolConfiguration.CORE_POOL_SIZE));
     listeners = new ArrayList<ThreadPoolListener>();
   }
 
