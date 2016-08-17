@@ -140,7 +140,6 @@ abstract public class Job implements IJob {
     } catch (Throwable t) {
       status = JobStatus.ERROR;
       uncatchedExceptionHandler.handleUncatchedException(t);
-      monitor.cancel();
     } finally {
       if (logger.isDebugEnabled()) {
         long finishedTs = System.currentTimeMillis();
