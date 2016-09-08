@@ -14,4 +14,11 @@ public interface IAdaptable {
    * @return adapted object
    */
   public Object adaptTo(Class<?> clazz);
+  
+  /**
+   * Check if current type is adaptable to the specified class.
+   * @param clazz the class to adapt to
+   * @return if current type is adaptable to the specified class
+   */
+  public boolean adaptable(Class<?> clazz);
 }
