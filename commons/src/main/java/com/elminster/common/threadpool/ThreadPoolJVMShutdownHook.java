@@ -1,4 +1,4 @@
-package com.elminster.common.pool;
+package com.elminster.common.threadpool;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -44,7 +44,7 @@ public class ThreadPoolJVMShutdownHook extends Thread {
    * {@inheritDoc}
    */
   public void run() {
-    ThreadPool tp = ThreadPool.getThreadPool();
+    ThreadPool tp = ThreadPool.getDefaultThreadPool();
     tp.shutdown();
     // interrupt all running runnables
     try {

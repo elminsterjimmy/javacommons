@@ -11,8 +11,8 @@ import java.util.Observer;
 import java.util.Properties;
 
 import com.elminster.common.observable.FileWatcher;
-import com.elminster.common.pool.ThreadPool;
-import com.elminster.common.pool.ThreadPoolListener;
+import com.elminster.common.threadpool.ThreadPool;
+import com.elminster.common.threadpool.ThreadPoolListener;
 
 /**
  * The dynamic configuration that using configuration files. All files will be watched by a thread to invoke the update
@@ -80,7 +80,7 @@ public class DynamicConfiguration extends StandardConfiguration implements Obser
   protected void loadResources() {
     super.loadResources();
     if (null != configurationFiles) {
-      ThreadPool pool = ThreadPool.getThreadPool();
+      ThreadPool pool = ThreadPool.getDefaultThreadPool();
       pool.addThreadPoolListener(new ThreadPoolListener() {
 
         @Override

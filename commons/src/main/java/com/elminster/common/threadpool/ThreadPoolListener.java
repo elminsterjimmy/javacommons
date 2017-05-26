@@ -1,4 +1,4 @@
-package com.elminster.common.pool;
+package com.elminster.common.threadpool;
 
 import com.elminster.common.listener.Listener;
 

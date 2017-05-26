@@ -1,4 +1,11 @@
-package com.elminster.common.pool;
+package com.elminster.common.threadpool;
+
+import static com.elminster.common.threadpool.ThreadPoolConfiguration.CORE_POOL_SIZE;
+import static com.elminster.common.threadpool.ThreadPoolConfiguration.DAEMON_THREAD;
+import static com.elminster.common.threadpool.ThreadPoolConfiguration.KEEP_ALIVE_TIME;
+import static com.elminster.common.threadpool.ThreadPoolConfiguration.MAX_POOL_SIZE;
+import static com.elminster.common.threadpool.ThreadPoolConfiguration.POOL_NAME;
+import static com.elminster.common.threadpool.ThreadPoolConfiguration.REJECTED_POLICY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +13,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -13,8 +21,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import com.elminster.common.config.IConfigProvider;
 
 /**
  * The thread pool.
@@ -27,37 +33,46 @@ final public class ThreadPool {
   /** the logger. */
   public static final Log logger = LogFactory.getLog(ThreadPool.class);
   /** the singleton. */
-  private static ThreadPool pool = new ThreadPool();
+  private static final ThreadPool defaultThreadPool = new ThreadPool();
   /** the thread pool executor. */
-  protected ThreadPoolExecutor executor;
+  protected final ThreadPoolExecutor executor;
   /** the thread pool listener. */
-  private List<ThreadPoolListener> listeners;
+  private final List<ThreadPoolListener> listeners;
 
   /**
    * the scheduled thread pool executor. Don't want to make the core thread pool too large, so use an additional scheduled thread pool for scheduled works.
    */
-  protected ScheduledThreadPoolExecutor scheduledExecutor;
+  protected final ScheduledThreadPoolExecutor scheduledExecutor;
 
   /**
-   * Singleton
+   * Default non-param constructor for initialize the default threadpool.
    */
   private ThreadPool() {
-    quickInit(ThreadPoolConfiguration.INSTANCE);
+    this(ThreadPoolConfiguration.INSTANCE);
   }
-
+  
   /**
-   * Initialize the pool.
-   * 
-   * @param cfg
-   *          the config
+   * Create the threadpool with specified configuration.
+   * @param cfg the configuration
    */
-  private void quickInit(IConfigProvider cfg) {
-    executor = new ThreadPoolExecutor(cfg.getIntegerProperty(ThreadPoolConfiguration.CORE_POOL_SIZE),
-        cfg.getIntegerProperty(ThreadPoolConfiguration.MAX_POOL_SIZE),
-        cfg.getLongProperty(ThreadPoolConfiguration.KEEP_ALIVE_TIME),
-        TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(cfg.getIntegerProperty(ThreadPoolConfiguration.CORE_POOL_SIZE)));
-    scheduledExecutor = new ScheduledThreadPoolExecutor(
-        cfg.getIntegerProperty(ThreadPoolConfiguration.CORE_POOL_SIZE));
+  public ThreadPool(ThreadPoolConfiguration cfg) {
+    String rejectedPolicy = cfg.getStringProperty(REJECTED_POLICY);
+    RejectedExecutionHandler rejectHandler = null;
+    try {
+      Class<?> clazz = Class.forName(rejectedPolicy);
+      rejectHandler = (RejectedExecutionHandler) clazz.newInstance();
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+      rejectHandler = new DefaultRejectedPolicy();
+    }
+    executor = new ThreadPoolExecutor(cfg.getIntegerProperty(CORE_POOL_SIZE),
+        cfg.getIntegerProperty(MAX_POOL_SIZE),
+        cfg.getLongProperty(KEEP_ALIVE_TIME), TimeUnit.MILLISECONDS,
+        new ArrayBlockingQueue<Runnable>(cfg.getIntegerProperty(CORE_POOL_SIZE)),
+        new NamedThreadFactory(cfg.getStringProperty(POOL_NAME), cfg.getBooleanProperty(DAEMON_THREAD)),
+        rejectHandler);
+    scheduledExecutor = new ScheduledThreadPoolExecutor(cfg.getIntegerProperty(CORE_POOL_SIZE),
+        new NamedThreadFactory(cfg.getStringProperty(POOL_NAME), cfg.getBooleanProperty(DAEMON_THREAD)),
+        rejectHandler );
     listeners = new ArrayList<ThreadPoolListener>();
   }
 
@@ -66,8 +81,8 @@ final public class ThreadPool {
    * 
    * @return the singleton thread pool
    */
-  public static ThreadPool getThreadPool() {
-    return pool;
+  public static ThreadPool getDefaultThreadPool() {
+    return defaultThreadPool;
   }
 
   /**

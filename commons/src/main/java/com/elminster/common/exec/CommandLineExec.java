@@ -10,7 +10,7 @@ import java.util.Set;
 
 import com.elminster.common.constants.Constants.StringConstants;
 import com.elminster.common.misc.ThreadCreator;
-import com.elminster.common.pool.ThreadPool;
+import com.elminster.common.threadpool.ThreadPool;
 import com.elminster.common.util.Assert;
 import com.elminster.common.util.CollectionUtil;
 
@@ -35,7 +35,7 @@ public class CommandLineExec {
   /** the thread creator. */
   final private ThreadCreator threadCreator = new ThreadCreator();
   /** the thread pool. */
-  final private ThreadPool threadPool = ThreadPool.getThreadPool();
+  final private ThreadPool threadPool = ThreadPool.getDefaultThreadPool();
 
   /**
    * Constructor.
