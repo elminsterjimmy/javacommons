@@ -1,5 +1,7 @@
 package com.elminster.common.cache;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * The cache object.
  * 
@@ -17,7 +19,7 @@ class CacheObject<K, V> {
   /** the created time. */
   private final long createdTime;
   /** the hit count. */
-  private long hit;
+  private final AtomicLong hit;
   /** the last hit time. */
   private long lastHitTime;
   
@@ -40,6 +42,7 @@ class CacheObject<K, V> {
     this.key = key;
     this.value = value;
     this.ttl = ttl;
+    this.hit = new AtomicLong();
     this.createdTime = System.currentTimeMillis();
   }
   
@@ -80,14 +83,14 @@ class CacheObject<K, V> {
    * @return
    */
   public long getHitCount() {
-    return hit;
+    return hit.get();
   }
   
   /**
    * Add hit.
    */
   public void addHit() {
-    hit++;
+    hit.incrementAndGet();
     lastHitTime = System.currentTimeMillis();
   }
   
@@ -97,8 +100,7 @@ class CacheObject<K, V> {
    * @return the hit count
    */
   public long subHit(long sub) {
-    hit = hit - sub;
-    return hit;
+    return hit.addAndGet(-sub);
   }
   
   /**
