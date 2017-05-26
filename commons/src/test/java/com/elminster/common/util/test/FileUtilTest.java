@@ -12,7 +12,7 @@ public class FileUtilTest {
 
   @Test
   public void testGetFileNameExcludeExtension() {
-    File f = new File("c:/test.xml");
+    File f = new File("test.xml");
     try {
       if (!f.exists()) {
         f.createNewFile();
@@ -35,5 +35,29 @@ public class FileUtilTest {
     Assert.assertEquals("/\\|?*<>\"#", FileUtil.restoreFromSafeFileName(FileUtil.toSafeFileName("/\\|?*<>\"#")));
     Assert.assertEquals("#中文测试#", FileUtil.restoreFromSafeFileName(FileUtil.toSafeFileName("#中文测试#")));
     Assert.assertEquals("日本語テスト/", FileUtil.restoreFromSafeFileName(FileUtil.toSafeFileName("日本語テスト/")));
+  }
+  
+  @Test
+  public void testFindFileFrom() {
+    String fileName = "test1/test2/test3.txt";
+    File file = new File(fileName);
+    try {
+      FileUtil.createNewFile(fileName);
+      File root = new File("test1");
+      File foundFile3 = FileUtil.findFileFrom(root, "test3.txt");
+      File foundFile2 = FileUtil.findFileFrom(root, "test2");
+      File foundFile4 = FileUtil.findFileFrom(root, "test4.txt");
+      File expactFile2 = new File("test1/test2");
+      Assert.assertEquals(file.getAbsolutePath(), foundFile3.getAbsolutePath());
+      Assert.assertEquals(expactFile2.getAbsolutePath(), foundFile2.getAbsolutePath());
+      Assert.assertEquals(null, foundFile4);
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      if (file.exists()) {
+        file.delete();
+        FileUtil.deleteEmptyFolder("test1");
+      }
+    }
   }
 }

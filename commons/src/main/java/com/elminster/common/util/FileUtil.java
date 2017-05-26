@@ -67,20 +67,22 @@ public abstract class FileUtil {
   /** the temporary directory specified in OS. */
   public static final String TEMPORARY_DIR = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
 
+  // @formatter:off
   /** the illegal filename characters. */
-  private static final char[] ILLEGAL_FILENAME_CHARACTERS = {
-      CharacterConstants.SLASH,
-      CharacterConstants.BACKSLASH,
-      CharacterConstants.COLON,
-      CharacterConstants.STAR,
-      CharacterConstants.QUESTION,
-      CharacterConstants.VERTICAL_BAR,
-      CharacterConstants.GREAT_THAN,
-      CharacterConstants.LESS_THAN,
-      CharacterConstants.DOUBLE_QUOTE,
-      CharacterConstants.CR,
-      CharacterConstants.LF
+  private static final char[] ILLEGAL_FILENAME_CHARACTERS = { 
+    CharacterConstants.SLASH,
+    CharacterConstants.BACKSLASH,
+    CharacterConstants.COLON,
+    CharacterConstants.STAR,
+    CharacterConstants.QUESTION,
+    CharacterConstants.VERTICAL_BAR,
+    CharacterConstants.GREAT_THAN,
+    CharacterConstants.LESS_THAN,
+    CharacterConstants.DOUBLE_QUOTE,
+    CharacterConstants.CR,
+    CharacterConstants.LF 
   };
+  // @formatter:on
 
   /**
    * Get the system temporary folder.
@@ -95,8 +97,7 @@ public abstract class FileUtil {
    * Generate temporary folder by UUID.
    * 
    * @param parent
-   *          the parent folder (if it is not set, the parent folder will be the
-   *          system temporary folder).
+   *          the parent folder (if it is not set, the parent folder will be the system temporary folder).
    * @return the temporary folder path
    */
   public static String generateTemporaryFolderByUUID(String parent) {
@@ -109,8 +110,7 @@ public abstract class FileUtil {
    * Generate temporary file by UUID.
    * 
    * @param parent
-   *          the parent folder (if it is not set, the parent folder will be the
-   *          system temporary folder).
+   *          the parent folder (if it is not set, the parent folder will be the system temporary folder).
    * @return the temporary file path
    */
   public static String generateTemporaryFileByUUID(String parent) {
@@ -123,8 +123,7 @@ public abstract class FileUtil {
    * Generate the temporary file by timestamp.
    * 
    * @param parent
-   *          the parent folder (if it is not set, the parent folder will be the
-   *          system temporary folder).
+   *          the parent folder (if it is not set, the parent folder will be the system temporary folder).
    * @param prefix
    *          the prefix of the temporary file
    * @param suffix
@@ -169,8 +168,7 @@ public abstract class FileUtil {
   }
 
   /**
-   * Create folder using the specified absolute file path (create the parent
-   * folder if necessary)
+   * Create folder using the specified absolute file path (create the parent folder if necessary)
    * 
    * @param fileName
    *          the absolute file path
@@ -217,8 +215,7 @@ public abstract class FileUtil {
   }
 
   /**
-   * Move the specified file to another file (create folder for move to file if
-   * necessary)
+   * Move the specified file to another file (create folder for move to file if necessary)
    * 
    * @param srcFile
    *          the file to move
@@ -236,8 +233,7 @@ public abstract class FileUtil {
   }
 
   /**
-   * Copy the specified file to another file (create folder for move to file if
-   * necessary)
+   * Copy the specified file to another file (create folder for move to file if necessary)
    * 
    * @param srcFile
    *          the file to copy
@@ -283,8 +279,7 @@ public abstract class FileUtil {
   }
 
   /**
-   * Copy the specified file to another file (create folder for move to file if
-   * necessary)
+   * Copy the specified file to another file (create folder for move to file if necessary)
    * 
    * @param srcInputStream
    *          the inputString to copy
@@ -334,8 +329,7 @@ public abstract class FileUtil {
   }
 
   /**
-   * Copy the specified file to a folder (create the copy to folder if
-   * necessary)
+   * Copy the specified file to a folder (create the copy to folder if necessary)
    * 
    * @param srcFile
    *          the file to copy
@@ -385,8 +379,7 @@ public abstract class FileUtil {
   }
 
   /**
-   * Copy the specified folder to an folder (create the copy to folder if
-   * necessary).
+   * Copy the specified folder to an folder (create the copy to folder if necessary).
    * 
    * @param src
    *          the folder to copy
@@ -463,7 +456,25 @@ public abstract class FileUtil {
   }
 
   /**
-   * Get the file extension of the specified absolute path.
+   * Get the file format (extension without <code>.</code>) of the specified absolute path.
+   * 
+   * @param path
+   *          the specified absolute path
+   * @return the file format
+   */
+  public static String getFileFarmat(String path) {
+    if (StringUtil.isEmpty(path)) {
+      return EMPTY_STRING;
+    }
+    int idx = path.lastIndexOf(EXTENSION_SPLIT);
+    if (-1 == idx) {
+      return EMPTY_STRING;
+    }
+    return path.substring(idx + 1);
+  }
+
+  /**
+   * Get the file extension (.xxx) of the specified absolute path.
    * 
    * @param path
    *          the specified absolute path
@@ -477,7 +488,7 @@ public abstract class FileUtil {
     if (-1 == idx) {
       return EMPTY_STRING;
     }
-    return path.substring(idx + 1);
+    return path.substring(idx);
   }
 
   /**
@@ -491,7 +502,7 @@ public abstract class FileUtil {
     File file = new File(absolutePath);
     return getFileNameExcludeExtension(file);
   }
-  
+
   /**
    * Get the file name of the specified filename without extension.
    * 
@@ -501,25 +512,33 @@ public abstract class FileUtil {
    */
   public static String getFileNameExcludeExtension(String filename) {
     Assert.notNull(filename);
-    return filename.substring(0, filename.lastIndexOf(EXTENSION_SPLIT));
+    int idx = filename.lastIndexOf(EXTENSION_SPLIT);
+    if (idx < 0) {
+      return EMPTY_STRING;
+    } else {
+      return filename.substring(0, idx);
+    }
   }
-  
+
   /**
    * Get the file name of the specified absolute path without extension.
    * 
    * @param file
    *          the specified file
    * @return the file name without extension
+   * @throws IllegalArgumentException
+   *           on file is invalid.
    */
   public static String getFileNameExcludeExtension(File file) {
-    String fileName = null;
+    Assert.notNull(file);
     if (file.isFile()) {
-      fileName = file.getName();
-      fileName = fileName.substring(0, fileName.lastIndexOf(EXTENSION_SPLIT));
+      String fileName = file.getName();
+      return getFileNameExcludeExtension(fileName);
+    } else {
+      throw new IllegalArgumentException(String.format("File: [%s] is not a valid File.", file));
     }
-    return fileName;
   }
-  
+
   /**
    * Delete the specified folder unless it's empty.
    * 
@@ -535,8 +554,7 @@ public abstract class FileUtil {
   }
 
   /**
-   * Delete the specified file or folder (folder contains all sub folder and sub
-   * file).
+   * Delete the specified file or folder (folder contains all sub folder and sub file).
    * 
    * @param filename
    *          the specified absolute path
@@ -807,8 +825,7 @@ public abstract class FileUtil {
   }
 
   /**
-   * Read a specified file to a list by line. <b>The input stream is not
-   * closed.</b>
+   * Read a specified file to a list by line. <b>The input stream is not closed.</b>
    * 
    * @param fileName
    *          a specified file
@@ -872,7 +889,7 @@ public abstract class FileUtil {
   public static List<String> readFileByLine(String fileName, String charset) throws IOException {
     return readFileByLine(fileName, false, charset);
   }
-  
+
   /**
    * Read a specified file to a String (ignore the blank line).
    * 
@@ -950,7 +967,7 @@ public abstract class FileUtil {
    *          whether ignore the blank line
    * @param charset
    *          the charset of the specified file
-   * @return　the list contains all the file contexts
+   * @return the list contains all the file contexts
    * @throws IOException
    *           on error
    */
@@ -1042,8 +1059,7 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static void writeLines2file(List<String> lines, String fileName, boolean append, boolean overwrite)
-      throws IOException {
+  public static void writeLines2file(List<String> lines, String fileName, boolean append, boolean overwrite) throws IOException {
     if (isFileExist(fileName)) {
       if (overwrite) {
         writeLines2file(lines, fileName, append);
@@ -1129,8 +1145,7 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static void writeLine2file(String line, String fileName, boolean append, String encoding, boolean overwrite)
-      throws IOException {
+  public static void writeLine2file(String line, String fileName, boolean append, String encoding, boolean overwrite) throws IOException {
     if (isFileExist(fileName)) {
       if (overwrite) {
         writeLine2file(line, fileName, append, encoding);
@@ -1154,8 +1169,7 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static void writeLines2file(List<String> lines, String fileName, boolean append, String encoding)
-      throws IOException {
+  public static void writeLines2file(List<String> lines, String fileName, boolean append, String encoding) throws IOException {
     if (null == lines) {
       return;
     }
@@ -1200,8 +1214,7 @@ public abstract class FileUtil {
    * @throws IOException
    *           on error
    */
-  public static void writeLines2file(List<String> lines, String fileName, boolean append, String encoding,
-      boolean overwrite) throws IOException {
+  public static void writeLines2file(List<String> lines, String fileName, boolean append, String encoding, boolean overwrite) throws IOException {
     if (isFileExist(fileName)) {
       if (overwrite) {
         writeLines2file(lines, fileName, append, encoding);
@@ -1292,8 +1305,7 @@ public abstract class FileUtil {
     writeLines2file(manifestContents, manifestPath, false);
     // create the zip file
 
-    FileUtil.createZip(packagePath, (String[]) ObjectUtil.toObjectArray(CollectionUtil
-        .collection2Array(listAllAbsoluteFilePath(rootFolder, false))));
+    FileUtil.createZip(packagePath, (String[]) ObjectUtil.toObjectArray(CollectionUtil.collection2Array(listAllAbsoluteFilePath(rootFolder, false))));
   }
 
   /**
@@ -1350,10 +1362,15 @@ public abstract class FileUtil {
 
   /**
    * Check if the directory contains the file with specified filename.
-   * @param directory the directory
-   * @param filename the filename
-   * @param includedExtension included extension
-   * @param recursion if recursion
+   * 
+   * @param directory
+   *          the directory
+   * @param filename
+   *          the filename
+   * @param includedExtension
+   *          included extension
+   * @param recursion
+   *          if recursion
    * @return if the directory contains the file with specified filename
    */
   public static boolean contains(File directory, String filename, boolean includedExtension, boolean recursion) {
@@ -1387,11 +1404,14 @@ public abstract class FileUtil {
     }
     return false;
   }
-  
+
   /**
    * Change the file's extension to specified extension.
-   * @param fullName the file's full name.
-   * @param extension2ChangeTo the extension to change to
+   * 
+   * @param fullName
+   *          the file's full name.
+   * @param extension2ChangeTo
+   *          the extension to change to
    * @return the full name with changed extension
    */
   public static String changeFileExtension(String fullName, String extension2ChangeTo) {
@@ -1402,10 +1422,12 @@ public abstract class FileUtil {
       return fullName.substring(0, idx) + (extension2ChangeTo.startsWith(EXTENSION_SPLIT) ? extension2ChangeTo : EXTENSION_SPLIT + extension2ChangeTo);
     }
   }
-  
+
   /**
    * Get the safe file name by replacing <code>*?<>/\|</code> to <code>#HEX</code> presentation.
-   * @param filename the original filename
+   * 
+   * @param filename
+   *          the original filename
    * @return the safe file name
    */
   public static String toSafeFileName(final String filename) {
@@ -1415,7 +1437,7 @@ public abstract class FileUtil {
         char c = filename.charAt(i);
         if (isIllegalFileNameCharacter(c)) {
           safeFileName.append(StringConstants.SHARP);
-          safeFileName.append(BinaryUtil.getHex((byte)c));
+          safeFileName.append(BinaryUtil.getHex((byte) c));
         } else {
           if (CharacterConstants.SHARP == c) {
             safeFileName.append(StringConstants.SHARP);
@@ -1426,10 +1448,12 @@ public abstract class FileUtil {
     }
     return safeFileName.toString();
   }
-  
+
   /**
    * Restore the filename from safe filename.
-   * @param safeFileName the safe filename
+   * 
+   * @param safeFileName
+   *          the safe filename
    * @return the original filename
    */
   public static String restoreFromSafeFileName(final String safeFileName) {
@@ -1444,7 +1468,7 @@ public abstract class FileUtil {
               fileName.append(nextChar);
             } else {
               char nextnextChar = safeFileName.charAt(++i);
-              fileName.append((char)(Byte.parseByte(String.valueOf(nextChar) + String.valueOf(nextnextChar), 16)));
+              fileName.append((char) (Byte.parseByte(String.valueOf(nextChar) + String.valueOf(nextnextChar), 16)));
             }
           } catch (StringIndexOutOfBoundsException | NumberFormatException ex) {
             throw new RuntimeException(String.format("Failed to parse safeFileName [%s].", safeFileName));
@@ -1459,7 +1483,9 @@ public abstract class FileUtil {
 
   /**
    * Check if the character is an illegal file name character.
-   * @param c the character
+   * 
+   * @param c
+   *          the character
    * @return is an illegal file name character
    */
   private static boolean isIllegalFileNameCharacter(char c) {
@@ -1469,5 +1495,31 @@ public abstract class FileUtil {
       }
     }
     return false;
+  }
+
+  /**
+   * Find the specified file from a specified file.
+   * @param file the specified file
+   * @param filename2find the file name need to find
+   * @return found file or null for not found
+   */
+  public static File findFileFrom(File file, String filename2find) {
+    Assert.notNull(file);
+    Assert.notNull(filename2find);
+    if (!file.exists()) {
+      throw new IllegalArgumentException(String.format("The search root file [%s] does not exist.", file));
+    }
+    if (filename2find.equals(file.getName())) {
+      return file;
+    }
+    if (file.isDirectory()) {
+      for (File f : file.listFiles()) {
+        File found = findFileFrom(f, filename2find);
+        if (null != found) {
+          return found;
+        }
+      }
+    }
+    return null;
   }
 }
