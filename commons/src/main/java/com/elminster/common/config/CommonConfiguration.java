@@ -6,7 +6,6 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.elminster.common.config.key.Key;
 import com.elminster.common.util.StringUtil;
 
 /**
