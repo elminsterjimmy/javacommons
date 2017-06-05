@@ -1,14 +1,24 @@
 package com.elminster.common.util;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.elminster.common.constants.Constants.StringConstants;
 
@@ -21,33 +31,40 @@ import com.elminster.common.constants.Constants.StringConstants;
  */
 public abstract class ReflectUtil {
 
-  /**
-   * Maps primitive {@code Class}es to their corresponding wrapper {@code Class}.
-   */
-  private static final Map<Class<?>, Class<?>> primitiveWrapperMap = new HashMap<Class<?>, Class<?>>();
+  private static final Map<Class<?>, Class<?>> primitive2WrapperMap = new HashMap<>(9);
+  private static final Map<Class<?>, Class<?>> wrapper2PrimitiveMap = new HashMap<>(9);
+  private static final Map<String, Class<?>> primitiveTypeNameMap = new HashMap<>(17);
+  
+  /** Suffix for array class names: "[]" */
+  public static final String ARRAY_SUFFIX = "[]";
+  /** Prefix for internal array class names: "[L" */
+  private static final String INTERNAL_ARRAY_PREFIX = "[L";
 
   static {
-    primitiveWrapperMap.put(Boolean.TYPE, Boolean.class);
-    primitiveWrapperMap.put(Byte.TYPE, Byte.class);
-    primitiveWrapperMap.put(Character.TYPE, Character.class);
-    primitiveWrapperMap.put(Short.TYPE, Short.class);
-    primitiveWrapperMap.put(Integer.TYPE, Integer.class);
-    primitiveWrapperMap.put(Long.TYPE, Long.class);
-    primitiveWrapperMap.put(Double.TYPE, Double.class);
-    primitiveWrapperMap.put(Float.TYPE, Float.class);
-    primitiveWrapperMap.put(Void.TYPE, Void.TYPE);
-  }
-
-  /**
-   * Maps wrapper {@code Class}es to their corresponding primitive types.
-   */
-  private static final Map<Class<?>, Class<?>> wrapperPrimitiveMap = new HashMap<Class<?>, Class<?>>();
-  static {
-    for (final Class<?> primitiveClass : primitiveWrapperMap.keySet()) {
-      final Class<?> wrapperClass = primitiveWrapperMap.get(primitiveClass);
+    primitive2WrapperMap.put(Boolean.TYPE, Boolean.class);
+    primitive2WrapperMap.put(Byte.TYPE, Byte.class);
+    primitive2WrapperMap.put(Character.TYPE, Character.class);
+    primitive2WrapperMap.put(Short.TYPE, Short.class);
+    primitive2WrapperMap.put(Integer.TYPE, Integer.class);
+    primitive2WrapperMap.put(Long.TYPE, Long.class);
+    primitive2WrapperMap.put(Double.TYPE, Double.class);
+    primitive2WrapperMap.put(Float.TYPE, Float.class);
+    primitive2WrapperMap.put(Void.TYPE, Void.TYPE);
+    
+    for (final Class<?> primitiveClass : primitive2WrapperMap.keySet()) {
+      final Class<?> wrapperClass = primitive2WrapperMap.get(primitiveClass);
       if (!primitiveClass.equals(wrapperClass)) {
-        wrapperPrimitiveMap.put(wrapperClass, primitiveClass);
+        wrapper2PrimitiveMap.put(wrapperClass, primitiveClass);
       }
+    }
+    
+    Set<Class<?>> primitiveTypeClasses = new HashSet<Class<?>>(17);
+    primitiveTypeClasses.addAll(primitive2WrapperMap.keySet());
+    primitiveTypeClasses.addAll(Arrays
+        .asList(new Class<?>[] { boolean[].class, byte[].class, char[].class, double[].class,
+    float[].class, int[].class, long[].class, short[].class }));
+    for (Class<?> clazz : primitiveTypeClasses) {
+      primitiveTypeNameMap.put(clazz.getName(), clazz);
     }
   }
 
@@ -116,8 +133,7 @@ public abstract class ReflectUtil {
    *          the specified method
    */
   public static void makeAccessible(Method method) {
-    if ((!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers()))
-        && !method.isAccessible()) {
+    if ((!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers())) && !method.isAccessible()) {
       method.setAccessible(true);
     }
   }
@@ -129,8 +145,7 @@ public abstract class ReflectUtil {
    *          the specified constructor
    */
   public static void makeAccessible(Constructor<?> constructor) {
-    if ((!Modifier.isPublic(constructor.getModifiers()) || !Modifier.isPublic(constructor.getDeclaringClass()
-        .getModifiers())) && !constructor.isAccessible()) {
+    if ((!Modifier.isPublic(constructor.getModifiers()) || !Modifier.isPublic(constructor.getDeclaringClass().getModifiers())) && !constructor.isAccessible()) {
       constructor.setAccessible(true);
     }
   }
@@ -162,8 +177,8 @@ public abstract class ReflectUtil {
    * @throws IllegalAccessException
    * @throws InvocationTargetException
    */
-  public static Object invoke(Object obj, String methodName, Object... args) throws NoSuchMethodException,
-      IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+  public static Object invoke(Object obj, String methodName, Object... args)
+      throws NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
     if (null == args) {
       args = new Object[] {};
     }
@@ -196,8 +211,7 @@ public abstract class ReflectUtil {
    * @throws IllegalAccessException
    * @throws InvocationTargetException
    */
-  public static Object invoke(Object obj, Method method, Object... args) throws IllegalArgumentException,
-      IllegalAccessException, InvocationTargetException {
+  public static Object invoke(Object obj, Method method, Object... args) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
     makeAccessible(method);
     return method.invoke(obj, args);
   }
@@ -212,8 +226,7 @@ public abstract class ReflectUtil {
    * @param value
    *          new value
    */
-  public static void setField(Object obj, String fieldName, Object value) throws IllegalArgumentException,
-      IllegalAccessException {
+  public static void setField(Object obj, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException {
     Class<?> clazz = obj.getClass();
     Field field = getDeclaredField(clazz, fieldName);
     makeAccessible(field);
@@ -230,8 +243,7 @@ public abstract class ReflectUtil {
    * @param value
    *          new value
    */
-  public static void setField(Object obj, Field field, Object value) throws IllegalArgumentException,
-      IllegalAccessException {
+  public static void setField(Object obj, Field field, Object value) throws IllegalArgumentException, IllegalAccessException {
     makeAccessible(field);
     field.set(obj, value);
   }
@@ -247,8 +259,7 @@ public abstract class ReflectUtil {
    * @throws IllegalArgumentException
    * @throws IllegalAccessException
    */
-  public static Object getFieldValue(Object obj, String fieldName) throws IllegalArgumentException,
-      IllegalAccessException {
+  public static Object getFieldValue(Object obj, String fieldName) throws IllegalArgumentException, IllegalAccessException {
     Class<?> clazz = obj.getClass();
     Field field = getDeclaredField(clazz, fieldName);
     return getFieldValue(obj, field);
@@ -287,7 +298,7 @@ public abstract class ReflectUtil {
     }
     return value;
   }
-  
+
   /**
    * Get the specified declared method by method name
    * 
@@ -306,7 +317,7 @@ public abstract class ReflectUtil {
     }
     return getDeclaredMethod(clazz, methodName, classes);
   }
-  
+
   /**
    * Get the specified declared method by method name
    * 
@@ -394,7 +405,49 @@ public abstract class ReflectUtil {
    * @return the wrapped class
    */
   public static Class<?> getWrappedClass(Class<?> primitive) {
-    return primitiveWrapperMap.get(primitive);
+    return primitive2WrapperMap.get(primitive);
+  }
+
+  /**
+   * Check if a specified object can adapt to specified class.
+   * 
+   * @param clazz
+   *          the class adapt to
+   * @param obj
+   *          the object need to adapt
+   * @return whether the object can adapt to specified class
+   */
+  public static boolean isAdpatable(Class<?> clazz, Object obj) {
+    Assert.notNull(clazz);
+    boolean isPrimitive = clazz.isPrimitive();
+    if (null == obj) {
+      return !isPrimitive;
+    }
+
+    if (isPrimitive) {
+      clazz = getWrappedClass(clazz);
+    }
+    return clazz == obj.getClass() || clazz.isInstance(obj);
+  }
+
+  /**
+   * Get the code base location of the class.
+   * 
+   * @param clazz
+   *          the class
+   * @return the code base of the class
+   */
+  public static URL getCodeBase(Class<?> clazz) {
+    Assert.notNull(clazz);
+    ProtectionDomain domain = clazz.getProtectionDomain();
+    URL url = null;
+    if (null != domain) {
+      CodeSource source = domain.getCodeSource();
+      if (null != source) {
+        url = source.getLocation();
+      }
+    }
+    return url;
   }
 
   /**
@@ -472,8 +525,7 @@ public abstract class ReflectUtil {
    * @throws NoSuchMethodException
    *           on error
    */
-  public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... args) throws NoSuchMethodException,
-      SecurityException {
+  public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... args) throws NoSuchMethodException, SecurityException {
     Constructor<?> constructor;
     if (0 == args.length) {
       constructor = clazz.getDeclaredConstructor();
@@ -496,8 +548,8 @@ public abstract class ReflectUtil {
    * @throws IllegalAccessException
    * @throws InstantiationException
    */
-  public static Object newInstanceViaReflect(Class<?> clazz) throws NoSuchMethodException, SecurityException,
-      InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+  public static Object newInstanceViaReflect(Class<?> clazz)
+      throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     try {
       Constructor<?> constructor = getConstructor(clazz);
       makeAccessible(constructor);
@@ -506,7 +558,7 @@ public abstract class ReflectUtil {
       return clazz.newInstance();
     }
   }
-  
+
   /**
    * Create new instance of specified class from reflect.
    * 
@@ -519,11 +571,93 @@ public abstract class ReflectUtil {
    * @throws IllegalArgumentException
    * @throws IllegalAccessException
    * @throws InstantiationException
-   * @throws ClassNotFoundException 
+   * @throws ClassNotFoundException
    */
-  public static Object newInstanceViaReflect(String className) throws NoSuchMethodException, SecurityException,
-      InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException {
+  public static Object newInstanceViaReflect(String className)
+      throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException {
     Class<?> clazz = Class.forName(className);
     return newInstanceViaReflect(clazz);
   }
+  
+  /**
+   * Same as <code>Class.forName()</code>, except that it works for primitive
+   * types.
+   */
+  public static Class<?> forName(String name) throws ClassNotFoundException {
+    Assert.notNull(name);
+    return forName(name, ReflectUtil.class.getClassLoader());
+  }
+
+  /**
+   * Replacement for <code>Class.forName()</code> that also returns Class
+   * instances for primitives (like "int") and array class names (like
+   * "String[]").
+   * 
+   * @param name the name of the Class
+   * @param classLoader the class loader to use (may be <code>null</code>,
+   *            which indicates the default class loader)
+   * @return Class instance for the supplied name
+   * @throws ClassNotFoundException if the class was not found
+   * @throws LinkageError if the class file could not be loaded
+   * @see Class#forName(String, boolean, ClassLoader)
+   */
+  public static Class<?> forName(String name, ClassLoader classLoader)
+          throws ClassNotFoundException, LinkageError {
+
+      Class<?> clazz = resolvePrimitiveClassName(name);
+      if (null != clazz) {
+          return clazz;
+      }
+
+      // "java.lang.String[]" style arrays
+      if (name.endsWith(ARRAY_SUFFIX)) {
+          String elementClassName = name.substring(0, name.length() - ARRAY_SUFFIX.length());
+          Class<?> elementClass = forName(elementClassName, classLoader);
+          return Array.newInstance(elementClass, 0).getClass();
+      }
+
+      // "[Ljava.lang.String;" style arrays
+      int internalArrayMarker = name.indexOf(INTERNAL_ARRAY_PREFIX);
+      if (internalArrayMarker != -1 && name.endsWith(";")) {
+          String elementClassName = null;
+          if (internalArrayMarker == 0) {
+              elementClassName = name
+                      .substring(INTERNAL_ARRAY_PREFIX.length(), name.length() - 1);
+          } else if (name.startsWith("[")) {
+              elementClassName = name.substring(1);
+          }
+          Class<?> elementClass = forName(elementClassName, classLoader);
+          return Array.newInstance(elementClass, 0).getClass();
+      }
+
+      ClassLoader classLoaderToUse = classLoader;
+      if (null == classLoaderToUse) {
+          classLoaderToUse = ReflectUtil.class.getClassLoader();
+      }
+      return classLoaderToUse.loadClass(name);
+  }
+
+  /**
+   * Resolve the given class name as primitive class, if appropriate,
+   * according to the JVM's naming rules for primitive classes.
+   * <p>
+   * Also supports the JVM's internal class names for primitive arrays. Does
+   * <i>not</i> support the "[]" suffix notation for primitive arrays; this is
+   * only supported by {@link #forName}.
+   * 
+   * @param name the name of the potentially primitive class
+   * @return the primitive class, or <code>null</code> if the name does not
+   *         denote a primitive class or primitive array class
+   */
+  public static Class<?> resolvePrimitiveClassName(String name) {
+      Class<?> result = null;
+      // Most class names will be quite long, considering that they
+      // SHOULD sit in a package, so a length check is worthwhile.
+      if (name != null && name.length() <= 8) {
+          // Could be a primitive - likely.
+          result = (Class<?>) primitiveTypeNameMap.get(name);
+      }
+      return result;
+  }
+
 }
