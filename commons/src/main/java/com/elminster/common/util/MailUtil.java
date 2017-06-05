@@ -74,12 +74,14 @@ abstract public class MailUtil {
       throws AddressException, MessagingException {
 
     boolean rst = false;
+    int port = -1; // -1 means default port
     Properties p = new Properties();
     p.put("mail.smtp.auth", isAutheticate ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
     p.put("mail.transport.protocol", DEFAULT_SEND_PROTOCOL);
     p.put("mail.smtp.host", smtpHost);
     if (null != smtpPort) {
       p.put("mail.smtp.port", smtpPort);
+      port = smtpPort.intValue();
     }
     Session session = Session.getDefaultInstance(p);
     Message msg = new MimeMessage(session);
@@ -134,7 +136,7 @@ abstract public class MailUtil {
     if (null != user) {
       // log in to server
       tran = session.getTransport(DEFAULT_SEND_PROTOCOL);
-      tran.connect(smtpHost, user, password);
+      tran.connect(smtpHost, port, user, password);
       tran.sendMessage(msg, msg.getAllRecipients());
     } else {
       Transport.send(msg, msg.getAllRecipients());
