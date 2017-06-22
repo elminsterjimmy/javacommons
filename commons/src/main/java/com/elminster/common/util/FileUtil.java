@@ -430,12 +430,15 @@ public abstract class FileUtil {
    * 
    * @param path
    *          the specified absolute path
-   * @return the folder name
+   * @return the directory's absolute path of the path
    */
-  public static String getPath(String path) {
-    String value = null;
-    File file = new File(path);
-    value = file.getParentFile().getAbsolutePath();
+  public static String getPath(final String path) {
+    String value = EMPTY_STRING;
+    String rp = replaceFileSeparate(path);
+    int idx = rp.lastIndexOf(LINUX_FILE_SEPARATE);
+    if (idx > -1) {
+      value = path.substring(0, idx);
+    }
     return value;
   }
 
@@ -446,11 +449,12 @@ public abstract class FileUtil {
    *          the specified absolute path
    * @return the file name
    */
-  public static String getFileName(String path) {
+  public static String getFileName(final String path) {
     String fileName = EMPTY_STRING;
-    File file = new File(path);
-    if (file.isFile()) {
-      fileName = file.getName();
+    String rp = replaceFileSeparate(path);
+    int idx = rp.lastIndexOf(LINUX_FILE_SEPARATE);
+    if (idx > -1) {
+      fileName = path.substring(idx + 1);
     }
     return fileName;
   }
@@ -1499,8 +1503,11 @@ public abstract class FileUtil {
 
   /**
    * Find the specified file from a specified file.
-   * @param file the specified file
-   * @param filename2find the file name need to find
+   * 
+   * @param file
+   *          the specified file
+   * @param filename2find
+   *          the file name need to find
    * @return found file or null for not found
    */
   public static File findFileFrom(File file, String filename2find) {

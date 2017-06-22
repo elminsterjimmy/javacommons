@@ -60,4 +60,18 @@ public class FileUtilTest {
       }
     }
   }
+  
+  @Test
+  public void testGetFileNameAndPath() {
+    String unix = "/test/test1/test2.txt";
+    String win = "c:\\test\\test1\\test2.txt";
+    String folder = "/test/test1/";
+    Assert.assertEquals("test2.txt", FileUtil.getFileName(unix));
+    Assert.assertEquals("test2.txt", FileUtil.getFileName(win));
+    Assert.assertEquals("", FileUtil.getFileName(folder));
+    
+    Assert.assertEquals("/test/test1", FileUtil.getPath(unix));
+    Assert.assertEquals("c:\\test\\test1", FileUtil.getPath(win));
+    Assert.assertEquals("/test/test1", FileUtil.getPath(folder));
+  }
 }
