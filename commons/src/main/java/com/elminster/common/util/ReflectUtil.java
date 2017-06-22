@@ -16,9 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.elminster.common.constants.Constants.StringConstants;
 
@@ -34,7 +31,7 @@ public abstract class ReflectUtil {
   private static final Map<Class<?>, Class<?>> primitive2WrapperMap = new HashMap<>(9);
   private static final Map<Class<?>, Class<?>> wrapper2PrimitiveMap = new HashMap<>(9);
   private static final Map<String, Class<?>> primitiveTypeNameMap = new HashMap<>(17);
-  
+
   /** Suffix for array class names: "[]" */
   public static final String ARRAY_SUFFIX = "[]";
   /** Prefix for internal array class names: "[L" */
@@ -50,19 +47,27 @@ public abstract class ReflectUtil {
     primitive2WrapperMap.put(Double.TYPE, Double.class);
     primitive2WrapperMap.put(Float.TYPE, Float.class);
     primitive2WrapperMap.put(Void.TYPE, Void.TYPE);
-    
+
     for (final Class<?> primitiveClass : primitive2WrapperMap.keySet()) {
       final Class<?> wrapperClass = primitive2WrapperMap.get(primitiveClass);
       if (!primitiveClass.equals(wrapperClass)) {
         wrapper2PrimitiveMap.put(wrapperClass, primitiveClass);
       }
     }
-    
+
     Set<Class<?>> primitiveTypeClasses = new HashSet<Class<?>>(17);
     primitiveTypeClasses.addAll(primitive2WrapperMap.keySet());
+    // @formatter:off
     primitiveTypeClasses.addAll(Arrays
-        .asList(new Class<?>[] { boolean[].class, byte[].class, char[].class, double[].class,
-    float[].class, int[].class, long[].class, short[].class }));
+        .asList(new Class<?>[] { 
+          boolean[].class,
+          byte[].class,
+          char[].class,
+          double[].class, float[].class,
+          int[].class,
+          long[].class,
+          short[].class }));
+    // @formatter:on
     for (Class<?> clazz : primitiveTypeClasses) {
       primitiveTypeNameMap.put(clazz.getName(), clazz);
     }
@@ -578,10 +583,9 @@ public abstract class ReflectUtil {
     Class<?> clazz = Class.forName(className);
     return newInstanceViaReflect(clazz);
   }
-  
+
   /**
-   * Same as <code>Class.forName()</code>, except that it works for primitive
-   * types.
+   * Same as <code>Class.forName()</code>, except that it works for primitive types.
    */
   public static Class<?> forName(String name) throws ClassNotFoundException {
     Assert.notNull(name);
@@ -589,75 +593,72 @@ public abstract class ReflectUtil {
   }
 
   /**
-   * Replacement for <code>Class.forName()</code> that also returns Class
-   * instances for primitives (like "int") and array class names (like
-   * "String[]").
+   * Replacement for <code>Class.forName()</code> that also returns Class instances for primitives (like "int") and array class names (like "String[]").
    * 
-   * @param name the name of the Class
-   * @param classLoader the class loader to use (may be <code>null</code>,
-   *            which indicates the default class loader)
+   * @param name
+   *          the name of the Class
+   * @param classLoader
+   *          the class loader to use (may be <code>null</code>, which indicates the default class loader)
    * @return Class instance for the supplied name
-   * @throws ClassNotFoundException if the class was not found
-   * @throws LinkageError if the class file could not be loaded
+   * @throws ClassNotFoundException
+   *           if the class was not found
+   * @throws LinkageError
+   *           if the class file could not be loaded
    * @see Class#forName(String, boolean, ClassLoader)
    */
-  public static Class<?> forName(String name, ClassLoader classLoader)
-          throws ClassNotFoundException, LinkageError {
+  public static Class<?> forName(String name, ClassLoader classLoader) throws ClassNotFoundException, LinkageError {
 
-      Class<?> clazz = resolvePrimitiveClassName(name);
-      if (null != clazz) {
-          return clazz;
-      }
+    Class<?> clazz = resolvePrimitiveClassName(name);
+    if (null != clazz) {
+      return clazz;
+    }
 
-      // "java.lang.String[]" style arrays
-      if (name.endsWith(ARRAY_SUFFIX)) {
-          String elementClassName = name.substring(0, name.length() - ARRAY_SUFFIX.length());
-          Class<?> elementClass = forName(elementClassName, classLoader);
-          return Array.newInstance(elementClass, 0).getClass();
-      }
+    // "java.lang.String[]" style arrays
+    if (name.endsWith(ARRAY_SUFFIX)) {
+      String elementClassName = name.substring(0, name.length() - ARRAY_SUFFIX.length());
+      Class<?> elementClass = forName(elementClassName, classLoader);
+      return Array.newInstance(elementClass, 0).getClass();
+    }
 
-      // "[Ljava.lang.String;" style arrays
-      int internalArrayMarker = name.indexOf(INTERNAL_ARRAY_PREFIX);
-      if (internalArrayMarker != -1 && name.endsWith(";")) {
-          String elementClassName = null;
-          if (internalArrayMarker == 0) {
-              elementClassName = name
-                      .substring(INTERNAL_ARRAY_PREFIX.length(), name.length() - 1);
-          } else if (name.startsWith("[")) {
-              elementClassName = name.substring(1);
-          }
-          Class<?> elementClass = forName(elementClassName, classLoader);
-          return Array.newInstance(elementClass, 0).getClass();
+    // "[Ljava.lang.String;" style arrays
+    int internalArrayMarker = name.indexOf(INTERNAL_ARRAY_PREFIX);
+    if (internalArrayMarker != -1 && name.endsWith(";")) {
+      String elementClassName = null;
+      if (internalArrayMarker == 0) {
+        elementClassName = name.substring(INTERNAL_ARRAY_PREFIX.length(), name.length() - 1);
+      } else if (name.startsWith("[")) {
+        elementClassName = name.substring(1);
       }
+      Class<?> elementClass = forName(elementClassName, classLoader);
+      return Array.newInstance(elementClass, 0).getClass();
+    }
 
-      ClassLoader classLoaderToUse = classLoader;
-      if (null == classLoaderToUse) {
-          classLoaderToUse = ReflectUtil.class.getClassLoader();
-      }
-      return classLoaderToUse.loadClass(name);
+    ClassLoader classLoaderToUse = classLoader;
+    if (null == classLoaderToUse) {
+      classLoaderToUse = ReflectUtil.class.getClassLoader();
+    }
+    return classLoaderToUse.loadClass(name);
   }
 
   /**
-   * Resolve the given class name as primitive class, if appropriate,
-   * according to the JVM's naming rules for primitive classes.
+   * Resolve the given class name as primitive class, if appropriate, according to the JVM's naming rules for primitive classes.
    * <p>
-   * Also supports the JVM's internal class names for primitive arrays. Does
-   * <i>not</i> support the "[]" suffix notation for primitive arrays; this is
-   * only supported by {@link #forName}.
+   * Also supports the JVM's internal class names for primitive arrays. Does <i>not</i> support the "[]" suffix notation for primitive arrays; this is only supported by
+   * {@link #forName}.
    * 
-   * @param name the name of the potentially primitive class
-   * @return the primitive class, or <code>null</code> if the name does not
-   *         denote a primitive class or primitive array class
+   * @param name
+   *          the name of the potentially primitive class
+   * @return the primitive class, or <code>null</code> if the name does not denote a primitive class or primitive array class
    */
   public static Class<?> resolvePrimitiveClassName(String name) {
-      Class<?> result = null;
-      // Most class names will be quite long, considering that they
-      // SHOULD sit in a package, so a length check is worthwhile.
-      if (name != null && name.length() <= 8) {
-          // Could be a primitive - likely.
-          result = (Class<?>) primitiveTypeNameMap.get(name);
-      }
-      return result;
+    Class<?> result = null;
+    // Most class names will be quite long, considering that they
+    // SHOULD sit in a package, so a length check is worthwhile.
+    if (name != null && name.length() <= 8) {
+      // Could be a primitive - likely.
+      result = (Class<?>) primitiveTypeNameMap.get(name);
+    }
+    return result;
   }
 
 }
