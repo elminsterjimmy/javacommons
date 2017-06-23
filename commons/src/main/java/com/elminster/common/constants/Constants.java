@@ -7,7 +7,7 @@ package com.elminster.common.constants;
  * @version 1.0
  */
 public interface Constants {
-  
+
   /***
    * The time unit.
    * 
@@ -22,8 +22,7 @@ public interface Constants {
     public static final long DAY_IN_MS = 24 * HOUR_IN_MS;
     public static final long WEEK_IN_MS = 7 * DAY_IN_MS;
   }
-  
-  
+
   /**
    * The encoding Strings.
    * 
@@ -31,11 +30,23 @@ public interface Constants {
    * @version 1.0
    */
   public interface EncodingConstants {
-    public static final String UTF8 = "UTF-8"; //$NON-NLS-1$
+    /** Eight-bit UCS Transformation Format. */
+    public static final String UTF8 = "UTF-8";
+    /** ISO Latin Alphabet No. 1, a.k.a. ISO-LATIN-1. */
+    public static final String ISO88591 = "ISO-8859-1";
+    /** Seven-bit ASCII, a.k.a. ISO646-US, a.k.a. the Basic Latin block of the Unicode character set. */
+    public static final String ASCII = "US-ASCII";
+    /** Sixteen-bit UCS Transformation Format, byte order identified by an optional byte-order mark. */
+    public static final String UTF16 = "UTF-16";
+    /** Sixteen-bit UCS Transformation Format, big-endian byte order. */
+    public static final String UTF16BE = "UTF-16BE";
+    /** Sixteen-bit UCS Transformation Format, little-endian byte order. */
+    public static final String UTF16LE = "UTF-16LE";
   }
-  
+
   /**
    * The JAVA system property name.
+   * 
    * @author jgu
    * @version 1.0
    */
@@ -68,7 +79,7 @@ public interface Constants {
     public static final String USER_HOME = "user.home";
     public static final String USER_DIR = "user.dir";
   }
-  
+
   /**
    * The character constants.
    * 
@@ -77,55 +88,55 @@ public interface Constants {
    */
   public interface CharacterConstants {
     /** <code>{</code> */
-    public static final char LEFT_BRACES = '{'; 
+    public static final char LEFT_BRACES = '{';
     /** <code>}</code> */
-    public static final char RIGHT_BRACES = '}'; 
+    public static final char RIGHT_BRACES = '}';
     /** <code>[</code> */
-    public static final char LEFT_SQUARE_BRACKETS = '['; 
+    public static final char LEFT_SQUARE_BRACKETS = '[';
     /** <code>]</code> */
-    public static final char RIGHT_SQUARE_BRACKETS = ']'; 
+    public static final char RIGHT_SQUARE_BRACKETS = ']';
     /** <code>(</code> */
-    public static final char LEFT_PARENTHESES = '('; 
+    public static final char LEFT_PARENTHESES = '(';
     /** <code>)</code> */
-    public static final char RIGHT_PARENTHESES = ')'; 
+    public static final char RIGHT_PARENTHESES = ')';
     /** <code>_</code> */
-    public static final char UNDER_LINE = '_'; 
+    public static final char UNDER_LINE = '_';
     /** <code>\n</code> */
-    public static final char LF = '\n'; 
+    public static final char LF = '\n';
     /** <code>\r</code> */
-    public static final char CR = '\r'; 
+    public static final char CR = '\r';
     /** <code>\t</code> */
-    public static final char TAB = '\t'; 
+    public static final char TAB = '\t';
     /** <code>&</code> */
-    public static final char AND = '&'; 
+    public static final char AND = '&';
     /** <code>?</code> */
     public static final char QUESTION = '?';
     /** <code>=</code> */
     public static final char EQUAL = '=';
     /** <code>*</code> */
-    public static final char STAR = '*'; 
+    public static final char STAR = '*';
     /** <code> </code> */
-    public static final char SPACE = ' '; 
+    public static final char SPACE = ' ';
     /** <code>-</code> */
-    public static final char HYPHEN = '-'; 
+    public static final char HYPHEN = '-';
     /** <code>,</code> */
-    public static final char COMMA = ','; 
+    public static final char COMMA = ',';
     /** <code>.</code> */
-    public static final char DOT = '.'; 
+    public static final char DOT = '.';
     /** <code>:</code> */
-    public static final char COLON = ':'; 
+    public static final char COLON = ':';
     /** <code>+</code> */
-    public static final char PLUS = '+'; 
+    public static final char PLUS = '+';
     /** <code>|</code> */
-    public static final char VERTICAL_BAR = '|'; 
+    public static final char VERTICAL_BAR = '|';
     /** <code>#</code> */
     public static final char SHARP = '#';
     /** <code>;</code> */
-    public static final char SEMICOLON = ';'; 
+    public static final char SEMICOLON = ';';
     /** <code>/</code> */
-    public static final char SLASH = '/'; 
+    public static final char SLASH = '/';
     /** <code>\</code> */
-    public static final char BACKSLASH = '\\'; 
+    public static final char BACKSLASH = '\\';
     /** <code>@</code> */
     public static final char AT = '@';
     /** <code>$</code> */
@@ -143,7 +154,7 @@ public interface Constants {
     /** <code><</code> */
     public static final char LESS_THAN = '<';
   }
-  
+
   /**
    * The String symbols.
    * 
