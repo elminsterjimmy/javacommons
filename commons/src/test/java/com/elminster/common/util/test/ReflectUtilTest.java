@@ -1,5 +1,7 @@
 package com.elminster.common.util.test;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -51,6 +53,11 @@ public class ReflectUtilTest {
     Assert.assertEquals(
         "com.elminster.common.util.test.ReflectUtilTest#testGetCallMethodName",
         ReflectUtil.getCallMethodName(1));
+  }
+  
+  @Test
+  public void testNewInstance() throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    Assert.assertTrue(String.class == ReflectUtil.newInstanceViaReflect(String.class).getClass());
   }
   
   class TestGetFieldClass {
