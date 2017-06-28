@@ -513,7 +513,7 @@ public abstract class ReflectUtil {
    * @throws NoSuchMethodException
    *           on error
    */
-  public static Constructor<?> getConstructor(Class<?> clazz) throws NoSuchMethodException, SecurityException {
+  public static <T> Constructor<T> getConstructor(Class<T> clazz) throws NoSuchMethodException, SecurityException {
     return getConstructor(clazz, new Class<?>[0]);
   }
 
@@ -530,8 +530,8 @@ public abstract class ReflectUtil {
    * @throws NoSuchMethodException
    *           on error
    */
-  public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... args) throws NoSuchMethodException, SecurityException {
-    Constructor<?> constructor;
+  public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... args) throws NoSuchMethodException, SecurityException {
+    Constructor<T> constructor;
     if (0 == args.length) {
       constructor = clazz.getDeclaredConstructor();
     } else {
@@ -553,10 +553,10 @@ public abstract class ReflectUtil {
    * @throws IllegalAccessException
    * @throws InstantiationException
    */
-  public static Object newInstanceViaReflect(Class<?> clazz)
+  public static <T> T newInstanceViaReflect(Class<T> clazz)
       throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     try {
-      Constructor<?> constructor = getConstructor(clazz);
+      Constructor<T> constructor = getConstructor(clazz);
       makeAccessible(constructor);
       return constructor.newInstance();
     } catch (NoSuchMethodException nsme) {
