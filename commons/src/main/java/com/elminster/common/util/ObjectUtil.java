@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.elminster.common.constants.Constants.StringConstants;
-import com.elminster.common.util.Messages.Message;
 
 /**
  * Object Utilities
@@ -28,27 +27,6 @@ public abstract class ObjectUtil {
   private static final String ARRAY_ELEMENT_SEPARATOR = StringConstants.COMMA + StringConstants.SPACE;
   /** Array's address: <code>@ </code> */
   private static final String ARRAY_ADDRESS = StringConstants.AT;
-
-  /**
-   * Check whether the specified array contains the specified element
-   * 
-   * @param array
-   *          the array to check
-   * @param element
-   *          the element to check for
-   * @return whether the element is in the array
-   */
-  public static boolean contains(Object[] array, Object element) {
-    if (null == array) {
-      throw new IllegalArgumentException(Messages.getString(Message.TARGET_ARRAY_IS_NULL));
-    }
-    for (Object obj : array) {
-      if (isEqual(obj, element)) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   /**
    * Determine if the specified Object is equal

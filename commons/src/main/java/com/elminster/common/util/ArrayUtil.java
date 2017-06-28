@@ -58,8 +58,7 @@ abstract public class ArrayUtil {
     Class<?> type1 = o1.getClass().getComponentType();
     Class<?> type2 = o2.getClass().getComponentType();
     if (!type1.equals(type2)) {
-      throw new IllegalArgumentException(Messages.getString(Message.ARRAY_TYPE_UNMATCH, new Object[] {
-          type1.toString(), type2.toString() }));
+      throw new IllegalArgumentException(Messages.getString(Message.ARRAY_TYPE_UNMATCH, new Object[] { type1.toString(), type2.toString() }));
     }
     Object[] result = (Object[]) Array.newInstance(type1, o1.length + o2.length);
     System.arraycopy(o1, 0, result, 0, o1.length);
@@ -88,11 +87,14 @@ abstract public class ArrayUtil {
   public static boolean isArrayNotEmpty(final Object[] array) {
     return !isArrayEmpty(array);
   }
-  
+
   /**
    * Slice the array from start.
-   * @param array the array
-   * @param start the start
+   * 
+   * @param array
+   *          the array
+   * @param start
+   *          the start
    * @return the sliced array
    */
   public static Object[] sliceArray(final Object[] array, final int start) {
@@ -101,9 +103,13 @@ abstract public class ArrayUtil {
 
   /**
    * Slice the array with the range [start, end).
-   * @param array the array
-   * @param start the slice start index
-   * @param end the slice end index
+   * 
+   * @param array
+   *          the array
+   * @param start
+   *          the slice start index
+   * @param end
+   *          the slice end index
    * @return the sliced array
    */
   public static Object[] sliceArray(final Object[] array, final int start, final int end) {
@@ -119,10 +125,12 @@ abstract public class ArrayUtil {
     System.arraycopy(array, start, result, 0, length);
     return result;
   }
-  
+
   /**
    * Join the array with <code>,</code>.
-   * @param array the array
+   * 
+   * @param array
+   *          the array
    * @return the joined string
    */
   public static String joinString(final Object[] array) {
@@ -137,11 +145,14 @@ abstract public class ArrayUtil {
     }
     return sb.toString();
   }
-  
+
   /**
    * Join the array with specified string.
-   * @param array the array
-   * @param joinString the join string
+   * 
+   * @param array
+   *          the array
+   * @param joinString
+   *          the join string
    * @return the joined string
    */
   public static String joinString(final Object[] array, final String joinString) {
@@ -157,10 +168,12 @@ abstract public class ArrayUtil {
     }
     return sb.toString();
   }
-  
+
   /**
    * Revert the array.
-   * @param array the array
+   * 
+   * @param array
+   *          the array
    * @return the reverted array
    */
   public static Object[] revertArray(final Object[] array) {
@@ -174,5 +187,26 @@ abstract public class ArrayUtil {
       result[i] = array[length - 1 - i];
     }
     return result;
+  }
+
+  /**
+   * Check whether the specified array contains the specified element
+   * 
+   * @param array
+   *          the array to check
+   * @param element
+   *          the element to check for
+   * @return whether the element is in the array
+   */
+  public static <T> boolean contains(T[] array, T element) {
+    if (null == array) {
+      throw new IllegalArgumentException(Messages.getString(Message.TARGET_ARRAY_IS_NULL));
+    }
+    for (T obj : array) {
+      if (ObjectUtil.isEqual(obj, element)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
