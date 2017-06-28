@@ -305,6 +305,10 @@ abstract public class TypeUtil {
     public String toString() {
       return toString(false);
     }
+    
+    public Class<?> getType() {
+      return type;
+    }
   }
 
   public static class ClassTypeDef {
