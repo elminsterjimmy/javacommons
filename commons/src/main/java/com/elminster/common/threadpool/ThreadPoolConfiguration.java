@@ -37,7 +37,7 @@ public class ThreadPoolConfiguration extends CommonConfiguration {
   public static final StringKey REJECTED_POLICY = new StringKey("threadpool.rejected.policy", DefaultRejectedPolicy.class.getName());
 
   public static final ThreadPoolConfiguration INSTANCE = new ThreadPoolConfiguration();
-
+  
   @Override
   protected void loadResources() {
     super.loadResources();
@@ -48,7 +48,7 @@ public class ThreadPoolConfiguration extends CommonConfiguration {
       try (InputStream fis = new FileInputStream(configFile)) {
         properties.load(fis);
       } catch (IOException e) {
-        logger.error(String.format("Failed to load [%s]. Cause [%s].", CONFIG_NAME, ExceptionUtil.getFullStackTrace(e)));
+        logger.error(String.format("Failed to load [%s]. Cause [%s].", CONFIG_NAME, ExceptionUtil.getStackTrace(e)));
         logger.warn(String.format("[%s] is not found, use default configuration.", CONFIG_NAME));
       }
     }

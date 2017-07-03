@@ -50,10 +50,12 @@ final public class ThreadPool {
   private ThreadPool() {
     this(ThreadPoolConfiguration.INSTANCE);
   }
-  
+
   /**
    * Create the threadpool with specified configuration.
-   * @param cfg the configuration
+   * 
+   * @param cfg
+   *          the configuration
    */
   public ThreadPool(ThreadPoolConfiguration cfg) {
     String rejectedPolicy = cfg.getStringProperty(REJECTED_POLICY);
@@ -64,16 +66,23 @@ final public class ThreadPool {
     } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
       rejectHandler = new DefaultRejectedPolicy();
     }
-    executor = new ThreadPoolExecutor(cfg.getIntegerProperty(CORE_POOL_SIZE),
-        cfg.getIntegerProperty(MAX_POOL_SIZE),
-        cfg.getLongProperty(KEEP_ALIVE_TIME), TimeUnit.MILLISECONDS,
-        new ArrayBlockingQueue<Runnable>(cfg.getIntegerProperty(CORE_POOL_SIZE)),
-        new NamedThreadFactory(cfg.getStringProperty(POOL_NAME), cfg.getBooleanProperty(DAEMON_THREAD)),
+    executor = new ThreadPoolExecutor(cfg.getIntegerProperty(CORE_POOL_SIZE), cfg.getIntegerProperty(MAX_POOL_SIZE), cfg.getLongProperty(KEEP_ALIVE_TIME), TimeUnit.MILLISECONDS,
+        new ArrayBlockingQueue<Runnable>(cfg.getIntegerProperty(CORE_POOL_SIZE)), new NamedThreadFactory(cfg.getStringProperty(POOL_NAME), cfg.getBooleanProperty(DAEMON_THREAD)),
         rejectHandler);
     scheduledExecutor = new ScheduledThreadPoolExecutor(cfg.getIntegerProperty(CORE_POOL_SIZE),
-        new NamedThreadFactory(cfg.getStringProperty(POOL_NAME), cfg.getBooleanProperty(DAEMON_THREAD)),
-        rejectHandler );
+        new NamedThreadFactory(cfg.getStringProperty(POOL_NAME), cfg.getBooleanProperty(DAEMON_THREAD)), rejectHandler);
     listeners = new ArrayList<ThreadPoolListener>();
+  }
+
+  /**
+   * Create a threadpool with threadpool configuration.
+   * 
+   * @param cfg
+   *          the threadpool configuration
+   * @return a threadpool
+   */
+  public static ThreadPool createThreadPool(ThreadPoolConfiguration cfg) {
+    return new ThreadPool(cfg);
   }
 
   /**
@@ -214,5 +223,14 @@ final public class ThreadPool {
    */
   public void addThreadPoolListener(ThreadPoolListener listener) {
     this.listeners.add(listener);
+  }
+
+  /**
+   * Get the thread pool executor.
+   * 
+   * @return the thread pool executor
+   */
+  public ThreadPoolExecutor getExecutor() {
+    return executor;
   }
 }
