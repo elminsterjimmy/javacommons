@@ -60,6 +60,13 @@ public class ReflectUtilTest {
     Assert.assertTrue(String.class == ReflectUtil.newInstanceViaReflect(String.class).getClass());
   }
   
+  @Test
+  public void testIsAssignableFrom() {
+    // function (TestA a)
+    // function (c)
+    Assert.assertTrue(TestClassA.class.isAssignableFrom(TestClassC.class));
+  }
+  
   class TestGetFieldClass {
     private Boolean b1 = false;
     private boolean b2 = true;

@@ -190,7 +190,13 @@ public abstract class ReflectUtil {
     int argsCnt = args.length;
     Class<?>[] classArgs = new Class<?>[argsCnt];
     for (int i = 0; i < argsCnt; i++) {
-      classArgs[i] = args[i].getClass();
+      Class<?> clazz;
+      if (null == args[i]) {
+        clazz = Object.class;
+      } else {
+        clazz = args[i].getClass();
+      }
+      classArgs[i] = clazz;
     }
 
     Method method = getDeclaredMethod(obj.getClass(), methodName, classArgs);
@@ -318,7 +324,13 @@ public abstract class ReflectUtil {
   public static Method getDeclaredMethod(Class<? extends Object> clazz, String methodName, Object... args) {
     Class<?>[] classes = new Class<?>[args.length];
     for (int i = 0; i < args.length; i++) {
-      classes[i] = args[i].getClass();
+      Class<?> argClazz;
+      if (null == args[i]) {
+        argClazz = Object.class;
+      } else {
+        argClazz = args[i].getClass();
+      }
+      classes[i] = argClazz;
     }
     return getDeclaredMethod(clazz, methodName, classes);
   }
@@ -393,6 +405,9 @@ public abstract class ReflectUtil {
       if (actualClass.isArray()) {
         return checkParamClass(expectClass.getComponentType(), actualClass.getComponentType());
       }
+    } else if (Object.class.equals(actualClass)) {
+      // workaround for arg that is null
+      return true;
     } else {
       if (actualClass.isPrimitive()) {
         actualClass = getWrappedClass(actualClass);
