@@ -5,12 +5,12 @@ import org.apache.commons.logging.LogFactory;
 
 import com.elminster.common.util.ExceptionUtil;
 
-public class NoneUncatchedExceptionHandler implements UncatchedExceptionHandler {
+public class LogUncatchedExceptionHandler implements UncatchedExceptionHandler {
   
-  private static final Log logger = LogFactory.getLog(NoneUncatchedExceptionHandler.class);
+  private static final Log logger = LogFactory.getLog(LogUncatchedExceptionHandler.class);
   
   @Override
   public void handleUncatchedException(Throwable t) {
-    logger.error(ExceptionUtil.getCause(t));
+    logger.error(ExceptionUtil.getStackTrace(t));
   }
 }

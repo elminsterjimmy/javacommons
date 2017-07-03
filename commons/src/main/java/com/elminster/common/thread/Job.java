@@ -50,7 +50,7 @@ abstract public class Job implements IJob {
     this.name = name;
     this.status = JobStatus.CREATED;
     this.monitor = new JobMonitor();
-    uncatchedExceptionHandler = new NoneUncatchedExceptionHandler();
+    uncatchedExceptionHandler = new LogUncatchedExceptionHandler();
   }
   
   /**
@@ -68,7 +68,7 @@ abstract public class Job implements IJob {
     this.name = name;
     this.status = JobStatus.CREATED;
     this.monitor = monitor;
-    uncatchedExceptionHandler = new NoneUncatchedExceptionHandler();
+    uncatchedExceptionHandler = new LogUncatchedExceptionHandler();
   }
 
   /**
@@ -150,9 +150,9 @@ abstract public class Job implements IJob {
     }
   }
   
-  protected void setUncatchedExceptionHandler(UncatchedExceptionHandler handler) {
+  public void setUncatchedExceptionHandler(UncatchedExceptionHandler handler) {
     uncatchedExceptionHandler = handler;
   }
 
-  abstract protected JobStatus doWork(IJobMonitor monitor);
+  abstract protected JobStatus doWork(IJobMonitor monitor) throws Throwable;
 }
