@@ -2,8 +2,8 @@ package com.elminster.common.thread;
 
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The job.
@@ -14,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
 abstract public class Job implements IJob {
 
   /** the logger. */
-  private static final Log logger = LogFactory.getLog(Job.class);
+  private static final Logger logger = LoggerFactory.getLogger(Job.class);
 
   /** the job id. */
   private final long id;

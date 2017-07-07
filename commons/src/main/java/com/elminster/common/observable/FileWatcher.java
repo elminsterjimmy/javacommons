@@ -3,8 +3,8 @@ package com.elminster.common.observable;
 import java.io.File;
 import java.util.Observable;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.elminster.common.util.DateUtil;
 
@@ -28,7 +28,7 @@ public class FileWatcher extends Observable implements Runnable {
   /** Watch interval. Set to 10 seconds as default. */
   private static final long DEFAULT_WATCH_INTERVAL = 10 * DateUtil.SECOND;
   /** the logger. */
-  private static final Log logger = LogFactory.getLog(FileWatcher.class);
+  private static final Logger logger = LoggerFactory.getLogger(FileWatcher.class);
   
   /** the file to watch. */
   protected File file;

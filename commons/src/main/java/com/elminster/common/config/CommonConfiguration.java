@@ -3,8 +3,8 @@ package com.elminster.common.config;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.elminster.common.util.StringUtil;
 
@@ -17,7 +17,7 @@ import com.elminster.common.util.StringUtil;
 abstract public class CommonConfiguration implements IConfigProvider, IConfigPersister {
 
   /** the logger. */
-  protected static final Log logger = LogFactory.getLog(CommonConfiguration.class);
+  protected static final Logger logger = LoggerFactory.getLogger(CommonConfiguration.class);
 
   /** the properties. */
   protected Properties properties = new Properties();

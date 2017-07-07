@@ -8,8 +8,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.elminster.common.util.DateUtil;
 import com.elminster.common.util.FileUtil;
@@ -25,7 +25,7 @@ public class CompletionLogTask {
   /** the default interval. */
   private static final long DEFAULT_INTERVAL = DateUtil.MINUTE;
   /** the logger. */
-  private static final Log logger = LogFactory.getLog(CompletionLogTask.class);
+  private static final Logger logger = LoggerFactory.getLogger(CompletionLogTask.class);
   /** the completion log path. */
   protected final String completionLogPath;
   /** the lock used to ensure the thread safe of read/write unloggedCompletionTasks List. */

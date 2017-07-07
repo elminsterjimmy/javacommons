@@ -6,8 +6,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * JDBC Utilities
@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class JDBCUtil {
 
-  private static final Log logger = LogFactory.getLog(JDBCUtil.class);
+  private static final Logger logger = LoggerFactory.getLogger(JDBCUtil.class);
 
   public static void closeConnection(Connection conn) {
     if (null != conn) {

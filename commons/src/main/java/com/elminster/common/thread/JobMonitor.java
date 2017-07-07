@@ -1,7 +1,7 @@
 package com.elminster.common.thread;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.elminster.common.thread.IJob.JobStatus;
 
@@ -14,7 +14,7 @@ import com.elminster.common.thread.IJob.JobStatus;
 public class JobMonitor implements IJobMonitor {
   
   /** the logger. */
-  private static final Log logger = LogFactory.getLog(JobMonitor.class);
+  private static final Logger logger = LoggerFactory.getLogger(JobMonitor.class);
   
   /** the name. */
   private String name;

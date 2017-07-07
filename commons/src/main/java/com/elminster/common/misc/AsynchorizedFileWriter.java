@@ -8,14 +8,14 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.elminster.common.util.StringUtil;
 
 public class AsynchorizedFileWriter implements IWriter, Runnable {
   
-  private static final Log logger = LogFactory.getLog(AsynchorizedFileWriter.class);
+  private static final Logger logger = LoggerFactory.getLogger(AsynchorizedFileWriter.class);
   private static final long DEFAULT_INTERVAL = 500;
   private final BlockingQueue<String> queue = new ArrayBlockingQueue<String>(1024);
   private final long pollInterval;
@@ -68,10 +68,10 @@ public class AsynchorizedFileWriter implements IWriter, Runnable {
               fileWriter.append(msg);
             }
           } catch (IOException ioe) {
-            logger.error(ioe);
+            logger.error(ioe.getMessage());
           }
         } catch (InterruptedException ie) {
-          logger.error(ie);
+          logger.error(ie.getMessage());
         }
       }
     } catch (Exception e) {
@@ -82,7 +82,7 @@ public class AsynchorizedFileWriter implements IWriter, Runnable {
           fileWriter.flush();
           fileWriter.close();
         } catch (IOException e) {
-          logger.warn(e);
+          logger.warn(e.getMessage());
         }
       }
     }

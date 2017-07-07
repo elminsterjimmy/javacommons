@@ -20,8 +20,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for sending, receiving mail.
@@ -36,7 +36,7 @@ abstract public class MailUtil {
   private static final String DEFAULT_SEND_PROTOCOL = "smtp";
 
   /** The logger. */
-  private static Log logger = LogFactory.getLog(MailUtil.class);
+  private static Logger logger = LoggerFactory.getLogger(MailUtil.class);
 
   /**
    * Send mail.

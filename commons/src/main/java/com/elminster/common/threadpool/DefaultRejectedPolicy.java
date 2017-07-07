@@ -4,8 +4,8 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default rejected policy as abort and log the status.
@@ -16,7 +16,7 @@ import org.apache.commons.logging.LogFactory;
 public class DefaultRejectedPolicy implements RejectedExecutionHandler {
 
   /** the logger. */
-  public static final Log logger = LogFactory.getLog(DefaultRejectedPolicy.class);
+  public static final Logger logger = LoggerFactory.getLogger(DefaultRejectedPolicy.class);
   
   @Override
   public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {

@@ -3,8 +3,8 @@ package com.elminster.common.threadpool;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The default JVM shutdown hook for Thread Pool.
@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
 public class ThreadPoolJVMShutdownHook extends Thread {
   
   /** the logger. */
-  private static final Log logger = LogFactory.getLog(ThreadPoolJVMShutdownHook.class);
+  private static final Logger logger = LoggerFactory.getLogger(ThreadPoolJVMShutdownHook.class);
   /** the timeout. */
   private long timeout;
   /** the time unit for timeout. */

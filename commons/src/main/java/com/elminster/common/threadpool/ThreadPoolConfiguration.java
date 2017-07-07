@@ -5,8 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.elminster.common.config.CommonConfiguration;
 import com.elminster.common.util.ExceptionUtil;
@@ -19,7 +19,7 @@ import com.elminster.common.util.ExceptionUtil;
  */
 public class ThreadPoolConfiguration extends CommonConfiguration {
 
-  private static final Log logger = LogFactory.getLog(ThreadPoolConfiguration.class);
+  private static final Logger logger = LoggerFactory.getLogger(ThreadPoolConfiguration.class);
 
   private static final String CONFIG_NAME = "threadpool.properties";
 

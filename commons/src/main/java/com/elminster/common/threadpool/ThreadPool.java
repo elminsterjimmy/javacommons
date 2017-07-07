@@ -19,8 +19,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The thread pool.
@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
 final public class ThreadPool {
 
   /** the logger. */
-  public static final Log logger = LogFactory.getLog(ThreadPool.class);
+  public static final Logger logger = LoggerFactory.getLogger(ThreadPool.class);
   /** the singleton. */
   private static final ThreadPool defaultThreadPool = new ThreadPool();
   /** the thread pool executor. */
