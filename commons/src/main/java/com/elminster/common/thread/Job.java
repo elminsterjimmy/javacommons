@@ -130,6 +130,7 @@ abstract public class Job implements IJob {
    */
   @Override
   public void run() {
+    Thread.currentThread().setName(name);
     jobStarted = System.currentTimeMillis();
     if (logger.isDebugEnabled()) {
       logger.debug(String.format("Job {%X}-{%s} started at %tc.", id, name, new Date(jobStarted)));
