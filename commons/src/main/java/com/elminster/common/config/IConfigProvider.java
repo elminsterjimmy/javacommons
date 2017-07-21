@@ -29,7 +29,7 @@ public interface IConfigProvider {
    * @return the property.
    */
   public String getStringProperty(String key, String defaultValue);
-  
+
   /**
    * Get String property.
    * 
@@ -38,7 +38,7 @@ public interface IConfigProvider {
    * @return the property.
    */
   public String getStringProperty(StringKey key);
-  
+
   /**
    * Get Integer property. Will throw a NFE if the property cannot cast to Integer.
    * 
@@ -47,7 +47,7 @@ public interface IConfigProvider {
    * @return the property.
    */
   public Integer getIntegerProperty(String key);
-  
+
   /**
    * Get Integer property.
    * 
@@ -67,7 +67,7 @@ public interface IConfigProvider {
    * @return the property.
    */
   public Integer getIntegerProperty(IntegerKey key);
-  
+
   /**
    * Get Long property. Will throw a NFE if the property cannot cast to Long.
    * 
@@ -76,7 +76,7 @@ public interface IConfigProvider {
    * @return the property.
    */
   public Long getLongProperty(String key);
-  
+
   /**
    * Get Long property.
    * 
@@ -87,7 +87,6 @@ public interface IConfigProvider {
    * @return the property.
    */
   public Long getLongProperty(String key, Long defaultValue);
-
 
   /**
    * Get Integer property.
@@ -106,7 +105,7 @@ public interface IConfigProvider {
    * @return the property.
    */
   public Float getFloatProperty(String key);
-  
+
   /**
    * Get Float property.
    * 
@@ -117,7 +116,7 @@ public interface IConfigProvider {
    * @return the property.
    */
   public Float getFloatProperty(String key, Float defaultValue);
-  
+
   /**
    * Get Float property.
    * 
@@ -127,7 +126,6 @@ public interface IConfigProvider {
    */
   public Float getFloatProperty(FloatKey key);
 
-  
   /**
    * Get Double property. Will throw a NFE if the property cannot cast to Double.
    * 
@@ -136,7 +134,7 @@ public interface IConfigProvider {
    * @return the property.
    */
   public Double getDoubleProperty(String key);
-  
+
   /**
    * Get Double property.
    * 
@@ -165,7 +163,7 @@ public interface IConfigProvider {
    * @return the property.
    */
   public Boolean getBooleanProperty(String key);
-  
+
   /**
    * Get Integer property.
    * 
@@ -188,46 +186,74 @@ public interface IConfigProvider {
 
   /**
    * Set the String value.
-   * @param key the property key
-   * @param value the property value
+   * 
+   * @param key
+   *          the property key
+   * @param value
+   *          the property value
    */
   public void setProperty(String key, String value);
-  
+
   /**
    * Set the Boolean value.
-   * @param key the property key
-   * @param value the property value
+   * 
+   * @param key
+   *          the property key
+   * @param value
+   *          the property value
    */
   public void setProperty(String key, Boolean boolValue);
-  
+
   /**
    * Set the Integer value.
-   * @param key the property key
-   * @param value the property value
+   * 
+   * @param key
+   *          the property key
+   * @param value
+   *          the property value
    */
   public void setProperty(String key, Integer intValue);
-  
+
   /**
    * Set the Long value.
-   * @param key the property key
-   * @param value the property value
+   * 
+   * @param key
+   *          the property key
+   * @param value
+   *          the property value
    */
   public void setProperty(String key, Long longValue);
-  
+
   /**
    * Set the String value.
-   * @param key the property key
-   * @param value the property value
+   * 
+   * @param key
+   *          the property key
+   * @param value
+   *          the property value
    */
   public void setProperty(String key, Float floatValue);
-  
+
   /**
    * Set the Double value.
-   * @param key the property key
-   * @param value the property value
+   * 
+   * @param key
+   *          the property key
+   * @param value
+   *          the property value
    */
   public void setProperty(String key, Double doubleValue);
-  
+
+  /**
+   * Set the key.
+   * 
+   * @param E
+   *          the key type
+   * @param key
+   *          the key
+   */
+  public <E> void setProperties(Key<E> key);
+
   /** String Key. */
   public static class StringKey extends Key<String> {
 

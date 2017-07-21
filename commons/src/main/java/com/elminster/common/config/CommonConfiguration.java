@@ -1,20 +1,20 @@
 package com.elminster.common.config;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.elminster.common.config.key.Key;
 import com.elminster.common.util.StringUtil;
 
 /**
- * The Common Configuration.
+ * The Common Properties Configuration.
  * 
  * @author jgu
  * @version 1.0
  */
-abstract public class CommonConfiguration implements IConfigProvider, IConfigPersister {
+abstract public class CommonConfiguration implements IConfigProvider {
 
   /** the logger. */
   protected static final Logger logger = LoggerFactory.getLogger(CommonConfiguration.class);
@@ -26,13 +26,6 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
    * Constructor.
    */
   protected CommonConfiguration() {
-    loadResources();
-  }
-
-  /**
-   * Load the resource files.
-   */
-  protected void loadResources() {
   }
 
   /**
@@ -344,7 +337,7 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
   public void setProperty(String key, Boolean boolValue) {
     properties.put(key, String.valueOf(boolValue));
   }
-
+  
   /**
    * @see com.elminster.common.config.IConfigProvider#setProperty(java.lang.String, java.lang.Integer)
    */
@@ -378,10 +371,11 @@ abstract public class CommonConfiguration implements IConfigProvider, IConfigPer
   }
 
   /**
-   * @see com.elminster.common.config.IConfigPersister#persist()
+   * {@inheritDoc}
    */
   @Override
-  public void persist() throws IOException {
+  public <E> void setProperties(Key<E> key) {
+    this.setProperty(key.getKey(), String.valueOf(key.getDefaultValue()));
   }
 
   /**
