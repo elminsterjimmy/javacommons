@@ -4,6 +4,7 @@ import static com.elminster.common.threadpool.ThreadPoolConfiguration.CORE_POOL_
 import static com.elminster.common.threadpool.ThreadPoolConfiguration.DAEMON_THREAD;
 import static com.elminster.common.threadpool.ThreadPoolConfiguration.KEEP_ALIVE_TIME;
 import static com.elminster.common.threadpool.ThreadPoolConfiguration.MAX_POOL_SIZE;
+import static com.elminster.common.threadpool.ThreadPoolConfiguration.BLOCKING_QUEUE_SIZE;
 import static com.elminster.common.threadpool.ThreadPoolConfiguration.POOL_NAME;
 import static com.elminster.common.threadpool.ThreadPoolConfiguration.REJECTED_POLICY;
 
@@ -67,7 +68,7 @@ final public class ThreadPool {
       rejectHandler = new DefaultRejectedPolicy();
     }
     executor = new ThreadPoolExecutor(cfg.getIntegerProperty(CORE_POOL_SIZE), cfg.getIntegerProperty(MAX_POOL_SIZE), cfg.getLongProperty(KEEP_ALIVE_TIME), TimeUnit.MILLISECONDS,
-        new ArrayBlockingQueue<Runnable>(cfg.getIntegerProperty(CORE_POOL_SIZE)), new NamedThreadFactory(cfg.getStringProperty(POOL_NAME), cfg.getBooleanProperty(DAEMON_THREAD)),
+        new ArrayBlockingQueue<Runnable>(cfg.getIntegerProperty(BLOCKING_QUEUE_SIZE)), new NamedThreadFactory(cfg.getStringProperty(POOL_NAME), cfg.getBooleanProperty(DAEMON_THREAD)),
         rejectHandler);
     scheduledExecutor = new ScheduledThreadPoolExecutor(cfg.getIntegerProperty(CORE_POOL_SIZE),
         new NamedThreadFactory(cfg.getStringProperty(POOL_NAME), cfg.getBooleanProperty(DAEMON_THREAD)), rejectHandler);
