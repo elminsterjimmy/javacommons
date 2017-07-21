@@ -145,7 +145,7 @@ abstract public class Job implements IJob {
       if (logger.isDebugEnabled()) {
         long finishedTs = System.currentTimeMillis();
         long delta = finishedTs - jobStarted;
-        logger.debug(String.format("Job {%X}-{%s} finished at %tc. Time delta = %dms. Status = %s", id, name, new Date(
+        logger.debug(String.format("Job [{%X}-{%s}] finished at %tc. Time delta = [%d] ms. Status = [%s].", id, name, new Date(
             finishedTs), delta, status.toString()));
       }
     }
@@ -154,6 +154,6 @@ abstract public class Job implements IJob {
   public void setUncatchedExceptionHandler(UncatchedExceptionHandler handler) {
     uncatchedExceptionHandler = handler;
   }
-
+  
   abstract protected JobStatus doWork(IJobMonitor monitor) throws Throwable;
 }
