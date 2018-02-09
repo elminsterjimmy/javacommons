@@ -26,6 +26,20 @@ public abstract class Assert {
       throw new AssertException(message);
     }
   }
+  
+  /**
+   * Assert the expression is true, otherwise throws AssertException with specified message.
+   * 
+   * @param expression
+   *          the expression
+   * @param messageTemplate
+   *          the showing message template if the assert failed
+   * @param messageArgs
+   *          the showing message args
+   */
+  public static void isTrue(boolean expression, String messageTemplate, Object... messageArgs) {
+    isTrue(expression, String.format(messageTemplate, messageArgs));
+  }
 
   /**
    * Assert the expression is true, otherwise throws AssertException with specified message.
@@ -49,6 +63,20 @@ public abstract class Assert {
     if (null != object) {
       throw new AssertException(message);
     }
+  }
+  
+  /**
+   * Assert the object is null, otherwise throws AssertException with specified message.
+   * 
+   * @param expression
+   *          the expression
+   * @param messageTemplate
+   *          the showing message template if the assert failed
+   * @param messageArgs
+   *          the showing message args
+   */
+  public static void isNull(boolean expression, String messageTemplate, Object... messageArgs) {
+    isNull(expression, String.format(messageTemplate, messageArgs));
   }
 
   /**
@@ -78,6 +106,21 @@ public abstract class Assert {
   /**
    * Assert the object is not null, otherwise throws AssertException with specified message.
    * 
+   * @param expression
+   *          the expression
+   * @param messageTemplate
+   *          the showing message template if the assert failed
+   * @param messageArgs
+   *          the showing message args
+   */
+  public static void notNull(boolean expression, String messageTemplate, Object... messageArgs) {
+    notNull(expression, String.format(messageTemplate, messageArgs));
+  }
+
+
+  /**
+   * Assert the object is not null, otherwise throws AssertException with specified message.
+   * 
    * @param object
    *          the object
    */
@@ -97,6 +140,20 @@ public abstract class Assert {
     if (StringUtil.isEmpty(text)) {
       throw new AssertException(message);
     }
+  }
+
+  /**
+   * Assert the object is not empty, otherwise throws AssertException with specified message.
+   * 
+   * @param expression
+   *          the expression
+   * @param messageTemplate
+   *          the showing message template if the assert failed
+   * @param messageArgs
+   *          the showing message args
+   */
+  public static void notEmpty(boolean expression, String messageTemplate, Object... messageArgs) {
+    notEmpty(expression, String.format(messageTemplate, messageArgs));
   }
 
   /**
@@ -124,6 +181,20 @@ public abstract class Assert {
   }
 
   /**
+   * Assert the object is not blank, otherwise throws AssertException with specified message.
+   * 
+   * @param expression
+   *          the expression
+   * @param messageTemplate
+   *          the showing message template if the assert failed
+   * @param messageArgs
+   *          the showing message args
+   */
+  public static void notBlank(boolean expression, String messageTemplate, Object... messageArgs) {
+    notBlank(expression, String.format(messageTemplate, messageArgs));
+  }
+
+  /**
    * Assert the text is not blank, otherwise throws AssertException with specified message.
    * 
    * @param text
@@ -148,7 +219,7 @@ public abstract class Assert {
       throw new AssertException(message);
     }
   }
-
+  
   /**
    * Assert that the given text does not contain the given substring.
    * 
