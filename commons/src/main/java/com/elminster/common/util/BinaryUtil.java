@@ -709,4 +709,23 @@ public abstract class BinaryUtil {
        (((long) b[off + 0]) << 56);
     return Double.longBitsToDouble(j);
   }
+  
+  /**
+   * Concat bytes.
+   * @param bytes the bytes
+   * @return concated byte
+   */
+  public static byte[] concatBytes(byte[]... bytes) {
+    int length = 0;
+    for (byte[] b : bytes) {
+      length += b.length;
+    }
+    byte[] result = new byte[length];
+    int off = 0;
+    for (byte[] b : bytes) {
+      System.arraycopy(b, 0, result, off, b.length);
+      off += b.length;
+    }
+    return result;
+  }
 }
