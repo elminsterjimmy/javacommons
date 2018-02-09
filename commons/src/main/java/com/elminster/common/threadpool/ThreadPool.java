@@ -1,17 +1,20 @@
 package com.elminster.common.threadpool;
 
+import static com.elminster.common.threadpool.ThreadPoolConfiguration.BLOCKING_QUEUE_SIZE;
 import static com.elminster.common.threadpool.ThreadPoolConfiguration.CORE_POOL_SIZE;
 import static com.elminster.common.threadpool.ThreadPoolConfiguration.DAEMON_THREAD;
 import static com.elminster.common.threadpool.ThreadPoolConfiguration.KEEP_ALIVE_TIME;
 import static com.elminster.common.threadpool.ThreadPoolConfiguration.MAX_POOL_SIZE;
-import static com.elminster.common.threadpool.ThreadPoolConfiguration.BLOCKING_QUEUE_SIZE;
 import static com.elminster.common.threadpool.ThreadPoolConfiguration.POOL_NAME;
 import static com.elminster.common.threadpool.ThreadPoolConfiguration.REJECTED_POLICY;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -33,12 +36,18 @@ final public class ThreadPool {
 
   /** the logger. */
   public static final Logger logger = LoggerFactory.getLogger(ThreadPool.class);
+  /** monitor thread pool name prefix. */
+  private static final String MONITOR_THREAD_POOL_NAME_PREFIX = "thread-pool-monitor";
   /** the singleton. */
   private static final ThreadPool defaultThreadPool = new ThreadPool();
   /** the thread pool executor. */
   protected final ThreadPoolExecutor executor;
   /** the thread pool listener. */
   private final List<ThreadPoolListener> listeners;
+  /** the monitor executor. */
+  private final ExecutorService monitorExecutor;
+  /** the monitor threads. */
+  private final List<FutureMonitor> futureMonitors;
 
   /**
    * the scheduled thread pool executor. Don't want to make the core thread pool too large, so use an additional scheduled thread pool for scheduled works.
@@ -68,10 +77,13 @@ final public class ThreadPool {
       rejectHandler = new DefaultRejectedPolicy();
     }
     executor = new ThreadPoolExecutor(cfg.getIntegerProperty(CORE_POOL_SIZE), cfg.getIntegerProperty(MAX_POOL_SIZE), cfg.getLongProperty(KEEP_ALIVE_TIME), TimeUnit.MILLISECONDS,
-        new ArrayBlockingQueue<Runnable>(cfg.getIntegerProperty(BLOCKING_QUEUE_SIZE)), new NamedThreadFactory(cfg.getStringProperty(POOL_NAME), cfg.getBooleanProperty(DAEMON_THREAD)),
-        rejectHandler);
+        new ArrayBlockingQueue<Runnable>(cfg.getIntegerProperty(BLOCKING_QUEUE_SIZE)),
+        new NamedThreadFactory(cfg.getStringProperty(POOL_NAME), cfg.getBooleanProperty(DAEMON_THREAD)), rejectHandler);
     scheduledExecutor = new ScheduledThreadPoolExecutor(cfg.getIntegerProperty(CORE_POOL_SIZE),
         new NamedThreadFactory(cfg.getStringProperty(POOL_NAME), cfg.getBooleanProperty(DAEMON_THREAD)), rejectHandler);
+
+    monitorExecutor = Executors.newCachedThreadPool(new NamedThreadFactory(MONITOR_THREAD_POOL_NAME_PREFIX));
+    futureMonitors = new LinkedList<>();
     listeners = new ArrayList<ThreadPoolListener>();
   }
 
@@ -102,8 +114,10 @@ final public class ThreadPool {
    *          the callable
    * @return a futrue
    */
-  public Future<?> submit(Callable<?> callable) {
-    return executor.submit(callable);
+  @SuppressWarnings("unchecked")
+  public <V> Future<V> submit(Callable<V> callable) {
+    Future<V> future = executor.submit(callable);
+    return (Future<V>) wrap(future);
   }
 
   /**
@@ -132,7 +146,8 @@ final public class ThreadPool {
    *           if command is null
    */
   public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
-    return scheduledExecutor.schedule(command, delay, unit);
+    ScheduledFuture<?> future = scheduledExecutor.schedule(command, delay, unit);
+    return (ScheduledFuture<?>) wrap(future);
   }
 
   /**
@@ -150,8 +165,10 @@ final public class ThreadPool {
    * @throws NullPointerException
    *           if callable is null
    */
+  @SuppressWarnings("unchecked")
   public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
-    return scheduledExecutor.schedule(callable, delay, unit);
+    ScheduledFuture<V> future = scheduledExecutor.schedule(callable, delay, unit);
+    return (ScheduledFuture<V>) wrap(future);
   }
 
   /**
@@ -177,7 +194,8 @@ final public class ThreadPool {
    *           if period less than or equal to zero
    */
   public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
-    return scheduledExecutor.scheduleAtFixedRate(command, initialDelay, period, unit);
+    ScheduledFuture<?> future = scheduledExecutor.scheduleAtFixedRate(command, initialDelay, period, unit);
+    return (ScheduledFuture<?>) wrap(future);
   }
 
   /**
@@ -202,7 +220,8 @@ final public class ThreadPool {
    *           if delay less than or equal to zero
    */
   public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
-    return scheduledExecutor.scheduleWithFixedDelay(command, initialDelay, delay, unit);
+    ScheduledFuture<?> future = scheduledExecutor.scheduleWithFixedDelay(command, initialDelay, delay, unit);
+    return (ScheduledFuture<?>) wrap(future);
   }
 
   /**
@@ -214,6 +233,7 @@ final public class ThreadPool {
     }
     executor.shutdown();
     scheduledExecutor.shutdown();
+    monitorExecutor.shutdown();
   }
 
   /**
@@ -233,5 +253,38 @@ final public class ThreadPool {
    */
   public ThreadPoolExecutor getExecutor() {
     return executor;
+  }
+
+  /**
+   * Wrap the future to add monitor.
+   * 
+   * @param future
+   *          the future to wrap
+   * @return wrapped future
+   */
+  private Future<?> wrap(Future<?> future) {
+    ListenableFuture<?> listenableFuture = new ListenableFutureImpl<>(future);
+    FutureMonitor futureMonitor = null;
+    for (FutureMonitor fm : futureMonitors) {
+      try {
+        fm.addFuture(listenableFuture);
+        futureMonitor = fm;
+        break;
+      } catch (FutureOverflowException e) {
+        ;
+      }
+    }
+    if (null == futureMonitor) {
+      logger.debug("All future monitor are full, create new one.");
+      futureMonitor = new FutureMonitor(100);
+      futureMonitors.add(futureMonitor);
+      try {
+        futureMonitor.addFuture(listenableFuture);
+        this.monitorExecutor.execute(futureMonitor);
+      } catch (FutureOverflowException e) {
+        logger.error("SHOULD NEVER HAPPEN!");
+      }
+    }
+    return listenableFuture;
   }
 }

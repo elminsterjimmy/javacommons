@@ -1,0 +1,28 @@
+package com.elminster.common.event;
+
+/**
+ * The event interface.
+ * 
+ * @author jinggu
+ * @version 1.0
+ */
+public interface Event {
+
+  /**
+   * Get the event name.
+   * @return the event name
+   */
+  public String getName();
+  
+  /**
+   * Get the event source.
+   * @return the event source
+   */
+  public Object getSource();
+  
+  /**
+   * Get the event target.
+   * @return the event target
+   */
+  public Object getTarget();
+}
