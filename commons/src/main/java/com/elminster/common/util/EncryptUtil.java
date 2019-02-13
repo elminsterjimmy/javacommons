@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.security.Key;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -11,7 +12,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 
 /**
  * Encrypt Utilities
@@ -50,7 +50,7 @@ public class EncryptUtil {
    * @throws Exception on error
    */
   public static String encryptBASE64(byte[] data) throws Exception {
-    return DatatypeConverter.printBase64Binary(data);
+    return Base64.getEncoder().encodeToString(data);
   }
 
   /**
@@ -60,7 +60,7 @@ public class EncryptUtil {
    * @throws Exception on error
    */
   public static byte[] decryptBASE64(String data) throws Exception {
-    return DatatypeConverter.parseBase64Binary(data);
+    return Base64.getDecoder().decode(data);
   }
 
   /**
