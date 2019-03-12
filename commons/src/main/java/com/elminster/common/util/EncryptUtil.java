@@ -225,7 +225,7 @@ public class EncryptUtil {
   public static String initDESKey(String seed) throws Exception {
     SecureRandom secureRandom = null;
     if (null != seed) {
-      secureRandom = new SecureRandom(decryptBASE64(seed));
+      secureRandom = new SecureRandom(encryptBASE64(seed.getBytes()).getBytes());
     } else {
       secureRandom = new SecureRandom();
     }
