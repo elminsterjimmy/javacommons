@@ -173,7 +173,7 @@ public abstract class CollectionUtil {
   /**
    * Deep clone a collection, dependent on Cloneable interface.
    * 
-   * @param map
+   * @param c
    *          collection to clone
    * @return cloned map
    */

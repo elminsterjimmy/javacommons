@@ -99,7 +99,7 @@ abstract public class BytecodeUtil {
    * 
    * [int.class, boolean[].class, Object.class] => "I[ZLjava/lang/Object;"
    * 
-   * @param class
+   * @param classes
    *          the class array
    * @return the bytecode type
    */
@@ -173,7 +173,7 @@ abstract public class BytecodeUtil {
    * "[Z" => boolean[].class
    * "[[Ljava/util/Map;" => java.util.Map[][].class
    * 
-   * @param bytecodeType
+   * @param jvmBytecodeType
    *          the JVM bytecode type
    * @param cl
    *          the classloader to load the class
@@ -227,7 +227,7 @@ abstract public class BytecodeUtil {
   /**
    * JVM bytecode type to class array.
    * 
-   * @param bytecodeType
+   * @param jvmBytecodeType
    *          the JVM bytecode type
    * 
    * @return the class array
@@ -240,7 +240,7 @@ abstract public class BytecodeUtil {
   /**
    * JVM bytecode type to class array.
    * 
-   * @param bytecodeType
+   * @param jvmBytecodeType
    *          the JVM bytecode type
    * @param cl
    *          the classloader to load the class

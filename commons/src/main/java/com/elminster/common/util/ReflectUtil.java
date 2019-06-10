@@ -148,7 +148,7 @@ public abstract class ReflectUtil {
   /**
    * Make the specified constructor accessible.
    * 
-   * @param method
+   * @param constructor
    *          the specified constructor
    */
   public static void makeAccessible(Constructor<?> constructor) {
@@ -160,7 +160,7 @@ public abstract class ReflectUtil {
   /**
    * Make the specified field accessible.
    * 
-   * @param method
+   * @param field
    *          the specified field
    */
   public static void makeAccessible(Field field) {
@@ -172,7 +172,7 @@ public abstract class ReflectUtil {
   /**
    * Invoke the specified method in runtime
    * 
-   * @param the
+   * @param obj
    *          object the underlying method is invoked from
    * @param methodName
    *          specified method name
@@ -212,9 +212,9 @@ public abstract class ReflectUtil {
   /**
    * Invoke the specified method in runtime
    * 
-   * @param the
+   * @param obj
    *          object the underlying method is invoked from
-   * @param methodName
+   * @param method
    *          specified method
    * @param args
    *          specified method arguments
@@ -564,14 +564,13 @@ public abstract class ReflectUtil {
    *          the class
    * @return the new instance
    * @throws SecurityException
-   * @throws NoSuchMethodException
    * @throws InvocationTargetException
    * @throws IllegalArgumentException
    * @throws IllegalAccessException
    * @throws InstantiationException
    */
   public static <T> T newInstanceViaReflect(Class<T> clazz)
-      throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+      throws SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     try {
       Constructor<T> constructor = getConstructor(clazz);
       makeAccessible(constructor);
@@ -588,7 +587,6 @@ public abstract class ReflectUtil {
    *          the class name
    * @return the new instance
    * @throws SecurityException
-   * @throws NoSuchMethodException
    * @throws InvocationTargetException
    * @throws IllegalArgumentException
    * @throws IllegalAccessException
@@ -596,7 +594,7 @@ public abstract class ReflectUtil {
    * @throws ClassNotFoundException
    */
   public static Object newInstanceViaReflect(String className)
-      throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException {
+      throws SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException {
     Class<?> clazz = Class.forName(className);
     return newInstanceViaReflect(clazz);
   }
