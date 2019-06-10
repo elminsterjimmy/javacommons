@@ -6,6 +6,8 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import com.elminster.common.constants.Constants.StringConstants;
 
@@ -21,12 +23,6 @@ public abstract class ObjectUtil {
   private static final String ARRAY_START = StringConstants.LEFT_SQUARE_BRACKETS;
   /** End of an Array: <code>]</code> */
   private static final String ARRAY_END = StringConstants.RIGHT_SQUARE_BRACKETS;
-  /** Empty Array: <code>[]</code> */
-  private static final String EMPTY_ARRAY = ARRAY_START + ARRAY_END;
-  /** Array Elements' separator: <code>, </code> */
-  private static final String ARRAY_ELEMENT_SEPARATOR = StringConstants.COMMA + StringConstants.SPACE;
-  /** Array's address: <code>@ </code> */
-  private static final String ARRAY_ADDRESS = StringConstants.AT;
 
   /**
    * Determine if the specified Object is equal
@@ -98,21 +94,21 @@ public abstract class ObjectUtil {
       if (obj instanceof short[]) {
         return toString((short[]) obj);
       } else if (obj instanceof long[]) {
-        return toString((long[]) obj);
+        return ArrayUtil.toString((long[]) obj);
       } else if (obj instanceof int[]) {
-        return toString((int[]) obj);
+        return ArrayUtil.toString((int[]) obj);
       } else if (obj instanceof float[]) {
-        return toString((float[]) obj);
+        return ArrayUtil.toString((float[]) obj);
       } else if (obj instanceof double[]) {
-        return toString((double[]) obj);
+        return ArrayUtil.toString((double[]) obj);
       } else if (obj instanceof char[]) {
-        return toString((char[]) obj);
+        return ArrayUtil.toString((char[]) obj);
       } else if (obj instanceof boolean[]) {
-        return toString((boolean[]) obj);
+        return ArrayUtil.toString((boolean[]) obj);
       } else if (obj instanceof byte[]) {
-        return toString((byte[]) obj);
+        return ArrayUtil.toString((byte[]) obj);
       } else if (obj instanceof Object[]) {
-        return toString((Object[]) obj);
+        return ArrayUtil.toString((Object[]) obj);
       } else {
         return StringConstants.EMPTY_STRING;
       }
@@ -148,276 +144,6 @@ public abstract class ObjectUtil {
       e.printStackTrace();
     }
     return builder.toString();
-  }
-
-  /**
-   * Return a String representation of the specified array's elements
-   * 
-   * @param array
-   *          the array to build a String representation for
-   * @return a String representation of the array's elements
-   */
-  public static String toString(short[] array) {
-    if (null == array) {
-      return StringConstants.EMPTY_STRING;
-    }
-    int length = array.length;
-    if (0 == length) {
-      return EMPTY_ARRAY;
-    }
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < length; i++) {
-      if (0 == i) {
-        sb.append(ARRAY_START);
-      } else {
-        sb.append(ARRAY_ELEMENT_SEPARATOR);
-      }
-      sb.append(array[i]);
-    }
-    sb.append(ARRAY_END);
-    sb.append(ARRAY_ADDRESS);
-    sb.append(array.toString());
-    return sb.toString();
-  }
-
-  /**
-   * Return a String representation of the specified array's elements
-   * 
-   * @param array
-   *          the array to build a String representation for
-   * @return a String representation of the array's elements
-   */
-  public static String toString(long[] array) {
-    if (null == array) {
-      return StringConstants.EMPTY_STRING;
-    }
-    int length = array.length;
-    if (0 == length) {
-      return EMPTY_ARRAY;
-    }
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < length; i++) {
-      if (0 == i) {
-        sb.append(ARRAY_START);
-      } else {
-        sb.append(ARRAY_ELEMENT_SEPARATOR);
-      }
-      sb.append(array[i]);
-    }
-    sb.append(ARRAY_END);
-    sb.append(ARRAY_ADDRESS);
-    sb.append(array.toString());
-    return sb.toString();
-  }
-
-  /**
-   * Return a String representation of the specified array's elements
-   * 
-   * @param array
-   *          the array to build a String representation for
-   * @return a String representation of the array's elements
-   */
-  public static String toString(int[] array) {
-    if (null == array) {
-      return StringConstants.EMPTY_STRING;
-    }
-    int length = array.length;
-    if (0 == length) {
-      return EMPTY_ARRAY;
-    }
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < length; i++) {
-      if (0 == i) {
-        sb.append(ARRAY_START);
-      } else {
-        sb.append(ARRAY_ELEMENT_SEPARATOR);
-      }
-      sb.append(array[i]);
-    }
-    sb.append(ARRAY_END);
-    sb.append(ARRAY_ADDRESS);
-    sb.append(array.toString());
-    return sb.toString();
-  }
-
-  /**
-   * Return a String representation of the specified array's elements
-   * 
-   * @param array
-   *          the array to build a String representation for
-   * @return a String representation of the array's elements
-   */
-  public static String toString(float[] array) {
-    if (null == array) {
-      return StringConstants.EMPTY_STRING;
-    }
-    int length = array.length;
-    if (0 == length) {
-      return EMPTY_ARRAY;
-    }
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < length; i++) {
-      if (0 == i) {
-        sb.append(ARRAY_START);
-      } else {
-        sb.append(ARRAY_ELEMENT_SEPARATOR);
-      }
-      sb.append(array[i]);
-    }
-    sb.append(ARRAY_END);
-    sb.append(ARRAY_ADDRESS);
-    sb.append(array.toString());
-    return sb.toString();
-  }
-
-  /**
-   * Return a String representation of the specified array's elements
-   * 
-   * @param array
-   *          the array to build a String representation for
-   * @return a String representation of the array's elements
-   */
-  public static String toString(double[] array) {
-    if (null == array) {
-      return StringConstants.EMPTY_STRING;
-    }
-    int length = array.length;
-    if (0 == length) {
-      return EMPTY_ARRAY;
-    }
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < length; i++) {
-      if (0 == i) {
-        sb.append(ARRAY_START);
-      } else {
-        sb.append(ARRAY_ELEMENT_SEPARATOR);
-      }
-      sb.append(array[i]);
-    }
-    sb.append(ARRAY_END);
-    sb.append(ARRAY_ADDRESS);
-    sb.append(array.toString());
-    return sb.toString();
-  }
-
-  /**
-   * Return a String representation of the specified array's elements
-   * 
-   * @param array
-   *          the array to build a String representation for
-   * @return a String representation of the array's elements
-   */
-  public static String toString(char[] array) {
-    if (null == array) {
-      return StringConstants.EMPTY_STRING;
-    }
-    int length = array.length;
-    if (0 == length) {
-      return EMPTY_ARRAY;
-    }
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < length; i++) {
-      if (0 == i) {
-        sb.append(ARRAY_START);
-      } else {
-        sb.append(ARRAY_ELEMENT_SEPARATOR);
-      }
-      sb.append(array[i]);
-    }
-    sb.append(ARRAY_END);
-    sb.append(ARRAY_ADDRESS);
-    sb.append(array.toString());
-    return sb.toString();
-  }
-
-  /**
-   * Return a String representation of the specified array's elements
-   * 
-   * @param array
-   *          the array to build a String representation for
-   * @return a String representation of the array's elements
-   */
-  public static String toString(byte[] array) {
-    if (null == array) {
-      return StringConstants.EMPTY_STRING;
-    }
-    int length = array.length;
-    if (0 == length) {
-      return EMPTY_ARRAY;
-    }
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < length; i++) {
-      if (0 == i) {
-        sb.append(ARRAY_START);
-      } else {
-        sb.append(ARRAY_ELEMENT_SEPARATOR);
-      }
-      sb.append(array[i]);
-    }
-    sb.append(ARRAY_END);
-    sb.append(ARRAY_ADDRESS);
-    sb.append(array.toString());
-    return sb.toString();
-  }
-
-  /**
-   * Return a String representation of the specified array's elements
-   * 
-   * @param array
-   *          the array to build a String representation for
-   * @return a String representation of the array's elements
-   */
-  public static String toString(boolean[] array) {
-    if (null == array) {
-      return StringConstants.EMPTY_STRING;
-    }
-    int length = array.length;
-    if (0 == length) {
-      return EMPTY_ARRAY;
-    }
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < length; i++) {
-      if (0 == i) {
-        sb.append(ARRAY_START);
-      } else {
-        sb.append(ARRAY_ELEMENT_SEPARATOR);
-      }
-      sb.append(array[i]);
-    }
-    sb.append(ARRAY_END);
-    sb.append(ARRAY_ADDRESS);
-    sb.append(array.toString());
-    return sb.toString();
-  }
-
-  /**
-   * Return a String representation of the specified array's elements
-   * 
-   * @param array
-   *          the array to build a String representation for
-   * @return a String representation of the array's elements
-   */
-  public static String toString(Object[] array) {
-    if (null == array) {
-      return StringConstants.EMPTY_STRING;
-    }
-    int length = array.length;
-    if (0 == length) {
-      return EMPTY_ARRAY;
-    }
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < length; i++) {
-      if (0 == i) {
-        sb.append(ARRAY_START);
-      } else {
-        sb.append(ARRAY_ELEMENT_SEPARATOR);
-      }
-      sb.append(array[i]);
-    }
-    sb.append(ARRAY_END);
-    sb.append(ARRAY_ADDRESS);
-    sb.append(array.toString());
-    return sb.toString();
   }
 
   /**
@@ -515,5 +241,26 @@ public abstract class ObjectUtil {
       }
     }
     return dest;
+  }
+
+  /**
+   * Convert object to Optional to prevent NPE.
+   * A typical usage is in an invoke chain to avoid NPE.
+   * <cdoe>
+   * Optional<AnnotatedType[]> optional = toOptional(() -> {
+   *   return String.class.getAnnotatedInterfaces().getClass().getAnnotatedInterfaces();
+   * });
+   * </cdoe>
+   *
+   * @param supplier the function
+   * @param <T> the param type
+   * @return the wrapped Optional
+   */
+  public static <T> Optional<T> toOptional(Supplier<T> supplier) {
+    try {
+      return Optional.ofNullable(supplier.get());
+    } catch(NullPointerException npe) {
+      return Optional.empty();
+    }
   }
 }

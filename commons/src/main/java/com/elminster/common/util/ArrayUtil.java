@@ -1,6 +1,9 @@
 package com.elminster.common.util;
 
 import java.lang.reflect.Array;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.elminster.common.constants.Constants.StringConstants;
 import com.elminster.common.util.Messages.Message;
@@ -14,7 +17,17 @@ import com.elminster.common.util.Messages.Message;
 abstract public class ArrayUtil {
 
   /** the default join string <code>,</code>. */
-  private static final Object DEFAULT_JOIN_STRING = StringConstants.COMMA;
+  private static final String DEFAULT_JOIN_STRING = StringConstants.COMMA;
+  /** Start of an Array: <code>[</code> */
+  private static final String ARRAY_START = StringConstants.LEFT_SQUARE_BRACKETS;
+  /** End of an Array: <code>]</code> */
+  private static final String ARRAY_END = StringConstants.RIGHT_SQUARE_BRACKETS;
+  /** Empty Array: <code>[]</code> */
+  private static final String EMPTY_ARRAY = ARRAY_START + ARRAY_END;
+  /** Array Elements' separator: <code>, </code> */
+  private static final String ARRAY_ELEMENT_SEPARATOR = StringConstants.COMMA + StringConstants.SPACE;
+  /** Array's address: <code>@ </code> */
+  private static final String ARRAY_ADDRESS = StringConstants.AT;
 
   /**
    * Reallocates an array with a new size, and copies the contents of the old array to the new array.
@@ -97,8 +110,8 @@ abstract public class ArrayUtil {
    *          the start
    * @return the sliced array
    */
-  public static Object[] sliceArray(final Object[] array, final int start) {
-    return sliceArray(array, start, array.length);
+  public static Object[] slice(final Object[] array, final int start) {
+    return slice(array, start, array.length);
   }
 
   /**
@@ -112,7 +125,7 @@ abstract public class ArrayUtil {
    *          the slice end index
    * @return the sliced array
    */
-  public static Object[] sliceArray(final Object[] array, final int start, final int end) {
+  public static Object[] slice(final Object[] array, final int start, final int end) {
     if (null == array) {
       return null;
     }
@@ -134,16 +147,7 @@ abstract public class ArrayUtil {
    * @return the joined string
    */
   public static String joinString(final Object[] array) {
-    StringBuilder sb = new StringBuilder();
-    if (null != array) {
-      for (Object obj : array) {
-        sb.append(obj.toString());
-        sb.append(DEFAULT_JOIN_STRING);
-      }
-      int length = sb.length();
-      sb.delete(length - 1, length);
-    }
-    return sb.toString();
+    return joinString(array, DEFAULT_JOIN_STRING);
   }
 
   /**
@@ -156,17 +160,11 @@ abstract public class ArrayUtil {
    * @return the joined string
    */
   public static String joinString(final Object[] array, final String joinString) {
-    StringBuilder sb = new StringBuilder();
+    StringJoiner joiner = new StringJoiner(joinString);
     if (null != array) {
-      for (Object obj : array) {
-        sb.append(obj.toString());
-        sb.append(joinString);
-      }
-      int slength = joinString.length();
-      int length = sb.length();
-      sb.delete(length - slength, length);
+      Stream.of(array).forEach(e -> joiner.add(e.toString()));
     }
-    return sb.toString();
+    return joiner.toString();
   }
 
   /**
@@ -208,5 +206,275 @@ abstract public class ArrayUtil {
       }
     }
     return false;
+  }
+
+  /**
+   * Return a String representation of the specified array's elements
+   *
+   * @param array
+   *          the array to build a String representation for
+   * @return a String representation of the array's elements
+   */
+  public static String toString(short[] array) {
+    if (null == array) {
+      return StringConstants.EMPTY_STRING;
+    }
+    int length = array.length;
+    if (0 == length) {
+      return EMPTY_ARRAY;
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < length; i++) {
+      if (0 == i) {
+        sb.append(ARRAY_START);
+      } else {
+        sb.append(ARRAY_ELEMENT_SEPARATOR);
+      }
+      sb.append(array[i]);
+    }
+    sb.append(ARRAY_END);
+    sb.append(ARRAY_ADDRESS);
+    sb.append(array.toString());
+    return sb.toString();
+  }
+
+  /**
+   * Return a String representation of the specified array's elements
+   *
+   * @param array
+   *          the array to build a String representation for
+   * @return a String representation of the array's elements
+   */
+  public static String toString(long[] array) {
+    if (null == array) {
+      return StringConstants.EMPTY_STRING;
+    }
+    int length = array.length;
+    if (0 == length) {
+      return EMPTY_ARRAY;
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < length; i++) {
+      if (0 == i) {
+        sb.append(ARRAY_START);
+      } else {
+        sb.append(ARRAY_ELEMENT_SEPARATOR);
+      }
+      sb.append(array[i]);
+    }
+    sb.append(ARRAY_END);
+    sb.append(ARRAY_ADDRESS);
+    sb.append(array.toString());
+    return sb.toString();
+  }
+
+  /**
+   * Return a String representation of the specified array's elements
+   *
+   * @param array
+   *          the array to build a String representation for
+   * @return a String representation of the array's elements
+   */
+  public static String toString(int[] array) {
+    if (null == array) {
+      return StringConstants.EMPTY_STRING;
+    }
+    int length = array.length;
+    if (0 == length) {
+      return EMPTY_ARRAY;
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < length; i++) {
+      if (0 == i) {
+        sb.append(ARRAY_START);
+      } else {
+        sb.append(ARRAY_ELEMENT_SEPARATOR);
+      }
+      sb.append(array[i]);
+    }
+    sb.append(ARRAY_END);
+    sb.append(ARRAY_ADDRESS);
+    sb.append(array.toString());
+    return sb.toString();
+  }
+
+  /**
+   * Return a String representation of the specified array's elements
+   *
+   * @param array
+   *          the array to build a String representation for
+   * @return a String representation of the array's elements
+   */
+  public static String toString(float[] array) {
+    if (null == array) {
+      return StringConstants.EMPTY_STRING;
+    }
+    int length = array.length;
+    if (0 == length) {
+      return EMPTY_ARRAY;
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < length; i++) {
+      if (0 == i) {
+        sb.append(ARRAY_START);
+      } else {
+        sb.append(ARRAY_ELEMENT_SEPARATOR);
+      }
+      sb.append(array[i]);
+    }
+    sb.append(ARRAY_END);
+    sb.append(ARRAY_ADDRESS);
+    sb.append(array.toString());
+    return sb.toString();
+  }
+
+  /**
+   * Return a String representation of the specified array's elements
+   *
+   * @param array
+   *          the array to build a String representation for
+   * @return a String representation of the array's elements
+   */
+  public static String toString(double[] array) {
+    if (null == array) {
+      return StringConstants.EMPTY_STRING;
+    }
+    int length = array.length;
+    if (0 == length) {
+      return EMPTY_ARRAY;
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < length; i++) {
+      if (0 == i) {
+        sb.append(ARRAY_START);
+      } else {
+        sb.append(ARRAY_ELEMENT_SEPARATOR);
+      }
+      sb.append(array[i]);
+    }
+    sb.append(ARRAY_END);
+    sb.append(ARRAY_ADDRESS);
+    sb.append(array.toString());
+    return sb.toString();
+  }
+
+  /**
+   * Return a String representation of the specified array's elements
+   *
+   * @param array
+   *          the array to build a String representation for
+   * @return a String representation of the array's elements
+   */
+  public static String toString(char[] array) {
+    if (null == array) {
+      return StringConstants.EMPTY_STRING;
+    }
+    int length = array.length;
+    if (0 == length) {
+      return EMPTY_ARRAY;
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < length; i++) {
+      if (0 == i) {
+        sb.append(ARRAY_START);
+      } else {
+        sb.append(ARRAY_ELEMENT_SEPARATOR);
+      }
+      sb.append(array[i]);
+    }
+    sb.append(ARRAY_END);
+    sb.append(ARRAY_ADDRESS);
+    sb.append(array.toString());
+    return sb.toString();
+  }
+
+  /**
+   * Return a String representation of the specified array's elements
+   *
+   * @param array
+   *          the array to build a String representation for
+   * @return a String representation of the array's elements
+   */
+  public static String toString(byte[] array) {
+    if (null == array) {
+      return StringConstants.EMPTY_STRING;
+    }
+    int length = array.length;
+    if (0 == length) {
+      return EMPTY_ARRAY;
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < length; i++) {
+      if (0 == i) {
+        sb.append(ARRAY_START);
+      } else {
+        sb.append(ARRAY_ELEMENT_SEPARATOR);
+      }
+      sb.append(array[i]);
+    }
+    sb.append(ARRAY_END);
+    sb.append(ARRAY_ADDRESS);
+    sb.append(array.toString());
+    return sb.toString();
+  }
+
+  /**
+   * Return a String representation of the specified array's elements
+   *
+   * @param array
+   *          the array to build a String representation for
+   * @return a String representation of the array's elements
+   */
+  public static String toString(boolean[] array) {
+    if (null == array) {
+      return StringConstants.EMPTY_STRING;
+    }
+    int length = array.length;
+    if (0 == length) {
+      return EMPTY_ARRAY;
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < length; i++) {
+      if (0 == i) {
+        sb.append(ARRAY_START);
+      } else {
+        sb.append(ARRAY_ELEMENT_SEPARATOR);
+      }
+      sb.append(array[i]);
+    }
+    sb.append(ARRAY_END);
+    sb.append(ARRAY_ADDRESS);
+    sb.append(array.toString());
+    return sb.toString();
+  }
+
+  /**
+   * Return a String representation of the specified array's elements
+   *
+   * @param array
+   *          the array to build a String representation for
+   * @return a String representation of the array's elements
+   */
+  public static String toString(Object[] array) {
+    if (null == array) {
+      return StringConstants.EMPTY_STRING;
+    }
+    int length = array.length;
+    if (0 == length) {
+      return EMPTY_ARRAY;
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < length; i++) {
+      if (0 == i) {
+        sb.append(ARRAY_START);
+      } else {
+        sb.append(ARRAY_ELEMENT_SEPARATOR);
+      }
+      sb.append(array[i]);
+    }
+    sb.append(ARRAY_END);
+    sb.append(ARRAY_ADDRESS);
+    sb.append(array.toString());
+    return sb.toString();
   }
 }
