@@ -27,7 +27,7 @@ public class FIFOCache<K, V> extends AbstractCache<K, V> {
    * @param capacity the capacity
    */
   public FIFOCache(int capacity) {
-    this.capacity = capacity;
+    super(capacity);
     cacheMap = new LinkedHashMap<K, CacheObject<K, V>>(capacity + 1, 1.0f, false);
   }
 
@@ -40,6 +40,7 @@ public class FIFOCache<K, V> extends AbstractCache<K, V> {
     CacheObject<K, V> first = null;
     
     Iterator<CacheObject<K, V>> values = cacheMap.values().iterator();
+    // first evict the expired objects
     while (values.hasNext()) {
       CacheObject<K, V> co = values.next();
       if (co.isExpired()) {
@@ -50,7 +51,7 @@ public class FIFOCache<K, V> extends AbstractCache<K, V> {
         first = co;
       }
     }
-
+    // if still full, evict the first one
     if (isFull() && null != first) {
       cacheMap.remove(first.getKey());
       count++;

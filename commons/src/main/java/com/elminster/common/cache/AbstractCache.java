@@ -1,5 +1,8 @@
 package com.elminster.common.cache;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
@@ -16,8 +19,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
  *          the value type
  */
 public abstract class AbstractCache<K, V> implements ICache<K, V> {
-  /** the capacity of the cache, 0 = infinite. */
-  protected int capacity = 0;
+
+  protected static final int INFINITE_CAPACITY = -1;
+
+  private static final Logger logger = LoggerFactory.getLogger(AbstractCache.class);
+
+  /** the capacity of the cache, -1 = infinite. */
+  protected final int capacity;
   /** the hit count. */
   protected volatile long hit = 0;
   /** the missed count. */
@@ -30,6 +38,14 @@ public abstract class AbstractCache<K, V> implements ICache<K, V> {
   private final ReadLock readLock = lock.readLock();
   /** the write lock. */
   private final WriteLock writeLock = lock.writeLock();
+
+  public AbstractCache() {
+    this(INFINITE_CAPACITY);
+  }
+
+  public AbstractCache(int capacity) {
+    this.capacity = capacity;
+  }
 
   /**
    * {@inheritDoc}
@@ -44,7 +60,7 @@ public abstract class AbstractCache<K, V> implements ICache<K, V> {
    */
   @Override
   public void put(K key, V value) {
-    put(key, value, 0);
+    _put(key, new CacheObject<>(key, value));
   }
 
   /**
@@ -52,10 +68,23 @@ public abstract class AbstractCache<K, V> implements ICache<K, V> {
    */
   @Override
   public void put(K key, V value, long ttl) {
+    _put(key, new CacheObject<>(key, value, ttl));
+  }
+
+  private void _put(K key, CacheObject<K, V> value) {
     try {
       writeLock.lock();
-      CacheObject<K, V> object = new CacheObject<K, V>(key, value, ttl);
-      cacheMap.put(key, object);
+      if (isFull()) {
+        // do the evict
+        if (logger.isDebugEnabled()) {
+          logger.debug("Cache is full, do the evict....");
+        }
+        evict();
+        if (logger.isDebugEnabled()) {
+          logger.debug("Cache is full, do the evict....");
+        }
+      }
+      cacheMap.put(key, value);
     } finally {
       writeLock.unlock();
     }
@@ -73,8 +102,8 @@ public abstract class AbstractCache<K, V> implements ICache<K, V> {
       if (null == cachedObject) {
         missed++;
       }
+      // expired
       if (cachedObject.isExpired()) {
-        // timeout
         cacheMap.remove(key);
         missed++;
       } else {
@@ -106,7 +135,8 @@ public abstract class AbstractCache<K, V> implements ICache<K, V> {
    */
   @Override
   public boolean isFull() {
-    return this.capacity > 0 && this.cacheMap.size() >= this.capacity;
+    return (this.capacity > 0 && this.cacheMap.size() >= this.capacity)
+            || Integer.MAX_VALUE == this.cacheMap.size();
   }
 
   /**
@@ -116,6 +146,9 @@ public abstract class AbstractCache<K, V> implements ICache<K, V> {
   public void remove(K key) {
     try {
       writeLock.lock();
+      if (isEmpty()) {
+        throw new CacheUnderflowException();
+      }
       cacheMap.remove(key);
     } finally {
       writeLock.unlock();

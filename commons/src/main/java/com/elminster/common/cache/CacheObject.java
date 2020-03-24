@@ -10,6 +10,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * @param <K> value type
  */
 class CacheObject<K, V> {
+
+  private static final long NO_TTL = -1;
   /** the key. */
   private final K key;
   /** the value. */
@@ -29,7 +31,7 @@ class CacheObject<K, V> {
    * @param value the value
    */
   public CacheObject(K key, V value) {
-    this(key, value, 0);
+    this(key, value, NO_TTL);
   }
   
   /**

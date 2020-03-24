@@ -19,16 +19,16 @@ public class LFUCache<K, V> extends AbstractCache<K, V> {
    * Constructor.
    */
   public LFUCache() {
-    this(0);
+    this(INFINITE_CAPACITY);
   }
-  
+
   /**
    * Constructor.
    * @param capacity the capacity
    */
   public LFUCache(int capacity) {
-    this.capacity = capacity;
-    this.cacheMap = new HashMap<K, CacheObject<K, V>>();
+    super(capacity);
+    this.cacheMap = new HashMap<>();
   }
   
   /**
@@ -44,6 +44,7 @@ public class LFUCache<K, V> extends AbstractCache<K, V> {
     CacheObject<K, V> co;
     while (values.hasNext()) {
       co = values.next();
+      // evict the expired ones
       if (co.isExpired()) {
         values.remove();
         count++;
@@ -55,19 +56,11 @@ public class LFUCache<K, V> extends AbstractCache<K, V> {
       }
     }
 
+    // still full, evict the LFU one
     if (isFull() && null != minHit) {
-      long minHitCount = minHit.getHitCount();
-      values = cacheMap.values().iterator();
-      while (values.hasNext()) {
-        co = values.next();
-        if (co.subHit(minHitCount) <= 0) {
-          values.remove();
-          count++;
-        }
-      }
+      cacheMap.remove(minHit);
+      count++;
     }
-    
     return count;
   }
-
 }

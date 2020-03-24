@@ -20,7 +20,7 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
    * Constructor.
    */
   public LRUCache() {
-    this(0);
+    this(INFINITE_CAPACITY);
   }
 
   /**
@@ -30,7 +30,7 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
    *          the capacity
    */
   public LRUCache(int capacity) {
-    this.capacity = capacity;
+    super(capacity);
 
     cacheMap = new LinkedHashMap<K, CacheObject<K, V>>(capacity + 1, 1.0f, true) {
       /** the serial version uid. */
@@ -55,6 +55,7 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
   @Override
   protected int doEviction() {
     int count = 0;
+    CacheObject<K, V> lastRead = null;
     Iterator<CacheObject<K, V>> values = cacheMap.values().iterator();
     CacheObject<K, V> co;
     while (values.hasNext()) {
@@ -62,7 +63,17 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
       if (co.isExpired()) {
         values.remove();
         count++;
+        continue;
       }
+
+      if (null == lastRead || co.getLastHitTime() < lastRead.getLastHitTime()) {
+        lastRead = co;
+      }
+    }
+
+    if (isFull() && null != lastRead) {
+      cacheMap.remove(lastRead);
+      count++;
     }
     return count;
   }
