@@ -12,17 +12,23 @@ public interface Event {
    * Get the event name.
    * @return the event name
    */
-  public String getName();
+  String getName();
   
   /**
    * Get the event source.
    * @return the event source
    */
-  public Object getSource();
+  Object getSource();
   
   /**
    * Get the event target.
    * @return the event target
    */
-  public Object getTarget();
+  Object getTarget();
+
+  /**
+   * Get when the event happens.
+   * @return when the event happens
+   */
+  long getWhen();
 }

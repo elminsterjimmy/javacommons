@@ -8,7 +8,7 @@ public class WriterFactory {
 
   public static final WriterFactory INSTANCE = new WriterFactory();
   
-  private final Map<String, IWriter> writerCache = new HashMap<String, IWriter>();
+  private final Map<String, IWriter> writerCache = new HashMap<>();
   
   public IWriter getWriter(String fileName) {
     IWriter writer = writerCache.get(fileName);

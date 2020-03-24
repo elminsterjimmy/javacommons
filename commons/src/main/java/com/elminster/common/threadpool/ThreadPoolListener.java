@@ -13,5 +13,5 @@ public interface ThreadPoolListener extends Listener {
   /**
    * On thread pool shutdown.
    */
-  public void onShutdown();
+  void onShutdown();
 }

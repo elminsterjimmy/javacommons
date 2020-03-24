@@ -1,11 +1,11 @@
 package com.elminster.common.escape;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.elminster.common.cache.CacheBuilder;
+import com.elminster.common.cache.ICache;
 
 public class EscaperBuilder {
 
-  private Map<String, String> cache = new HashMap<String, String>();
+  private ICache<String, String> cache = CacheBuilder.newSimpleCache();
   
   public static EscaperBuilder newBuilder() {
     return new EscaperBuilder();

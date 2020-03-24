@@ -13,15 +13,15 @@ public interface FutureListener extends Listener {
   /**
    * Callback on future done.
    */
-  public void onFinished(FutureEvent event);
+  void onFinished(FutureEvent event);
 
   /**
    * Callback on future throws exception.
    */
-  public void onException(FutureEvent event);
+  void onException(FutureEvent event);
 
   /**
    * Callback on future is cancelled.
    */
-  public void onCancelled(FutureEvent event);
+  void onCancelled(FutureEvent event);
 }

@@ -7,11 +7,13 @@ public class FutureEvent implements Event {
   private final String name;
   private final Object source;
   private final Object target;
+  private final long when;
   
   public FutureEvent(String name, Object source, Object target) {
     this.name = name;
     this.source = source;
     this.target = target;
+    this.when = System.currentTimeMillis();
   }
 
   @Override
@@ -27,5 +29,10 @@ public class FutureEvent implements Event {
   @Override
   public Object getTarget() {
     return target;
+  }
+
+  @Override
+  public long getWhen() {
+    return when;
   }
 }
