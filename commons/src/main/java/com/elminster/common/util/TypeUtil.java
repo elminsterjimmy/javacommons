@@ -309,6 +309,10 @@ abstract public class TypeUtil {
     public Class<?> getType() {
       return type;
     }
+
+    public List<CompactedType> getChildren() {
+      return this.children;
+    }
   }
 
   public static class ClassTypeDef {
