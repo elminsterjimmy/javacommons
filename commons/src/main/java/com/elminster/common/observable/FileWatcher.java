@@ -1,12 +1,17 @@
 package com.elminster.common.observable;
 
-import java.io.File;
-import java.util.Observable;
-
+import com.elminster.common.id.AtomicLongIdGenerator;
+import com.elminster.common.id.IdGenerator;
+import com.elminster.common.id.IdGeneratorFactory;
+import com.elminster.common.thread.IJob;
+import com.elminster.common.thread.IJobMonitor;
+import com.elminster.common.thread.Job;
+import com.elminster.common.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.elminster.common.util.DateUtil;
+import java.io.File;
+import java.util.Observable;
 
 /**
  * Watch the specified file, notify observer when the file last modify time is changed.
@@ -29,33 +34,55 @@ public class FileWatcher extends Observable implements Runnable {
   private static final long DEFAULT_WATCH_INTERVAL = 10 * DateUtil.SECOND;
   /** the logger. */
   private static final Logger logger = LoggerFactory.getLogger(FileWatcher.class);
-  
+
   /** the file to watch. */
   protected File file;
   /** last modify time of the watched file. */
   protected long lastModifyTime;
   /** watch interval. */
-  protected long watchInterval = DEFAULT_WATCH_INTERVAL;
-  /** watch stop flag. */
-  protected volatile boolean stop;
-  
-  /**
-   * Constructor.
-   * 
-   * @param file the file to watch
-   */
+  final protected long watchInterval;
+
+  private IdGenerator idGenerator;
+  private IJob watchJob;
+
   public FileWatcher(File file) {
+    this(file, DEFAULT_WATCH_INTERVAL);
+  }
+
+  public FileWatcher(File file, long watchInterval) {
+    if (null == file) {
+      throw new IllegalArgumentException("file cannot be NULL.");
+    }
+    if (!file.exists()) {
+      throw new IllegalArgumentException(String.format("file [%s] does NOT exist.", file));
+    }
     this.file = file;
     this.lastModifyTime = file.lastModified();
+    this.watchInterval = watchInterval;
+    try {
+      idGenerator = IdGeneratorFactory.getIdGeneratorFacotry().getInstance(AtomicLongIdGenerator.class);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    String jobName = String.format("FileWatcher [%s]", file.getName());
+    watchJob = new Job((long)idGenerator.nextId(), jobName) {
+      @Override
+      protected JobStatus doWork(IJobMonitor monitor) throws Throwable {
+        watch(monitor);
+        return JobStatus.DONE;
+      }
+    };
+  }
+
+  public void run() {
+    watchJob.run();
   }
   
   /**
    * Stop watching.
    */
   public void stopWatch() {
-    if (!stop) {
-      stop = true;
-    }
+    watchJob.cancel();
   }
   
   /**
@@ -65,21 +92,16 @@ public class FileWatcher extends Observable implements Runnable {
   public File getFile() {
     return this.file;
   }
-  
-  /**
-   * Set the watch interval.
-   * @param watchInterval watch interval
-   */
-  public void setWatchInterval(long watchInterval) {
-    this.watchInterval = watchInterval;
+
+  public long getWatchInterval() {
+    return watchInterval;
   }
   
   /**
    * Watch specified file and notify observers when file last modify time is changed.
    */
-  @Override
-  public void run() {
-    while (!stop) {
+  public void watch(IJobMonitor monitor) throws Throwable {
+    while (!monitor.isCancelled()) {
       if (!file.exists()) {
         stopWatch();
         throw new RuntimeException("Watched file: " + file.getAbsolutePath() + " is not exist.");
@@ -89,7 +111,7 @@ public class FileWatcher extends Observable implements Runnable {
         if (logger.isDebugEnabled()) {
           logger.debug("File watcher interrupted! ");
         }
-        stop = true;
+        throw new InterruptedException();
       }
       
       long lastModified = file.lastModified();
@@ -98,14 +120,7 @@ public class FileWatcher extends Observable implements Runnable {
         setChanged();
         notifyObservers(this);
       }
-      try {
-        Thread.sleep(watchInterval);
-      } catch (InterruptedException e) {
-        if (logger.isDebugEnabled()) {
-          logger.debug("File watcher interrupted! ", e);
-        }
-        stop = true;
-      }
+      Thread.sleep(watchInterval);
     }
   }
 }
