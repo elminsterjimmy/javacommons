@@ -76,7 +76,7 @@ abstract public class ReflectFactory<T> {
     try {
       T instance = (T) ReflectUtil.newInstanceViaReflect(className);
       return instance;
-    } catch (ClassNotFoundException | SecurityException | IllegalArgumentException | NoSuchMethodException | InstantiationException | IllegalAccessException
+    } catch (ClassNotFoundException | SecurityException | IllegalArgumentException | InstantiationException | IllegalAccessException
         | InvocationTargetException e) {
       throw new ObjectInstantiationExcption(e);
     }
@@ -95,7 +95,7 @@ abstract public class ReflectFactory<T> {
     try {
       T instance = ReflectUtil.newInstanceViaReflect(clazz);
       return instance;
-    } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+    } catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
       throw new ObjectInstantiationExcption(e);
     }
   }
