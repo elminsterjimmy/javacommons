@@ -15,5 +15,5 @@ public interface RetryPolicy {
    * @param context the retry context
    * @return if the command need to be retried
    */
-  public boolean needRetry(RetryContext context, RetryState retryState);
+  boolean needRetry(RetryContext context, RetryState retryState);
 }

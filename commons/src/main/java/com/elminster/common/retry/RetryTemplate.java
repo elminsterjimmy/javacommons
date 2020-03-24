@@ -58,17 +58,19 @@ public class RetryTemplate {
   @SuppressWarnings("unchecked")
   public <R, T extends Throwable> R retry(RetryCommand<R, T> command, RetryContext context) throws T, RetryExhaustedException {
     assert null != context;
+    RetryListener retryListener = context.getRetryListener();
     RetryPolicy policy = context.getRetryPolicy();
     RetryStateImpl state = new RetryStateImpl();
     int retryCount = 0;
     Object lastValue = null;
     do {
-      beforeRetry(context, state);
+      logger.info(String.format("Start retry operation [%s], retry count [%d].", context.getInfo(), state.retryCount));
+      beforeRetry(retryListener, context, state);
       try {
         state.setLastExecutionTimestamp(System.currentTimeMillis());
         R returnValue = command.execute(context);
         state.setLastReturnValue(returnValue);
-        afterRetry(context, state);
+        afterRetry(retryListener, context, state);
         if (!policy.needRetry(context, state)) {
           // if doesn't need retry just return the return value
           return returnValue;
@@ -76,7 +78,8 @@ public class RetryTemplate {
       } catch (Throwable throwable) {
         state.setLastThrowable(throwable);
         lastValue = throwable;
-        afterRetry(context, state);
+        logger.error(throwable.getMessage(), throwable);
+        afterRetry(retryListener, context, state);
         if (!policy.needRetry(context, state)) {
           // if doesn't need retry just throw the throwable
           throw throwable;
@@ -101,13 +104,19 @@ public class RetryTemplate {
     }
   }
 
-  private void beforeRetry(RetryContext context, RetryState state) {
+  private void beforeRetry(RetryListener retryListener, RetryContext context, RetryState state) {
     logger.debug("before retry command: {}, retry count: {}.", context.getInfo(), state.getRetryCount());
+    if (null != retryListener) {
+      retryListener.beforeRetry(context, state);
+    }
   }
 
-  private void afterRetry(RetryContext context, RetryState state) {
+  private void afterRetry(RetryListener retryListener, RetryContext context, RetryState state) {
     logger.debug("after retry command: {}, retry count: {}. return value: {}. thrown exception: {}", context.getInfo(), state.getRetryCount(),
         state.getLastReturnValue(), state.getLastThrowable());
+    if (null != retryListener) {
+      retryListener.afterRetry(context, state);
+    }
   }
   
   /**
@@ -118,35 +127,23 @@ public class RetryTemplate {
    */
   public static class RetryContextImpl implements RetryContext {
 
-    String info;
-    RetryPolicy retryPolicy;
-    long retryInterval;
-    boolean throwExhaustedExcetion;
+    final String info;
+    final RetryPolicy retryPolicy;
+    final long retryInterval;
+    final boolean throwExhaustedExcetion;
+    final RetryListener retryListener;
     
 
     public RetryContextImpl(RetryPolicy retryPolicy) {
-      this("", retryPolicy, 1000L, true);
+      this("", retryPolicy, null, 1000L, true);
     }
     
-    public RetryContextImpl(String info, RetryPolicy retryPolicy, long retryInterval, boolean throwExhaustedExcetion) {
+    public RetryContextImpl(String info, RetryPolicy retryPolicy, RetryListener retryListener, long retryInterval, boolean throwExhaustedExcetion) {
       super();
       this.info = info;
       this.retryPolicy = retryPolicy;
       this.retryInterval = retryInterval;
-      this.throwExhaustedExcetion = throwExhaustedExcetion;
-    }
-
-    /**
-     * @param retryInterval the retryInterval to set
-     */
-    public void setRetryInterval(long retryInterval) {
-      this.retryInterval = retryInterval;
-    }
-
-    /**
-     * @param throwExhaustedExcetion the throwExhaustedExcetion to set
-     */
-    public void setThrowExhaustedExcetion(boolean throwExhaustedExcetion) {
+      this.retryListener = retryListener;
       this.throwExhaustedExcetion = throwExhaustedExcetion;
     }
 
@@ -160,21 +157,6 @@ public class RetryTemplate {
       return throwExhaustedExcetion;
     }
 
-    /**
-     * @param info the info to set
-     */
-    @Override
-    public void setInfo(String info) {
-      this.info = info;
-    }
-
-    /**
-     * @param retryPolicy the retryPolicy to set
-     */
-    public void setRetryPolicy(RetryPolicy retryPolicy) {
-      this.retryPolicy = retryPolicy;
-    }
-
     @Override
     public String getInfo() {
       return info;
@@ -183,6 +165,11 @@ public class RetryTemplate {
     @Override
     public RetryPolicy getRetryPolicy() {
       return retryPolicy;
+    }
+
+    @Override
+    public RetryListener getRetryListener() {
+      return retryListener;
     }
   }
 
