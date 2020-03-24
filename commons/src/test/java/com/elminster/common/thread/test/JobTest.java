@@ -15,26 +15,26 @@ public class JobTest {
     IJob job = new Job(0, "test") {
 
       @Override
-      protected JobStatus doWork(IJobMonitor monitor) {
-        try {
-          monitor.beginJob("test", 10);
-          Thread.sleep(2000);
-          monitor.done();
-          return JobStatus.DONE;
-        } catch (InterruptedException e) {
-          Thread.currentThread().interrupt();
-          return JobStatus.ERROR;
+      protected JobStatus doWork(IJobMonitor monitor) throws InterruptedException {
+        monitor.beginJob("Test Job", 10);
+        int worked = 0;
+        while (!monitor.isCancelled()) {
+          Thread.sleep(300);
+          monitor.subJob("Test SubJob " + worked);
+          monitor.worked(++worked);
         }
+        monitor.done();
+        return JobStatus.DONE;
       }
       
     };
     new Thread(job).start();
-    job.cancel();
-    Assert.assertTrue(job.getJobStatus() == JobStatus.CANCELLED);
     try {
       Thread.sleep(2000);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
+    job.cancel();
+    Assert.assertTrue(job.getJobStatus() == JobStatus.CANCELLED);
   }
 }

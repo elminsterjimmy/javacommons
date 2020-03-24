@@ -38,19 +38,15 @@ public class JobMonitor implements IJobMonitor {
   public void beginJob(String name, int totalCount) {
     this.name = name;
     this.totalCount = totalCount;
-    if (logger.isDebugEnabled()) {
-      logger.debug(String.format("Begin job [%s] with total [%d].", name, totalCount));
-    }
+    logger.info(String.format("Begin job [%s] with total [%d].", name, totalCount));
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void subJob(String name) {
-    if (logger.isDebugEnabled()) {
-      logger.debug(String.format("Begin sub job [%s].", name));
-    }
+  public void subJob(String subJobName) {
+    logger.info(String.format("job [%s] begin sub job [%s].", name, subJobName));
   }
 
   /**
@@ -59,6 +55,7 @@ public class JobMonitor implements IJobMonitor {
   @Override
   public void worked(int progress) {
     this.progressed += progress;
+    logger.info(String.format("job [%s] worked [%d / %d].", name, progress, totalCount));
   }
 
   /**
@@ -67,9 +64,7 @@ public class JobMonitor implements IJobMonitor {
   @Override
   public JobStatus done() {
     done = true;
-    if (logger.isDebugEnabled()) {
-      logger.debug(String.format("Job [%s] is done.", name));
-    }
+    logger.info(String.format("Job [%s] is done.", name));
     return JobStatus.DONE;
   }
 
@@ -87,9 +82,7 @@ public class JobMonitor implements IJobMonitor {
   @Override
   public JobStatus cancel() {
     cancelled = true;
-    if (logger.isDebugEnabled()) {
-      logger.debug(String.format("Job [%s] is cancelled.", name));
-    }
+    logger.info(String.format("Job [%s] is cancelled.", name));
     return JobStatus.CANCELLED;
   }
 

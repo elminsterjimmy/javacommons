@@ -13,39 +13,39 @@ public interface IJob extends Runnable {
    * 
    * @return job id
    */
-  public long getId();
+  long getId();
 
   /**
    * Get the job name.
    * 
    * @return job name
    */
-  public String getName();
+  String getName();
 
   /**
    * Get the job description.
    * 
    * @return job description
    */
-  public String getDescription();
+  String getDescription();
 
   /**
    * Get the job status.
    * 
    * @return job status
    */
-  public JobStatus getJobStatus();
+  JobStatus getJobStatus();
   
   /**
    * Get the job monitor.
    * @return the job monitor
    */
-  public IJobMonitor getJobMonitor();
+  IJobMonitor getJobMonitor();
   
   /**
    * Cancel the job.
    */
-  public void cancel();
+  void cancel();
   
   /**
    * The job status.
@@ -54,7 +54,7 @@ public interface IJob extends Runnable {
    * @version 1.0
    */
   public static enum JobStatus {
-    CREATED, RUNNING, ERROR, CANCELLED, DONE;
+    CREATED, RUNNING, ERROR, CANCELLED, INTERRUPTED, DONE;
     
     public boolean isDone() {
       return JobStatus.DONE == this;

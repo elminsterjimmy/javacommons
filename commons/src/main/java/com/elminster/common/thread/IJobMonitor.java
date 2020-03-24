@@ -4,21 +4,21 @@ import com.elminster.common.thread.IJob.JobStatus;
 
 public interface IJobMonitor {
 
-  public void beginJob(String name, int totalCount);
+  void beginJob(String name, int totalCount);
   
-  public void subJob(String name);
+  void subJob(String subJobName);
   
-  public void worked(int progress);
+  void worked(int progress);
   
-  public int getTotalCount();
+  int getTotalCount();
   
-  public int getProgressed();
+  int getProgressed();
   
-  public JobStatus done();
+  JobStatus done();
   
-  public boolean isDone();
+  boolean isDone();
   
-  public JobStatus cancel();
+  JobStatus cancel();
   
-  public boolean isCancelled();
+  boolean isCancelled();
 }

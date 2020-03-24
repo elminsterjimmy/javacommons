@@ -138,6 +138,9 @@ abstract public class Job implements IJob {
     try {
       status = JobStatus.RUNNING;
       status = doWork(monitor);
+    } catch (InterruptedException ie) {
+      status = JobStatus.INTERRUPTED;
+      uncatchedExceptionHandler.handleUncatchedException(ie);
     } catch (Throwable t) {
       status = JobStatus.ERROR;
       uncatchedExceptionHandler.handleUncatchedException(t);
