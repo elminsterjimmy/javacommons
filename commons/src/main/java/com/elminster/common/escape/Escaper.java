@@ -12,7 +12,7 @@ public interface Escaper {
    * Escape the origin string.
    * 
    * @param origin
-   *          the origin string
+   *          the origin string to escape
    * @return escaped string
    */
   String escape(String origin);

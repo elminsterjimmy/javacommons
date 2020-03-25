@@ -3,20 +3,41 @@ package com.elminster.common.escape;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Escaper builder.
+ *
+ * @author jgu
+ * @version 1.0
+ */
 public class EscaperBuilder {
 
-  private List<Pair> cache = new ArrayList<>();
+  /** the escape pairs. */
+  private List<Pair> escapePairs = new ArrayList<>();
 
+  /**
+   * Create a new EscaperBuilder.
+   * @return a new EscaperBuilder
+   */
   public static EscaperBuilder newBuilder() {
     return new EscaperBuilder();
   }
 
+  /**
+   * Builder a new String Escaper.
+   * @return a new String Escaper
+   */
   public Escaper build() {
     return new StringReplaceEscaper();
   }
 
+  /**
+   * Add a escape.
+   * @param escape the String need to escape
+   * @param escaped the String escaped
+   * @return the EscaperBuilder
+   */
   public EscaperBuilder addEscape(String escape, String escaped) {
-    cache.add(new Pair(escape, escaped));
+    escapePairs.add(new Pair(escape, escaped));
     return this;
   }
 
@@ -30,8 +51,17 @@ public class EscaperBuilder {
     }
   }
 
+  /**
+   * The String Replace Escaper.
+   *
+   * @author jgu
+   * @version 1.0
+   */
   class StringReplaceEscaper implements Escaper {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String escape(String origin) {
       if (null == origin) {
@@ -44,7 +74,7 @@ public class EscaperBuilder {
       int p = 0;
       while (p < strLen) {
         boolean match = false;
-        for (Pair pair : cache) {
+        for (Pair pair : escapePairs) {
           int len = pair.src.length();
           if (p + len < strLen) {
             String sub = escaped.substring(p, p + len);
