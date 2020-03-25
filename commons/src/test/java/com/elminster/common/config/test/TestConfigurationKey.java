@@ -1,15 +1,11 @@
 package com.elminster.common.config.test;
 
+import com.elminster.common.config.CommonConfiguration;
+import com.elminster.common.config.key.KeyBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.elminster.common.config.CommonConfiguration;
-import com.elminster.common.config.IConfigProvider.BooleanKey;
-import com.elminster.common.config.IConfigProvider.DoubleKey;
-import com.elminster.common.config.IConfigProvider.FloatKey;
-import com.elminster.common.config.IConfigProvider.IntegerKey;
-import com.elminster.common.config.IConfigProvider.LongKey;
-import com.elminster.common.config.IConfigProvider.StringKey;
+import static com.elminster.common.config.key.Key.*;
 
 
 public class TestConfigurationKey {
@@ -19,16 +15,16 @@ public class TestConfigurationKey {
   @Test
   public void testConfigurationKey() {
     TestConfiguration config = new TestConfiguration();
-    StringKey sk1 = new StringKey("sk1", "sk1");
-    StringKey sk2 = new StringKey("sk2", "sk2");
-    StringKey sk3 = new StringKey("sk3", null);
+    StringKey sk1 = KeyBuilder.stringKey("sk1", "sk1");
+    StringKey sk2 = KeyBuilder.stringKey("sk2", "sk2");
+    StringKey sk3 = KeyBuilder.stringKey("sk3", null);
     Assert.assertEquals("sk1", config.getStringProperty(sk1));
     Assert.assertEquals("sk2", config.getStringProperty(sk2));
     Assert.assertNull(config.getStringProperty(sk3));
     
-    IntegerKey ik1 = new IntegerKey("ik1", 1);
-    IntegerKey ik2 = new IntegerKey("ik1", 2);
-    IntegerKey ik3 = new IntegerKey("ik3", null);
+    IntegerKey ik1 = KeyBuilder.integerKey("ik1", 1);
+    IntegerKey ik2 = KeyBuilder.integerKey("ik1", 2);
+    IntegerKey ik3 = KeyBuilder.integerKey("ik3", null);
     Assert.assertEquals(Integer.valueOf(1), config.getIntegerProperty(ik1));
     Assert.assertEquals(Integer.valueOf(2), config.getIntegerProperty(ik2));
     Assert.assertNull(config.getIntegerProperty(ik3));

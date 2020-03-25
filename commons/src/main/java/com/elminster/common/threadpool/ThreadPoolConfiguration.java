@@ -1,6 +1,9 @@
 package com.elminster.common.threadpool;
 
 import com.elminster.common.config.CommonConfiguration;
+import com.elminster.common.config.key.KeyBuilder;
+
+import static com.elminster.common.config.key.Key.*;
 
 /**
  * ThreadPool Configuration.

@@ -15,6 +15,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import static com.elminster.common.config.key.Key.*;
+
 /**
  * The dynamic configuration that using configuration files. All files will be watched by a thread to invoke the update
  * if the file's last modify date is changed.

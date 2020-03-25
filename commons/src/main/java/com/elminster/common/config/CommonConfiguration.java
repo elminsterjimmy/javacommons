@@ -1,12 +1,13 @@
 package com.elminster.common.config;
 
-import java.util.Properties;
-
+import com.elminster.common.config.key.Key;
+import com.elminster.common.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.elminster.common.config.key.Key;
-import com.elminster.common.util.StringUtil;
+import java.util.Properties;
+
+import static com.elminster.common.config.key.Key.*;
 
 /**
  * The Common Properties Configuration.

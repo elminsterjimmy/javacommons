@@ -2,6 +2,8 @@ package com.elminster.common.config;
 
 import com.elminster.common.config.key.Key;
 
+import static com.elminster.common.config.key.Key.*;
+
 /**
  * The configuration provider that provides a variety of get/set methods.
  * 
@@ -245,83 +247,10 @@ public interface IConfigProvider {
   void setProperty(String key, Double doubleValue);
 
   /**
-   * Set the key.
+   * Set the 
    * 
    * @param key
    *          the key
    */
   <E> void setProperties(Key<E> key);
-
-  /** String Key. */
-  class StringKey extends Key<String> {
-
-    StringKey(String key, String defaultValue) {
-      super(key, defaultValue);
-    }
-  }
-
-  /** Integer Key. */
-  class IntegerKey extends Key<Integer> {
-    IntegerKey(String key, Integer defaultValue) {
-      super(key, defaultValue);
-    }
-  }
-
-  /** Float Key. */
-  class FloatKey extends Key<Float> {
-
-    FloatKey(String key, Float defaultValue) {
-      super(key, defaultValue);
-    }
-  }
-
-  /** Long Key. */
-  class LongKey extends Key<Long> {
-
-    LongKey(String key, Long defaultValue) {
-      super(key, defaultValue);
-    }
-  }
-
-  /** Double Key. */
-  class DoubleKey extends Key<Double> {
-
-    DoubleKey(String key, Double defaultValue) {
-      super(key, defaultValue);
-    }
-  }
-
-  /** Boolean Key. */
-  class BooleanKey extends Key<Boolean> {
-
-    BooleanKey(String key, Boolean defaultValue) {
-      super(key, defaultValue);
-    }
-  }
-
-  class KeyBuilder {
-    public static StringKey stringKey(String key, String defaultValue) {
-      return new StringKey(key, defaultValue);
-    }
-
-    public static BooleanKey booleanKey(String key, Boolean defaultValue) {
-      return new BooleanKey(key, defaultValue);
-    }
-
-    public static IntegerKey integerKey(String key, Integer defaultValue) {
-      return new IntegerKey(key, defaultValue);
-    }
-
-    public static FloatKey floatKey(String key, Float defaultValue) {
-      return new FloatKey(key, defaultValue);
-    }
-
-    public static LongKey longKey(String key, Long defaultValue) {
-      return new LongKey(key, defaultValue);
-    }
-
-    public static DoubleKey doubleKey(String key, Double defaultValue) {
-      return new DoubleKey(key, defaultValue);
-    }
-  }
 }
