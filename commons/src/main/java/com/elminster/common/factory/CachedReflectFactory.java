@@ -1,7 +1,7 @@
 package com.elminster.common.factory;
 
 import com.elminster.common.cache.CacheBuilder;
-import com.elminster.common.cache.CacheTemplate;
+import com.elminster.common.cache.DaemonLoadCache;
 import com.elminster.common.cache.ICache;
 import com.elminster.common.exception.ObjectInstantiationExcption;
 
@@ -18,12 +18,12 @@ abstract public class CachedReflectFactory<K, T> extends ReflectFactory<T> {
     }
 
     public T getInstance(K key) {
-        return new CacheTemplate<K, T>() {
+        return new DaemonLoadCache<K, T>() {
             @Override
             protected T retrieveValueWhenCacheMissed(K key) throws Exception {
                 return createInstance(key);
             }
-        }.getValue(key);
+        }.get(key);
     }
 
     protected abstract T createInstance(K key) throws ObjectInstantiationExcption;

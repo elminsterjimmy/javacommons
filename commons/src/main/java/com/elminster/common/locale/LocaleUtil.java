@@ -1,6 +1,6 @@
 package com.elminster.common.locale;
 
-import com.elminster.common.cache.CacheTemplate;
+import com.elminster.common.cache.DaemonLoadCache;
 
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 public class LocaleUtil {
 
   /** the cache of the ResourceBundles. */
-  private static CacheTemplate<CacheKey, ResourceBundle> cache = new CacheTemplate<CacheKey, ResourceBundle>() {
+  private static DaemonLoadCache<CacheKey, ResourceBundle> cache = new DaemonLoadCache<CacheKey, ResourceBundle>() {
     @Override
     protected ResourceBundle retrieveValueWhenCacheMissed(CacheKey cacheKey) throws Exception {
       return ResourceBundle.getBundle(cacheKey.bundleName, cacheKey.locate);
@@ -52,7 +52,7 @@ public class LocaleUtil {
    */
   public static String getI18NMessage(String bundleName, Locale locale, String key, String... params) {
     CacheKey cacheKey = new CacheKey(bundleName, locale);
-    ResourceBundle resourceBundle = cache.getValue(cacheKey);
+    ResourceBundle resourceBundle = cache.get(cacheKey);
     if (null == resourceBundle) {
       throw new RuntimeException(String.format("resource bundle [%s] not found!", bundleName));
     }

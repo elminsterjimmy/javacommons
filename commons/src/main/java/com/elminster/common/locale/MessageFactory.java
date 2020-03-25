@@ -1,10 +1,10 @@
-package com.elminster.common.util;
+package com.elminster.common.locale;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import com.elminster.common.cache.DaemonLoadCache;
+import com.elminster.common.cache.ICache;
+
+import java.text.MessageFormat;
+import java.util.*;
 
 /**
  * Message factory for i18n.
@@ -21,7 +21,16 @@ public class MessageFactory {
   private Class<?> clazz;
 
   /** caches. */
-  private static Map<Class<?>, MessageFactory> factories = new HashMap<Class<?>, MessageFactory>();
+  private static ICache<Class<?>, MessageFactory> factories;
+
+  static {
+    factories = new DaemonLoadCache<Class<?>, MessageFactory>() {
+      @Override
+      protected MessageFactory retrieveValueWhenCacheMissed(Class<?> clazz) {
+        return new MessageFactory(clazz);
+      }
+    };
+  }
 
   /**
    * Constructor.
@@ -88,6 +97,6 @@ public class MessageFactory {
    * @return the localized message
    */
   private String getLocalizedMessage(ResourceBundle rb, String key, Object... args) {
-    return String.format(rb.getString(key), args);
+    return MessageFormat.format(rb.getString(key), args);
   }
 }
