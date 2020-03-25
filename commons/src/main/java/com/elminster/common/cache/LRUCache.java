@@ -6,7 +6,7 @@ import java.util.Map;
 
 /**
  * The LRU cache.
- * 
+ *
  * @author jgu
  * @version 1.0
  * @param <K>
@@ -20,12 +20,12 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
    * Constructor.
    */
   public LRUCache() {
-    this(INFINITE_CAPACITY);
+    this(MAX_CAPACITY);
   }
 
   /**
    * Constructor.
-   * 
+   *
    * @param capacity
    *          the capacity
    */
@@ -41,16 +41,14 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
        */
       @Override
       protected boolean removeEldestEntry(Map.Entry<K, CacheObject<K, V>> eldest) {
-        if (LRUCache.this.capacity == 0) {
-          return false;
-        }
         return size() > LRUCache.this.capacity;
       }
     };
   }
 
   /**
-   * {@inheritDoc}
+   * Evict the expired ones first, if still full evict the oldest unread element.
+   * @return evicted element count
    */
   @Override
   protected int doEviction() {

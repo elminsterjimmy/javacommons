@@ -6,33 +6,73 @@ package com.elminster.common.cache;
  * @author jgu
  * @version 1.0
  */
-public interface ICache<K, V> {
-  
-  public int capacity();
+ public interface ICache<K, V> {
 
-  public void put(K key, V object);
+  /**
+   * Get the capacity of the cache.
+   * @return the capacity of the cache
+   */
+  int capacity();
 
-  public void put(K key, V object, long ttl);
+  /**
+   * Put a key-value pair into the cache.
+   * @param key the key
+   * @param object the value
+   */
+   void put(K key, V object);
 
-  public V get(K key);
+  /**
+   * Put a key-value pair with a TTL(time to live) into the cache.
+   * @param key the key
+   * @param object the value
+   * @param ttl the TTL, unit <I>ms</I>
+   */
+   void put(K key, V object, long ttl);
 
-  public int evict();
+  /**
+   * Get the cached value from the key
+   * @param key the key
+   * @return the value associated with the key {@literal null} for not hit in the cache
+   */
+   V get(K key);
 
-  public boolean isFull();
+  /**
+   * Evict the expired values.
+   * @return evicted element count
+   */
+   int evict();
 
-  public void remove(K key);
+  /**
+   * Check if the cache is full.
+   * @return if the cache is full
+   */
+   boolean isFull();
 
-  public void clear();
+  /**
+   * Remove the cached value with the key
+   * @param key the key
+   */
+   void remove(K key);
 
-  public int size();
+  /**
+   * Clear the cache
+   */
+  void clear();
 
-  public boolean isEmpty();
-  
-  public void dump();
+  /**
+   * Get the size of the cache.
+   * @return the size of the cache
+   */
+   int size();
 
-  public long getMissedCount();
-  
-  public long getHitCount();
-  
-  public double getHitPercent();
+  /**
+   * Check if the cache is empty.
+   * @return if the cache is empty
+   */
+   boolean isEmpty();
+
+   /**
+    * Dump the cache.
+    */
+   void dump();
 }

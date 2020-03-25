@@ -19,7 +19,7 @@ public class LFUCache<K, V> extends AbstractCache<K, V> {
    * Constructor.
    */
   public LFUCache() {
-    this(INFINITE_CAPACITY);
+    this(MAX_CAPACITY);
   }
 
   /**
@@ -30,9 +30,10 @@ public class LFUCache<K, V> extends AbstractCache<K, V> {
     super(capacity);
     this.cacheMap = new HashMap<>();
   }
-  
+
   /**
-   * {@inheritDoc}
+   * Evict the expired ones first, if still full evict the min hit element.
+   * @return evicted element count
    */
   @Override
   protected int doEviction() {

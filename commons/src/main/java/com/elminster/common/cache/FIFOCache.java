@@ -28,11 +28,11 @@ public class FIFOCache<K, V> extends AbstractCache<K, V> {
    */
   public FIFOCache(int capacity) {
     super(capacity);
-    cacheMap = new LinkedHashMap<K, CacheObject<K, V>>(capacity + 1, 1.0f, false);
+    cacheMap = new LinkedHashMap<>(capacity + 1, 1.0f, false);
   }
 
   /**
-   * {@inheritDoc}
+   * Evict the expired ones first, if still full evict the first element.
    */
   @Override
   protected int doEviction() {

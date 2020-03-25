@@ -18,13 +18,15 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
  * @param <V>
  *          the value type
  */
-public abstract class AbstractCache<K, V> implements ICache<K, V> {
+public abstract class AbstractCache<K, V> implements ICache<K, V>, CacheStatistics {
 
-  protected static final int INFINITE_CAPACITY = -1;
+  /** the max capacity: {@link Integer#MAX_VALUE}. */
+  protected static final int MAX_CAPACITY = Integer.MAX_VALUE;
 
+  /** the logger. */
   private static final Logger logger = LoggerFactory.getLogger(AbstractCache.class);
 
-  /** the capacity of the cache, -1 = infinite. */
+  /** the capacity of the cache. */
   protected final int capacity;
   /** the hit count. */
   protected volatile long hit = 0;
@@ -39,10 +41,17 @@ public abstract class AbstractCache<K, V> implements ICache<K, V> {
   /** the write lock. */
   private final WriteLock writeLock = lock.writeLock();
 
+  /**
+   * Constructor the Cache with {@link Integer#MAX_VALUE} capacity.
+   */
   public AbstractCache() {
-    this(INFINITE_CAPACITY);
+    this(MAX_CAPACITY);
   }
 
+  /**
+   * Constructor the Cache with the capacity.
+   * @param capacity the capacity
+   */
   public AbstractCache(int capacity) {
     this.capacity = capacity;
   }
@@ -102,7 +111,7 @@ public abstract class AbstractCache<K, V> implements ICache<K, V> {
       if (null == cachedObject) {
         missed++;
       }
-      // expired
+      // remove the expired value
       if (cachedObject.isExpired()) {
         cacheMap.remove(key);
         missed++;
@@ -223,7 +232,7 @@ public abstract class AbstractCache<K, V> implements ICache<K, V> {
 
   /**
    * Do the eviction by specified algorithm.
-   * @return evict count
+   * @return evicted element count
    */
   abstract protected int doEviction();
 }

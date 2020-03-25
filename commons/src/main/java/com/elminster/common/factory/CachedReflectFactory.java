@@ -17,14 +17,13 @@ abstract public class CachedReflectFactory<K, T> extends ReflectFactory<T> {
         this.cache = cache;
     }
 
-    public T getInstance(K key) throws Exception {
-        final T cached = new CacheTemplate<K, T>() {
+    public T getInstance(K key) {
+        return new CacheTemplate<K, T>() {
             @Override
-            protected T retrieveValue(K key) throws Exception {
+            protected T retrieveValueWhenCacheMissed(K key) throws Exception {
                 return createInstance(key);
             }
-        }.getCached(key);
-        return cached;
+        }.getValue(key);
     }
 
     protected abstract T createInstance(K key) throws ObjectInstantiationExcption;

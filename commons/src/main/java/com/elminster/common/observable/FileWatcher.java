@@ -41,14 +41,24 @@ public class FileWatcher extends Observable implements Runnable {
   protected long lastModifyTime;
   /** watch interval. */
   final protected long watchInterval;
-
-  private IdGenerator idGenerator;
+  /** the id generator */
+  private IdGenerator idGenerator = IdGeneratorFactory.getIdGeneratorFacotry().getInstance(AtomicLongIdGenerator.class);;
+  /** the watch job. */
   private IJob watchJob;
 
+  /**
+   * Constructor the FileWatcher to watch the file.
+   * @param file the file to watch
+   */
   public FileWatcher(File file) {
     this(file, DEFAULT_WATCH_INTERVAL);
   }
 
+  /**
+   * Constructor the FileWatcher to watch the file.
+   * @param file the file to watch
+   * @param watchInterval the watch interval
+   */
   public FileWatcher(File file, long watchInterval) {
     if (null == file) {
       throw new IllegalArgumentException("file cannot be NULL.");
@@ -59,11 +69,6 @@ public class FileWatcher extends Observable implements Runnable {
     this.file = file;
     this.lastModifyTime = file.lastModified();
     this.watchInterval = watchInterval;
-    try {
-      idGenerator = IdGeneratorFactory.getIdGeneratorFacotry().getInstance(AtomicLongIdGenerator.class);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
     String jobName = String.format("FileWatcher [%s]", file.getName());
     watchJob = new Job((long)idGenerator.nextId(), jobName) {
       @Override
@@ -74,6 +79,9 @@ public class FileWatcher extends Observable implements Runnable {
     };
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void run() {
     watchJob.run();
   }
@@ -93,6 +101,10 @@ public class FileWatcher extends Observable implements Runnable {
     return this.file;
   }
 
+  /**
+   * Get the watch interval.
+   * @return the watch interval
+   */
   public long getWatchInterval() {
     return watchInterval;
   }
