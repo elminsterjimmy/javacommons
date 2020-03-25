@@ -15,5 +15,5 @@ public interface Escaper {
    *          the origin string
    * @return escaped string
    */
-  public String escape(String origin);
+  String escape(String origin);
 }

@@ -8,25 +8,25 @@ package com.elminster.common.constants;
  */
 public interface RegexConstants {
   /** the escaped <code>.</code>. */
-	public static final String REGEX_DOT = "\\.";
+	String REGEX_DOT = "\\.";
 	/** the escaped <code>*</code>. */
-	public static final String REGEX_STAR = "\\*";
+	String REGEX_STAR = "\\*";
 	/** the escaped <code>+</code>. */
-	public static final String REGEX_PLUS = "\\+";
+	String REGEX_PLUS = "\\+";
 	/** the escaped <code>[</code>. */
-	public static final String REGEX_LEFT_SQUARE_BRACKETS = "\\[";
+	String REGEX_LEFT_SQUARE_BRACKETS = "\\[";
 	/** the escaped <code>]</code>. */
-	public static final String REGEX_RIGHT_SQUARE_BRACKETS = "\\]";
+	String REGEX_RIGHT_SQUARE_BRACKETS = "\\]";
 	/** the escaped <code>(</code>. */
-	public static final String REGEX_LEFT_PARENTHESES = "\\(";
+	String REGEX_LEFT_PARENTHESES = "\\(";
 	/** the escaped <code>)</code>. */
-	public static final String REGEX_RIGHT_PARENTHESES = "\\)";
+	String REGEX_RIGHT_PARENTHESES = "\\)";
 	/** the escaped <code>$</code>. */
-	public static final String REGEX_DOLLAR = "\\$";
+	String REGEX_DOLLAR = "\\$";
 	/** the escaped <code>?</code>. */
-	public static final String REGEX_QUESTION = "\\?";
+	String REGEX_QUESTION = "\\?";
 	/** the escaped <code>^</code>. */
-	public static final String REGEX_CARET = "\\^";
+	String REGEX_CARET = "\\^";
 	/** the pattern for any included newline. */
-	public static final String REGEX_ANY_INCLUDE_NEWLINE = "((.|\n)*)";
+	String REGEX_ANY_INCLUDE_NEWLINE = "((.|\n)*)";
 }
