@@ -15,26 +15,26 @@ public interface RetryState {
    * 
    * @return the current retry count
    */
-  public int getRetryCount();
+  int getRetryCount();
 
   /**
    * Get the last throwable from the execution of the command.
    * 
    * @return the last throwable from the execution of the command
    */
-  public Optional<Throwable> getLastThrowable();
+  Optional<Throwable> getLastThrowable();
 
   /**
    * Get the last return value from the execution of the command.
    * 
    * @return the last return value from the execution of the command
    */
-  public Optional<Object> getLastReturnValue();
+  Optional<Object> getLastReturnValue();
 
   /**
    * Get the last timestamp from the execution of the command.
    * 
    * @return the last timestamp from the execution of the command
    */
-  public long getLastExecutionTimestamp();
+  long getLastExecutionTimestamp();
 }

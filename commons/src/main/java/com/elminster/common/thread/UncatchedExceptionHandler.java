@@ -1,6 +1,16 @@
 package com.elminster.common.thread;
 
+/**
+ * The UncatchedExceptionHandler.
+ *
+ * @author jgu
+ * @version 1.0
+ */
 public interface UncatchedExceptionHandler {
 
-  public void handleUncatchedException(Throwable t);
+  /**
+   * Handle the uncatched exception.
+   * @param t the throwable
+   */
+  void handleUncatchedException(Throwable t);
 }

@@ -60,7 +60,7 @@ public class SimpleCommandLineArgsParser implements IParser<String[], CommandLin
 
   /**
    * Get option name.
-   * @param trimed the trimmed String
+   * @param trimmed the trimmed String
    * @return the option name if the String start with <code>-</code> or <code>--</code>
    */
   private String getOpt(String trimmed) {

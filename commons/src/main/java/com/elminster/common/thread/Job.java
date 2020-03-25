@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The job.
- * 
+ *
  * @author jgu
  * @version 1.0
  */
@@ -27,23 +27,23 @@ abstract public class Job implements IJob {
 
   /** the job status. */
   private volatile JobStatus status;
-  
+
   /** the job monitor. */
   private final IJobMonitor monitor;
-  
+
   /** the job started in ms. */
   private long jobStarted;
-  
+
   /** the uncatched exception handler. */
   private UncatchedExceptionHandler uncatchedExceptionHandler;
-  
+
   /**
    * Constructor.
-   * 
+   *
    * @param id
-   *          the job id
+   *     the job id
    * @param name
-   *          the job name
+   *     the job name
    */
   public Job(long id, String name) {
     this.id = id;
@@ -52,16 +52,16 @@ abstract public class Job implements IJob {
     this.monitor = new JobMonitor();
     uncatchedExceptionHandler = new LogUncatchedExceptionHandler();
   }
-  
+
   /**
    * Constructor.
-   * 
+   *
    * @param id
-   *          the job id
+   *     the job id
    * @param name
-   *          the job name
+   *     the job name
    * @param monitor
-   *          the job monitor
+   *     the job monitor
    */
   public Job(long id, String name, IJobMonitor monitor) {
     this.id = id;
@@ -94,7 +94,7 @@ abstract public class Job implements IJob {
 
   /**
    * @param description
-   *          the description to set
+   *     the description to set
    */
   public void setDescription(String description) {
     this.description = description;
@@ -115,7 +115,7 @@ abstract public class Job implements IJob {
   public IJobMonitor getJobMonitor() {
     return monitor;
   }
-  
+
   /**
    * {@inheritDoc}
    */
@@ -153,10 +153,25 @@ abstract public class Job implements IJob {
       }
     }
   }
-  
+
+  /**
+   * Set the UncatchedExceptionHandler.
+   *
+   * @param handler
+   *     the UncatchedExceptionHandler to set
+   */
   public void setUncatchedExceptionHandler(UncatchedExceptionHandler handler) {
     uncatchedExceptionHandler = handler;
   }
-  
+
+  /**
+   * Do the actually work.
+   *
+   * @param monitor
+   *     the job monitor
+   * @return the job status
+   * @throws Throwable
+   *     on error
+   */
   abstract protected JobStatus doWork(IJobMonitor monitor) throws Throwable;
 }
