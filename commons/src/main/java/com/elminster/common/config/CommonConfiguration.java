@@ -99,9 +99,6 @@ abstract public class CommonConfiguration implements IConfigProvider {
     try {
       rtn = getIntegerProperty(key);
     } catch (NumberFormatException nfe) {
-      rtn = null;
-    }
-    if (null == rtn) {
       rtn = defaultValue;
     }
     return rtn;
@@ -150,9 +147,6 @@ abstract public class CommonConfiguration implements IConfigProvider {
     try {
       rtn = getLongProperty(key);
     } catch (NumberFormatException nfe) {
-      rtn = null;
-    }
-    if (null == rtn) {
       rtn = defaultValue;
     }
     return rtn;
@@ -201,9 +195,6 @@ abstract public class CommonConfiguration implements IConfigProvider {
     try {
       rtn = getFloatProperty(key);
     } catch (NumberFormatException nfe) {
-      rtn = null;
-    }
-    if (null == rtn) {
       rtn = defaultValue;
     }
     return rtn;
@@ -252,9 +243,6 @@ abstract public class CommonConfiguration implements IConfigProvider {
     try {
       rtn = getDoubleProperty(key);
     } catch (NumberFormatException nfe) {
-      rtn = null;
-    }
-    if (null == rtn) {
       rtn = defaultValue;
     }
     return rtn;
@@ -303,9 +291,6 @@ abstract public class CommonConfiguration implements IConfigProvider {
     try {
       rtn = getBooleanProperty(key);
     } catch (NumberFormatException nfe) {
-      rtn = null;
-    }
-    if (null == rtn) {
       rtn = defaultValue;
     }
     return rtn;

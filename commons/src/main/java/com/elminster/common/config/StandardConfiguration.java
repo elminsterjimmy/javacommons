@@ -28,21 +28,16 @@ public class StandardConfiguration extends CommonConfiguration {
     loadResources();
   }
   
-  protected StandardConfiguration() {
-  }
-
   /**
    * Load the resource files.
    */
   protected void loadResources() {
     if (null != configurationFiles) {
-      Reader reader = null;
       for (String configurationFile : configurationFiles) {
         if (logger.isDebugEnabled()) {
           logger.debug(String.format("Load Configuration file [%s]", configurationFile));
         }
-        try {
-          reader = new FileReader(configurationFile);
+        try (Reader reader = new FileReader(configurationFile)) {
           properties.load(reader);
         } catch (FileNotFoundException e) {
           File file = new File(configurationFile);
@@ -50,14 +45,6 @@ public class StandardConfiguration extends CommonConfiguration {
               configurationFile, file.getAbsoluteFile()));
         } catch (IOException e) {
           throw new RuntimeException(e);
-        } finally {
-          if (null != reader) {
-            try {
-              reader.close();
-            } catch (IOException e) {
-              throw new RuntimeException(e);
-            }
-          }
         }
       }
     }

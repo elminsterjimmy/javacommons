@@ -6,11 +6,12 @@ package com.elminster.common.callback;
  * @version 1.0
  * @param <T> notification type
  */
+@FunctionalInterface
 public interface ICallback<T> {
 
   /**
    * Callback with the notification.
    * @param notification the nofification
    */
-  public void callback(T notification);
+  void callback(T notification);
 }

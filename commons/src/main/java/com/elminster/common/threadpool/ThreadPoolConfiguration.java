@@ -11,19 +11,19 @@ import com.elminster.common.config.CommonConfiguration;
 public class ThreadPoolConfiguration extends CommonConfiguration {
 
   /** the thread pool core size. */
-  public static final IntegerKey CORE_POOL_SIZE = new IntegerKey("threadpool.core.size", 100);
+  public static final IntegerKey CORE_POOL_SIZE = KeyBuilder.integerKey("threadpool.core.size", 100);
   /** the thread pool max size. */
-  public static final IntegerKey MAX_POOL_SIZE = new IntegerKey("threadpool.max.size", 200);
+  public static final IntegerKey MAX_POOL_SIZE = KeyBuilder.integerKey("threadpool.max.size", 200);
   /** the thread pool core size. */
-  public static final IntegerKey BLOCKING_QUEUE_SIZE = new IntegerKey("threadpool.blocking.queue.size", 100);
+  public static final IntegerKey BLOCKING_QUEUE_SIZE = KeyBuilder.integerKey("threadpool.blocking.queue.size", 100);
   /** the thread pool keep alive time (unit ms). */
-  public static final LongKey KEEP_ALIVE_TIME = new LongKey("threadpool.keep.alive.time", 1000L);
+  public static final LongKey KEEP_ALIVE_TIME = KeyBuilder.longKey("threadpool.keep.alive.time", 1000L);
   /** the thread pool name. */
-  public static final StringKey POOL_NAME = new StringKey("threadpool.name", "threadpool");
+  public static final StringKey POOL_NAME = KeyBuilder.stringKey("threadpool.name", "threadpool");
   /** the thread pool uses daemon thread? */
-  public static final BooleanKey DAEMON_THREAD = new BooleanKey("threadpool.daemo", false);
+  public static final BooleanKey DAEMON_THREAD = KeyBuilder.booleanKey("threadpool.daemo", false);
   /** the thread pool uses rejected policy. */
-  public static final StringKey REJECTED_POLICY = new StringKey("threadpool.rejected.policy", DefaultRejectedPolicy.class.getName());
+  public static final StringKey REJECTED_POLICY = KeyBuilder.stringKey("threadpool.rejected.policy", DefaultRejectedPolicy.class.getName());
 
   public static final ThreadPoolConfiguration INSTANCE = new ThreadPoolConfiguration();
   

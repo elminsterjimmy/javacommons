@@ -14,5 +14,5 @@ public interface IConfigPersister {
    * Persist the configuration. 
    * @throws IOException on error
    */
-  public void persist() throws IOException;
+  void persist() throws IOException;
 }
