@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 
 import com.elminster.common.constants.Constants.StringConstants;
 import com.elminster.common.util.Messages.Message;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * The array utilites.

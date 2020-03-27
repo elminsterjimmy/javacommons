@@ -171,11 +171,11 @@ abstract public class TypeUtil {
   private static List<Class<?>> getClassFromRawType(Type type) {
     List<Class<?>> list = null;
     if (type instanceof Class<?>) {
-      list = new ArrayList<Class<?>>(0);
+      list = new ArrayList<>(0);
       list.add((Class<?>) type);
       return list;
     } else if (type instanceof ParameterizedType) {
-      list = new ArrayList<Class<?>>();
+      list = new ArrayList<>();
       ParameterizedType pt = (ParameterizedType) type;
       list.addAll(getClassFromRawType(pt.getRawType()));
       Type[] types = pt.getActualTypeArguments();
@@ -202,7 +202,7 @@ abstract public class TypeUtil {
           if (t instanceof TypeVariable<?>) {
             rtn.children.add(getActualClassFromTypeVariableReadable((TypeVariable<?>) type, clazz));
           } else if (t instanceof ParameterizedType) {
-            rtn.children.add(getCompactedTypeFromRawType((ParameterizedType) t, clazz));
+            rtn.children.add(getCompactedTypeFromRawType(t, clazz));
           } else if (t instanceof Class<?>) {
             CompactedType ct = new CompactedType();
             ct.type = (Class<?>) t;

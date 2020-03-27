@@ -10,13 +10,13 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.elminster.common.constants.Constants.StringConstants;
+import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * Object Utilities
- * 
+ *
  * @author Gu
  * @version 1.0
- * 
  */
 public abstract class ObjectUtil {
   /** Start of an Array: <code>[</code> */
@@ -26,11 +26,11 @@ public abstract class ObjectUtil {
 
   /**
    * Determine if the specified Object is equal
-   * 
+   *
    * @param o1
-   *          first Object to compare
+   *     first Object to compare
    * @param o2
-   *          second Object to compare
+   *     second Object to compare
    * @return whether the Objects is equal
    */
   public static boolean isEqual(Object o1, Object o2) {
@@ -75,15 +75,14 @@ public abstract class ObjectUtil {
         return Arrays.equals((short[]) o1, (short[]) o2);
       }
     }
-
     return false;
   }
 
   /**
    * Return a String representation of the specified Object
-   * 
+   *
    * @param obj
-   *          the object to build a String representation for
+   *     the object to build a String representation for
    * @return a String representation of the Object
    */
   public static String toString(Object obj) {
@@ -119,9 +118,9 @@ public abstract class ObjectUtil {
 
   /**
    * Return a String which contains all fields key-value pair.
-   * 
+   *
    * @param obj
-   *          specified Object
+   *     specified Object
    * @return a String which contains all fields key-value pair
    */
   public static String buildToStringByReflect(Object obj) {
@@ -148,9 +147,9 @@ public abstract class ObjectUtil {
 
   /**
    * Convert the given array (which may be a primitive array) to an object array.
-   * 
+   *
    * @param array
-   *          the array to convert
+   *     the array to convert
    * @return the corresponding object array
    */
   public static Object[] toObjectArray(Object array) {
@@ -187,19 +186,19 @@ public abstract class ObjectUtil {
   public static Object copyPropertiesSkipCollection(Object src, Object dest) throws Exception {
     return copyProperties(src, dest, null, null, false);
   }
-  
+
   public static Object copyProperties(Object src, Object dest, Map<String, String> fieldNameMapping) throws Exception {
     return copyProperties(src, dest, fieldNameMapping, null);
   }
 
   public static <T, K> Object copyProperties(Object src, Object dest, Map<String, String> fieldNameMapping,
-      Map<String, IValueConverter<T, K>> fieldValueConverter) throws Exception {
+                                             Map<String, IValueConverter<T, K>> fieldValueConverter) throws Exception {
     return copyProperties(src, dest, fieldNameMapping, fieldValueConverter, true);
   }
 
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public static <T, K> Object copyProperties(Object src, Object dest, Map<String, String> fieldNameMapping,
-      Map<String, IValueConverter<T, K>> fieldValueConverter, boolean copyCollection) throws Exception {
+                                             Map<String, IValueConverter<T, K>> fieldValueConverter, boolean copyCollection) throws Exception {
     Class<?> srcClazz = src.getClass();
     Class<?> destClazz = dest.getClass();
 
@@ -224,7 +223,7 @@ public abstract class ObjectUtil {
 
         if (!copyCollection
             && (Collection.class.isAssignableFrom(destField.getDeclaringClass()) || Collection.class
-                .isAssignableFrom(field.getDeclaringClass()))) {
+            .isAssignableFrom(field.getDeclaringClass()))) {
           continue;
         }
         Object value = ReflectUtil.getFieldValue(src, field);
@@ -252,14 +251,16 @@ public abstract class ObjectUtil {
    * });
    * </cdoe>
    *
-   * @param supplier the function
-   * @param <T> the param type
+   * @param supplier
+   *     the function
+   * @param <T>
+   *     the param type
    * @return the wrapped Optional
    */
   public static <T> Optional<T> toOptional(Supplier<T> supplier) {
     try {
       return Optional.ofNullable(supplier.get());
-    } catch(NullPointerException npe) {
+    } catch (NullPointerException npe) {
       return Optional.empty();
     }
   }

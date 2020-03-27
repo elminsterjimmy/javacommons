@@ -23,10 +23,9 @@ import com.elminster.common.constants.Constants.StringConstants;
 
 /**
  * Reflect Utilities
- * 
+ *
  * @author Gu
  * @version 1.0
- * 
  */
 public abstract class ReflectUtil {
 
@@ -57,18 +56,18 @@ public abstract class ReflectUtil {
       }
     }
 
-    Set<Class<?>> primitiveTypeClasses = new HashSet<Class<?>>(17);
+    Set<Class<?>> primitiveTypeClasses = new HashSet<>(17);
     primitiveTypeClasses.addAll(primitive2WrapperMap.keySet());
     // @formatter:off
     primitiveTypeClasses.addAll(Arrays
-        .asList(new Class<?>[] { 
-          boolean[].class,
-          byte[].class,
-          char[].class,
-          double[].class, float[].class,
-          int[].class,
-          long[].class,
-          short[].class }));
+        .asList(new Class<?>[]{
+            boolean[].class,
+            byte[].class,
+            char[].class,
+            double[].class, float[].class,
+            int[].class,
+            long[].class,
+            short[].class}));
     // @formatter:on
     for (Class<?> clazz : primitiveTypeClasses) {
       primitiveTypeNameMap.put(clazz.getName(), clazz);
@@ -77,9 +76,9 @@ public abstract class ReflectUtil {
 
   /**
    * Get all interfaces the specified class implemented.
-   * 
+   *
    * @param clazz
-   *          the specified class
+   *     the specified class
    * @return interfaces the specified class implemented
    */
   public static Class<?>[] getAllInterface(Class<? extends Object> clazz) {
@@ -94,9 +93,9 @@ public abstract class ReflectUtil {
 
   /**
    * Get all fields the specified class declared (include the declared field in super class).
-   * 
+   *
    * @param clazz
-   *          the specified class
+   *     the specified class
    * @return fields the specified class declared
    */
   public static Field[] getAllField(Class<? extends Object> clazz) {
@@ -111,9 +110,9 @@ public abstract class ReflectUtil {
 
   /**
    * Get all methods the specified class declared (include the declared methods in super class).
-   * 
+   *
    * @param clazz
-   *          the specified class
+   *     the specified class
    * @return methods the specified class declared
    */
   public static Method[] getAllMethod(Class<? extends Object> clazz) {
@@ -135,9 +134,9 @@ public abstract class ReflectUtil {
 
   /**
    * Make the specified method accessible.
-   * 
+   *
    * @param method
-   *          the specified method
+   *     the specified method
    */
   public static void makeAccessible(Method method) {
     if ((!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers())) && !method.isAccessible()) {
@@ -147,9 +146,9 @@ public abstract class ReflectUtil {
 
   /**
    * Make the specified constructor accessible.
-   * 
+   *
    * @param constructor
-   *          the specified constructor
+   *     the specified constructor
    */
   public static void makeAccessible(Constructor<?> constructor) {
     if ((!Modifier.isPublic(constructor.getModifiers()) || !Modifier.isPublic(constructor.getDeclaringClass().getModifiers())) && !constructor.isAccessible()) {
@@ -159,9 +158,9 @@ public abstract class ReflectUtil {
 
   /**
    * Make the specified field accessible.
-   * 
+   *
    * @param field
-   *          the specified field
+   *     the specified field
    */
   public static void makeAccessible(Field field) {
     if (!Modifier.isPublic(field.getModifiers()) && !field.isAccessible()) {
@@ -171,13 +170,13 @@ public abstract class ReflectUtil {
 
   /**
    * Invoke the specified method in runtime
-   * 
+   *
    * @param obj
-   *          object the underlying method is invoked from
+   *     object the underlying method is invoked from
    * @param methodName
-   *          specified method name
+   *     specified method name
    * @param args
-   *          specified method arguments
+   *     specified method arguments
    * @return method result
    * @throws NoSuchMethodException
    * @throws IllegalArgumentException
@@ -187,7 +186,7 @@ public abstract class ReflectUtil {
   public static Object invoke(Object obj, String methodName, Object... args)
       throws NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
     if (null == args) {
-      args = new Object[] {};
+      args = new Object[]{};
     }
     int argsCnt = args.length;
     Class<?>[] classArgs = new Class<?>[argsCnt];
@@ -211,13 +210,13 @@ public abstract class ReflectUtil {
 
   /**
    * Invoke the specified method in runtime
-   * 
+   *
    * @param obj
-   *          object the underlying method is invoked from
+   *     object the underlying method is invoked from
    * @param method
-   *          specified method
+   *     specified method
    * @param args
-   *          specified method arguments
+   *     specified method arguments
    * @return method result
    * @throws NoSuchMethodException
    * @throws IllegalArgumentException
@@ -231,13 +230,13 @@ public abstract class ReflectUtil {
 
   /**
    * Set the specified field to a specified new value.
-   * 
+   *
    * @param obj
-   *          the object whose field should be modified
+   *     the object whose field should be modified
    * @param fieldName
-   *          specified field's name
+   *     specified field's name
    * @param value
-   *          new value
+   *     new value
    */
   public static void setField(Object obj, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException {
     Class<?> clazz = obj.getClass();
@@ -248,13 +247,13 @@ public abstract class ReflectUtil {
 
   /**
    * Set the specified field to a specified new value in runtime.
-   * 
+   *
    * @param obj
-   *          the object whose field should be modified
+   *     the object whose field should be modified
    * @param field
-   *          specified field
+   *     specified field
    * @param value
-   *          new value
+   *     new value
    */
   public static void setField(Object obj, Field field, Object value) throws IllegalArgumentException, IllegalAccessException {
     makeAccessible(field);
@@ -263,11 +262,11 @@ public abstract class ReflectUtil {
 
   /**
    * Get the specified field value in runtime.
-   * 
+   *
    * @param obj
-   *          object from which the represented field's value is to be extracted
+   *     object from which the represented field's value is to be extracted
    * @param fieldName
-   *          specified field's name
+   *     specified field's name
    * @return the value of the represented field in object
    * @throws IllegalArgumentException
    * @throws IllegalAccessException
@@ -280,11 +279,11 @@ public abstract class ReflectUtil {
 
   /**
    * Get the specified field value in runtime.
-   * 
+   *
    * @param obj
-   *          object from which the represented field's value is to be extracted
-   * @param fieldName
-   *          specified field
+   *     object from which the represented field's value is to be extracted
+   * @param field
+   *     specified field
    * @return the value of the represented field in object
    * @throws IllegalArgumentException
    * @throws IllegalAccessException
@@ -293,14 +292,14 @@ public abstract class ReflectUtil {
     Object value = null;
     String getMethod = "get" + StringUtil.capitalize(field.getName()); //$NON-NLS-1$
     try {
-      value = invoke(obj, getMethod, new Object[] {});
+      value = invoke(obj, getMethod, new Object[]{});
     } catch (NoSuchMethodException e) {
     } catch (InvocationTargetException e) {
     }
     if (null == value && field.getType().equals(Boolean.TYPE) || field.getType().equals(Boolean.class)) {
       getMethod = "is" + StringUtil.capitalize(field.getName()); //$NON-NLS-1$
       try {
-        value = invoke(obj, getMethod, new Object[] {});
+        value = invoke(obj, getMethod, new Object[]{});
       } catch (NoSuchMethodException e) {
       } catch (InvocationTargetException e) {
       }
@@ -314,13 +313,13 @@ public abstract class ReflectUtil {
 
   /**
    * Get the specified declared method by method name
-   * 
+   *
    * @param clazz
-   *          the class declared the specified method
+   *     the class declared the specified method
    * @param methodName
-   *          the specified method's name
+   *     the specified method's name
    * @param args
-   *          the specified method's arguments type
+   *     the specified method's arguments type
    * @return the specified declared method
    */
   public static Method getDeclaredMethod(Class<? extends Object> clazz, String methodName, Object... args) {
@@ -339,11 +338,11 @@ public abstract class ReflectUtil {
 
   /**
    * Get the specified declared method by method name
-   * 
+   *
    * @param clazz
-   *          the class declared the specified method
+   *     the class declared the specified method
    * @param methodName
-   *          the specified method's name
+   *     the specified method's name
    * @return the specified declared method
    */
   public static Method getDeclaredMethod(Class<? extends Object> clazz, String methodName) {
@@ -352,13 +351,13 @@ public abstract class ReflectUtil {
 
   /**
    * Get the specified declared method by method name
-   * 
+   *
    * @param clazz
-   *          the class declared the specified method
+   *     the class declared the specified method
    * @param methodName
-   *          the specified method's name
+   *     the specified method's name
    * @param args
-   *          the specified method's arguments type
+   *     the specified method's arguments type
    * @return the specified declared method
    */
   public static Method getDeclaredMethod(Class<? extends Object> clazz, String methodName, Class<?>... args) {
@@ -388,11 +387,11 @@ public abstract class ReflectUtil {
 
   /**
    * Check the actual class is same or assignable from expect class.
-   * 
+   *
    * @param expectClass
-   *          the expect class
+   *     the expect class
    * @param actualClass
-   *          the actual class
+   *     the actual class
    * @return the actual class is same or assignable from expect class
    */
   private static boolean checkParamClass(Class<?> expectClass, Class<?> actualClass) {
@@ -421,9 +420,9 @@ public abstract class ReflectUtil {
 
   /**
    * Get the wrap class of primitive type.
-   * 
+   *
    * @param primitive
-   *          the primitive class
+   *     the primitive class
    * @return the wrapped class
    */
   public static Class<?> getWrappedClass(Class<?> primitive) {
@@ -432,11 +431,11 @@ public abstract class ReflectUtil {
 
   /**
    * Check if a specified object can adapt to specified class.
-   * 
+   *
    * @param clazz
-   *          the class adapt to
+   *     the class adapt to
    * @param obj
-   *          the object need to adapt
+   *     the object need to adapt
    * @return whether the object can adapt to specified class
    */
   public static boolean isAdpatable(Class<?> clazz, Object obj) {
@@ -454,9 +453,9 @@ public abstract class ReflectUtil {
 
   /**
    * Get the code base location of the class.
-   * 
+   *
    * @param clazz
-   *          the class
+   *     the class
    * @return the code base of the class
    */
   public static URL getCodeBase(Class<?> clazz) {
@@ -474,11 +473,11 @@ public abstract class ReflectUtil {
 
   /**
    * Get the specified declared field by field name
-   * 
+   *
    * @param clazz
-   *          the class declared the specified field
+   *     the class declared the specified field
    * @param fieldName
-   *          the specified field's name
+   *     the specified field's name
    * @return the specified declared field
    */
   public static Field getDeclaredField(Class<?> clazz, String fieldName) {
@@ -487,13 +486,13 @@ public abstract class ReflectUtil {
 
   /**
    * Get the specified declared field by field name
-   * 
+   *
    * @param clazz
-   *          the class declared the specified field
+   *     the class declared the specified field
    * @param fieldName
-   *          the specified field's name
+   *     the specified field's name
    * @param type
-   *          the specified field's type
+   *     the specified field's type
    * @return the specified declared field
    */
   public static Field getDeclearedField(Class<?> clazz, String fieldName, Class<?> type) {
@@ -508,9 +507,9 @@ public abstract class ReflectUtil {
 
   /**
    * Get the method name for a depth in call stack.
-   * 
+   *
    * @param depth
-   *          depth in the call stack (0 means current method, 1 means call method, ...)
+   *     depth in the call stack (0 means current method, 1 means call method, ...)
    * @return method name
    */
   public static String getCallMethodName(int depth) {
@@ -521,14 +520,14 @@ public abstract class ReflectUtil {
 
   /**
    * Get the constructor of specified class.
-   * 
+   *
    * @param clazz
-   *          the specified class name
+   *     the specified class name
    * @return the constructor
    * @throws SecurityException
-   *           on error
+   *     on error
    * @throws NoSuchMethodException
-   *           on error
+   *     on error
    */
   public static <T> Constructor<T> getConstructor(Class<T> clazz) throws NoSuchMethodException, SecurityException {
     return getConstructor(clazz, new Class<?>[0]);
@@ -536,16 +535,16 @@ public abstract class ReflectUtil {
 
   /**
    * Get the constructor of specified class.
-   * 
+   *
    * @param clazz
-   *          the specified class name
+   *     the specified class name
    * @param args
-   *          the specified class' arguments type
+   *     the specified class' arguments type
    * @return the constructor
    * @throws SecurityException
-   *           on error
+   *     on error
    * @throws NoSuchMethodException
-   *           on error
+   *     on error
    */
   public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... args) throws NoSuchMethodException, SecurityException {
     Constructor<T> constructor;
@@ -559,9 +558,9 @@ public abstract class ReflectUtil {
 
   /**
    * Create new instance of specified class from reflect.
-   * 
+   *
    * @param clazz
-   *          the class
+   *     the class
    * @return the new instance
    * @throws SecurityException
    * @throws InvocationTargetException
@@ -582,9 +581,9 @@ public abstract class ReflectUtil {
 
   /**
    * Create new instance of specified class from reflect.
-   * 
+   *
    * @param className
-   *          the class name
+   *     the class name
    * @return the new instance
    * @throws SecurityException
    * @throws InvocationTargetException
@@ -609,16 +608,16 @@ public abstract class ReflectUtil {
 
   /**
    * Replacement for <code>Class.forName()</code> that also returns Class instances for primitives (like "int") and array class names (like "String[]").
-   * 
+   *
    * @param name
-   *          the name of the Class
+   *     the name of the Class
    * @param classLoader
-   *          the class loader to use (may be <code>null</code>, which indicates the default class loader)
+   *     the class loader to use (may be <code>null</code>, which indicates the default class loader)
    * @return Class instance for the supplied name
    * @throws ClassNotFoundException
-   *           if the class was not found
+   *     if the class was not found
    * @throws LinkageError
-   *           if the class file could not be loaded
+   *     if the class file could not be loaded
    * @see Class#forName(String, boolean, ClassLoader)
    */
   public static Class<?> forName(String name, ClassLoader classLoader) throws ClassNotFoundException, LinkageError {
@@ -660,9 +659,9 @@ public abstract class ReflectUtil {
    * <p>
    * Also supports the JVM's internal class names for primitive arrays. Does <i>not</i> support the "[]" suffix notation for primitive arrays; this is only supported by
    * {@link #forName}.
-   * 
+   *
    * @param name
-   *          the name of the potentially primitive class
+   *     the name of the potentially primitive class
    * @return the primitive class, or <code>null</code> if the name does not denote a primitive class or primitive array class
    */
   public static Class<?> resolvePrimitiveClassName(String name) {
@@ -671,11 +670,11 @@ public abstract class ReflectUtil {
     // SHOULD sit in a package, so a length check is worthwhile.
     if (name != null && name.length() <= 8) {
       // Could be a primitive - likely.
-      result = (Class<?>) primitiveTypeNameMap.get(name);
+      result = primitiveTypeNameMap.get(name);
     }
     return result;
   }
-  
+
   /**
    * Returns the package name of {@code clazz} according to the Java Language Specification (section
    * 6.7). Unlike {@link Class#getPackage}, this method only parses the class name, without
@@ -701,12 +700,12 @@ public abstract class ReflectUtil {
    * define the proxy class. To implement multiple interfaces or specify a class loader, use {@link Proxy#newProxyInstance}.
    *
    * @throws IllegalArgumentException
-   *           if {@code interfaceType} does not specify the type of a Java interface
+   *     if {@code interfaceType} does not specify the type of a Java interface
    */
   public static <T> T newProxy(Class<T> interfaceType, InvocationHandler handler) {
     Assert.notNull(handler);
     Assert.isTrue(interfaceType.isInterface(), "%s is not an interface", interfaceType);
-    Object object = Proxy.newProxyInstance(interfaceType.getClassLoader(), new Class<?>[] { interfaceType }, handler);
+    Object object = Proxy.newProxyInstance(interfaceType.getClassLoader(), new Class<?>[]{interfaceType}, handler);
     return interfaceType.cast(object);
   }
 }

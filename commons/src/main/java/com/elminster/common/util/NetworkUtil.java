@@ -330,10 +330,14 @@ public abstract class NetworkUtil {
   }
 
   /**
-   * Check for a valid hostname.
+   * Check if the hostname is a valid hostname.
+   *
+   * @param hostname
+   *     the hostname to check
+   * @return if the hostname is a valid hostname
    */
-  public static boolean isValidHostname(String s) {
-    return s != null && s.length() <= 64 && HOSTNAME_PATTERN.matcher(s).matches();
+  public static boolean isValidHostname(String hostname) {
+    return hostname != null && hostname.length() <= 64 && HOSTNAME_PATTERN.matcher(hostname).matches();
   }
 
   /**

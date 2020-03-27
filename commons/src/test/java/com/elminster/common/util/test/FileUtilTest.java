@@ -70,8 +70,8 @@ public class FileUtilTest {
     Assert.assertEquals("test2.txt", FileUtil.getFileName(win));
     Assert.assertEquals("", FileUtil.getFileName(folder));
     
-    Assert.assertEquals("/test/test1", FileUtil.getPath(unix));
-    Assert.assertEquals("c:\\test\\test1", FileUtil.getPath(win));
-    Assert.assertEquals("/test/test1", FileUtil.getPath(folder));
+    Assert.assertEquals("/test/test1", FileUtil.getParentDirectory(unix));
+    Assert.assertEquals("c:\\test\\test1", FileUtil.getParentDirectory(win));
+    Assert.assertEquals("/test/test1", FileUtil.getParentDirectory(folder));
   }
 }

@@ -1,11 +1,12 @@
 package com.elminster.common.util;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.elminster.common.constants.Constants.CharacterConstants;
 import com.elminster.common.constants.Constants.JavaSystemProperty;
 import com.elminster.common.constants.Constants.StringConstants;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Reference to Class org.apache.commons.lang.StringUtils at Apache Commons Project.
@@ -70,7 +71,7 @@ public abstract class StringUtil {
    * @return <code>true</code> if the String is empty or null
    */
   public static boolean isEmpty(String str) {
-    return str == null || str.length() == 0;
+    return StringUtils.isEmpty(str);
   }
 
   /**
@@ -112,16 +113,7 @@ public abstract class StringUtil {
    * @return <code>true</code> if the String is null, empty or whitespace
    */
   public static boolean isBlank(String str) {
-    int strLen;
-    if (str == null || (strLen = str.length()) == 0) {
-      return true;
-    }
-    for (int i = 0; i < strLen; i++) {
-      if ((Character.isWhitespace(str.charAt(i)) == false)) {
-        return false;
-      }
-    }
-    return true;
+    return StringUtils.isBlank(str);
   }
 
   /**
@@ -170,7 +162,7 @@ public abstract class StringUtil {
    * @return <code>true</code> if the Strings are equal, case sensitive, or both <code>null</code>
    */
   public static boolean equals(String str1, String str2) {
-    return str1 == null ? str2 == null : str1.equals(str2);
+    return StringUtils.equals(str1, str2);
   }
 
   /**
@@ -198,7 +190,7 @@ public abstract class StringUtil {
    * @return <code>true</code> if the Strings are equal, case insensitive, or both <code>null</code>
    */
   public static boolean equalsIgnoreCase(String str1, String str2) {
-    return str1 == null ? str2 == null : str1.equalsIgnoreCase(str2);
+    return StringUtils.equalsIgnoreCase(str1, str2);
   }
 
   /**
@@ -226,16 +218,7 @@ public abstract class StringUtil {
    * @return the leftmost characters, <code>null</code> if null String input
    */
   public static String left(String str, int len) {
-    if (str == null) {
-      return null;
-    }
-    if (len < 0) {
-      return EMPTY;
-    }
-    if (str.length() <= len) {
-      return str;
-    }
-    return str.substring(0, len);
+    return StringUtils.left(str, len);
   }
 
   /**
@@ -263,16 +246,7 @@ public abstract class StringUtil {
    * @return the rightmost characters, <code>null</code> if null String input
    */
   public static String right(String str, int len) {
-    if (str == null) {
-      return null;
-    }
-    if (len < 0) {
-      return EMPTY;
-    }
-    if (str.length() <= len) {
-      return str;
-    }
-    return str.substring(str.length() - len);
+    return StringUtils.right(str, len);
   }
 
   /**
@@ -305,116 +279,9 @@ public abstract class StringUtil {
    * @return the middle characters, <code>null</code> if null String input
    */
   public static String mid(String str, int pos, int len) {
-    if (str == null) {
-      return null;
-    }
-    if (len < 0 || pos > str.length()) {
-      return EMPTY;
-    }
-    if (pos < 0) {
-      pos = 0;
-    }
-    if (str.length() <= (pos + len)) {
-      return str.substring(pos);
-    }
-    return str.substring(pos, pos + len);
+    return StringUtils.mid(str, pos, len);
   }
 
-  /**
-   * <p>
-   * Deletes all whitespaces from a String as defined by {@link Character#isWhitespace(char)}.
-   * </p>
-   * 
-   * <pre>
-   * StringUtils.deleteWhitespace(null)         = null
-   * StringUtils.deleteWhitespace("")           = ""
-   * StringUtils.deleteWhitespace("abc")        = "abc"
-   * StringUtils.deleteWhitespace("   ab  c  ") = "abc"
-   * </pre>
-   * 
-   * @param str
-   *          the String to delete whitespace from, may be null
-   * @return the String without whitespaces, <code>null</code> if null String input
-   */
-  public static String deleteWhitespace(String str) {
-    if (isEmpty(str)) {
-      return str;
-    }
-    int sz = str.length();
-    char[] chs = new char[sz];
-    int count = 0;
-    for (int i = 0; i < sz; i++) {
-      if (!Character.isWhitespace(str.charAt(i))) {
-        chs[count++] = str.charAt(i);
-      }
-    }
-    if (count == sz) {
-      return str;
-    }
-    return new String(chs, 0, count);
-  }
-
-  /**
-   * <p>
-   * Overlays part of a String with another String.
-   * </p>
-   * <p>
-   * A <code>null</code> string input returns <code>null</code>. A negative index is treated as zero. An index greater
-   * than the string length is treated as the string length. The start index is always the smaller of the two indices.
-   * </p>
-   * 
-   * <pre>
-   * StringUtils.overlay(null, *, *, *)            = null
-   * StringUtils.overlay("", "abc", 0, 0)          = "abc"
-   * StringUtils.overlay("abcdef", null, 2, 4)     = "abef"
-   * StringUtils.overlay("abcdef", "", 2, 4)       = "abef"
-   * StringUtils.overlay("abcdef", "", 4, 2)       = "abef"
-   * StringUtils.overlay("abcdef", "zzzz", 2, 4)   = "abzzzzef"
-   * StringUtils.overlay("abcdef", "zzzz", 4, 2)   = "abzzzzef"
-   * StringUtils.overlay("abcdef", "zzzz", -1, 4)  = "zzzzef"
-   * StringUtils.overlay("abcdef", "zzzz", 2, 8)   = "abzzzz"
-   * StringUtils.overlay("abcdef", "zzzz", -2, -3) = "zzzzabcdef"
-   * StringUtils.overlay("abcdef", "zzzz", 8, 10)  = "abcdefzzzz"
-   * </pre>
-   * 
-   * @param str
-   *          the String to do overlaying in, may be null
-   * @param overlay
-   *          the String to overlay, may be null
-   * @param start
-   *          the position to start overlaying at
-   * @param end
-   *          the position to stop overlaying before
-   * @return overlayed String, <code>null</code> if null String input
-   */
-  public static String overlay(String str, String overlay, int start, int end) {
-    if (str == null) {
-      return null;
-    }
-    if (overlay == null) {
-      overlay = EMPTY;
-    }
-    int len = str.length();
-    if (start < 0) {
-      start = 0;
-    }
-    if (start > len) {
-      start = len;
-    }
-    if (end < 0) {
-      end = 0;
-    }
-    if (end > len) {
-      end = len;
-    }
-    if (start > end) {
-      int temp = start;
-      start = end;
-      end = temp;
-    }
-    return new StringBuffer(len + start - end + overlay.length() + 1).append(str.substring(0, start)).append(overlay)
-        .append(str.substring(end)).toString();
-  }
 
   /**
    * <p>
@@ -475,7 +342,7 @@ public abstract class StringUtil {
    * letters are changed.
    * </p>
    * <p>
-   * For a word based algorithm, see {@link WordUtils#capitalize(String)}. A <code>null</code> input String returns
+   * A <code>null</code> input String returns
    * <code>null</code>.
    * </p>
    * 
@@ -489,48 +356,9 @@ public abstract class StringUtil {
    * @param str
    *          the String to capitalize, may be null
    * @return the capitalized String, <code>null</code> if null String input
-   * @see WordUtils#capitalize(String)
-   * @see #uncapitalize(String)
-   * @since 2.0
    */
   public static String capitalize(String str) {
-    int strLen;
-    if (str == null || (strLen = str.length()) == 0) {
-      return str;
-    }
-    return new StringBuffer(strLen).append(Character.toTitleCase(str.charAt(0))).append(str.substring(1)).toString();
-  }
-
-  /**
-   * <p>
-   * Uncapitalizes a String changing the first letter to title case as per {@link Character#toTitleCase(char)}. No other
-   * letters are changed.
-   * </p>
-   * <p>
-   * For a word based algorithm, see {@link WordUtils#uncapitalize(String)}. A <code>null</code> input String returns
-   * <code>null</code>.
-   * </p>
-   * 
-   * <pre>
-   * StringUtils.uncapitalize(null)  = null
-   * StringUtils.uncapitalize("")    = ""
-   * StringUtils.uncapitalize("Cat") = "cat"
-   * StringUtils.uncapitalize("CAt") = "cAt"
-   * </pre>
-   * 
-   * @param str
-   *          the String to capitalize, may be null
-   * @return the uncapitalize String, <code>null</code> if null String input
-   * @see WordUtils#uncapitalize(String)
-   * @see #capitalize(String)
-   * @since 2.0
-   */
-  public static String uncapitalize(String str) {
-    int strLen;
-    if (str == null || (strLen = str.length()) == 0) {
-      return str;
-    }
-    return new StringBuffer(strLen).append(Character.toLowerCase(str.charAt(0))).append(str.substring(1)).toString();
+    return StringUtils.capitalize(str);
   }
 
   /**
@@ -546,7 +374,7 @@ public abstract class StringUtil {
   /**
    * Calculated substring occurrences times
    * 
-   * @param Source
+   * @param source
    *          source string
    * @param sub
    *          sub string
@@ -610,7 +438,7 @@ public abstract class StringUtil {
   /**
    * Check two files content whether equals.
    * 
-   * @param context
+   * @param content
    *          the content
    * @param other
    *          the second content
@@ -705,443 +533,6 @@ public abstract class StringUtil {
   public static String replaceByIndexes(String string, int replaceStart, int replaceEnd, String replacement) {
     return new StringBuilder(string.substring(0, replaceStart)).append(replacement)
           .append(string.substring(replaceEnd, string.length())).toString();
-  }
-
-  /**
-   * <p>
-   * Left pad a String with spaces (' ').
-   * </p>
-   *
-   * <p>
-   * The String is padded to the size of <code>size</code>.
-   * </p>
-   *
-   * <pre>
-   * StringUtils.leftPad(null, *)   = null
-   * StringUtils.leftPad("", 3)     = "   "
-   * StringUtils.leftPad("bat", 3)  = "bat"
-   * StringUtils.leftPad("bat", 5)  = "  bat"
-   * StringUtils.leftPad("bat", 1)  = "bat"
-   * StringUtils.leftPad("bat", -1) = "bat"
-   * </pre>
-   *
-   * @param str
-   *          the String to pad out, may be null
-   * @param size
-   *          the size to pad to
-   * @return left padded String or original String if no padding is necessary, <code>null</code> if null String input
-   */
-  public static String leftPad(String str, int size) {
-    return leftPad(str, size, DEFAULT_PAD_CHAR);
-  }
-
-  /**
-   * <p>
-   * Left pad a String with a specified character.
-   * </p>
-   *
-   * <p>
-   * Pad to a size of <code>size</code>.
-   * </p>
-   *
-   * <pre>
-   * StringUtils.leftPad(null, *, *)     = null
-   * StringUtils.leftPad("", 3, 'z')     = "zzz"
-   * StringUtils.leftPad("bat", 3, 'z')  = "bat"
-   * StringUtils.leftPad("bat", 5, 'z')  = "zzbat"
-   * StringUtils.leftPad("bat", 1, 'z')  = "bat"
-   * StringUtils.leftPad("bat", -1, 'z') = "bat"
-   * </pre>
-   *
-   * @param str
-   *          the String to pad out, may be null
-   * @param size
-   *          the size to pad to
-   * @param padChar
-   *          the character to pad with
-   * @return left padded String or original String if no padding is necessary, <code>null</code> if null String input
-   * @since 2.0
-   */
-  public static String leftPad(String str, int size, char padChar) {
-    if (str == null) {
-      return null;
-    }
-    int pads = size - str.length();
-    if (pads <= 0) {
-      return str; // returns original String when possible
-    }
-    if (pads > PAD_LIMIT) {
-      return leftPad(str, size, String.valueOf(padChar));
-    }
-    return padding(pads, padChar).concat(str);
-  }
-
-  /**
-   * <p>
-   * Left pad a String with a specified String.
-   * </p>
-   *
-   * <p>
-   * Pad to a size of <code>size</code>.
-   * </p>
-   *
-   * <pre>
-   * StringUtils.leftPad(null, *, *)      = null
-   * StringUtils.leftPad("", 3, "z")      = "zzz"
-   * StringUtils.leftPad("bat", 3, "yz")  = "bat"
-   * StringUtils.leftPad("bat", 5, "yz")  = "yzbat"
-   * StringUtils.leftPad("bat", 8, "yz")  = "yzyzybat"
-   * StringUtils.leftPad("bat", 1, "yz")  = "bat"
-   * StringUtils.leftPad("bat", -1, "yz") = "bat"
-   * StringUtils.leftPad("bat", 5, null)  = "  bat"
-   * StringUtils.leftPad("bat", 5, "")    = "  bat"
-   * </pre>
-   *
-   * @param str
-   *          the String to pad out, may be null
-   * @param size
-   *          the size to pad to
-   * @param padStr
-   *          the String to pad with, null or empty treated as single space
-   * @return left padded String or original String if no padding is necessary, <code>null</code> if null String input
-   */
-  public static String leftPad(String str, int size, String padStr) {
-    if (str == null) {
-      return null;
-    }
-    if (isEmpty(padStr)) {
-      padStr = DEFAULT_PAD_STRING;
-    }
-    int padLen = padStr.length();
-    int strLen = str.length();
-    int pads = size - strLen;
-    if (pads <= 0) {
-      return str; // returns original String when possible
-    }
-    if (padLen == 1 && pads <= PAD_LIMIT) {
-      return leftPad(str, size, padStr.charAt(0));
-    }
-
-    if (pads == padLen) {
-      return padStr.concat(str);
-    } else if (pads < padLen) {
-      return padStr.substring(0, pads).concat(str);
-    } else {
-      char[] padding = new char[pads];
-      char[] padChars = padStr.toCharArray();
-      for (int i = 0; i < pads; i++) {
-        padding[i] = padChars[i % padLen];
-      }
-      return new String(padding).concat(str);
-    }
-  }
-
-  /**
-   * <p>
-   * Right pad a String with spaces (' ').
-   * </p>
-   *
-   * <p>
-   * The String is padded to the size of <code>size</code>.
-   * </p>
-   *
-   * <pre>
-   * StringUtils.rightPad(null, *)   = null
-   * StringUtils.rightPad("", 3)     = "   "
-   * StringUtils.rightPad("bat", 3)  = "bat"
-   * StringUtils.rightPad("bat", 5)  = "bat  "
-   * StringUtils.rightPad("bat", 1)  = "bat"
-   * StringUtils.rightPad("bat", -1) = "bat"
-   * </pre>
-   *
-   * @param str
-   *          the String to pad out, may be null
-   * @param size
-   *          the size to pad to
-   * @return right padded String or original String if no padding is necessary, <code>null</code> if null String input
-   */
-  public static String rightPad(String str, int size) {
-    return rightPad(str, size, DEFAULT_PAD_CHAR);
-  }
-
-  /**
-   * <p>
-   * Right pad a String with a specified character.
-   * </p>
-   *
-   * <p>
-   * The String is padded to the size of <code>size</code>.
-   * </p>
-   *
-   * <pre>
-   * StringUtils.rightPad(null, *, *)     = null
-   * StringUtils.rightPad("", 3, 'z')     = "zzz"
-   * StringUtils.rightPad("bat", 3, 'z')  = "bat"
-   * StringUtils.rightPad("bat", 5, 'z')  = "batzz"
-   * StringUtils.rightPad("bat", 1, 'z')  = "bat"
-   * StringUtils.rightPad("bat", -1, 'z') = "bat"
-   * </pre>
-   *
-   * @param str
-   *          the String to pad out, may be null
-   * @param size
-   *          the size to pad to
-   * @param padChar
-   *          the character to pad with
-   * @return right padded String or original String if no padding is necessary, <code>null</code> if null String input
-   * @since 2.0
-   */
-  public static String rightPad(String str, int size, char padChar) {
-    if (str == null) {
-      return null;
-    }
-    int pads = size - str.length();
-    if (pads <= 0) {
-      return str; // returns original String when possible
-    }
-    if (pads > PAD_LIMIT) {
-      return rightPad(str, size, String.valueOf(padChar));
-    }
-    return str.concat(padding(pads, padChar));
-  }
-
-  /**
-   * <p>
-   * Right pad a String with a specified String.
-   * </p>
-   *
-   * <p>
-   * The String is padded to the size of <code>size</code>.
-   * </p>
-   *
-   * <pre>
-   * StringUtils.rightPad(null, *, *)      = null
-   * StringUtils.rightPad("", 3, "z")      = "zzz"
-   * StringUtils.rightPad("bat", 3, "yz")  = "bat"
-   * StringUtils.rightPad("bat", 5, "yz")  = "batyz"
-   * StringUtils.rightPad("bat", 8, "yz")  = "batyzyzy"
-   * StringUtils.rightPad("bat", 1, "yz")  = "bat"
-   * StringUtils.rightPad("bat", -1, "yz") = "bat"
-   * StringUtils.rightPad("bat", 5, null)  = "bat  "
-   * StringUtils.rightPad("bat", 5, "")    = "bat  "
-   * </pre>
-   *
-   * @param str
-   *          the String to pad out, may be null
-   * @param size
-   *          the size to pad to
-   * @param padStr
-   *          the String to pad with, null or empty treated as single space
-   * @return right padded String or original String if no padding is necessary, <code>null</code> if null String input
-   */
-  public static String rightPad(String str, int size, String padStr) {
-    if (str == null) {
-      return null;
-    }
-    if (isEmpty(padStr)) {
-      padStr = DEFAULT_PAD_STRING;
-    }
-    int padLen = padStr.length();
-    int strLen = str.length();
-    int pads = size - strLen;
-    if (pads <= 0) {
-      return str; // returns original String when possible
-    }
-    if (padLen == 1 && pads <= PAD_LIMIT) {
-      return rightPad(str, size, padStr.charAt(0));
-    }
-
-    if (pads == padLen) {
-      return str.concat(padStr);
-    } else if (pads < padLen) {
-      return str.concat(padStr.substring(0, pads));
-    } else {
-      char[] padding = new char[pads];
-      char[] padChars = padStr.toCharArray();
-      for (int i = 0; i < pads; i++) {
-        padding[i] = padChars[i % padLen];
-      }
-      return str.concat(new String(padding));
-    }
-  }
-
-  /**
-   * <p>
-   * Returns padding using the specified delimiter repeated to a given length.
-   * </p>
-   *
-   * <pre>
-   * StringUtils.padding(0, 'e')  = ""
-   * StringUtils.padding(3, 'e')  = "eee"
-   * StringUtils.padding(-2, 'e') = IndexOutOfBoundsException
-   * </pre>
-   *
-   * <p>
-   * Note: this method doesn't not support padding with <a
-   * href="http://www.unicode.org/glossary/#supplementary_character">Unicode Supplementary Characters</a> as they
-   * require a pair of <code>char</code>s to be represented. If you are needing to support full I18N of your
-   * applications consider using {@link #repeat(String, int)} instead.
-   * </p>
-   *
-   * @param repeat
-   *          number of times to repeat delim
-   * @param padChar
-   *          character to repeat
-   * @return String with repeated character
-   * @throws IndexOutOfBoundsException
-   *           if <code>repeat &lt; 0</code>
-   * @see #repeat(String, int)
-   */
-  private static String padding(int repeat, char padChar) throws IndexOutOfBoundsException {
-    if (repeat < 0) {
-      throw new IndexOutOfBoundsException("Cannot pad a negative amount: " + repeat);
-    }
-    final char[] buf = new char[repeat];
-    for (int i = 0; i < buf.length; i++) {
-      buf[i] = padChar;
-    }
-    return new String(buf);
-  }
-
-  /**
-   * <p>
-   * Checks whether the String a valid Java number.
-   * </p>
-   *
-   * <p>
-   * Valid numbers include hexadecimal marked with the <code>0x</code> qualifier, scientific notation and numbers marked
-   * with a type qualifier (e.g. 123L).
-   * </p>
-   *
-   * <p>
-   * <code>Null</code> and empty String will return <code>false</code>.
-   * </p>
-   *
-   * @param str
-   *          the <code>String</code> to check
-   * @return <code>true</code> if the string is a correctly formatted number
-   */
-  public static boolean isNumber(String str) {
-    if (StringUtil.isEmpty(str)) {
-      return false;
-    }
-    char[] chars = str.toCharArray();
-    int sz = chars.length;
-    boolean hasExp = false;
-    boolean hasDecPoint = false;
-    boolean allowSigns = false;
-    boolean foundDigit = false;
-    // deal with any possible sign up front
-    int start = (chars[0] == '-') ? 1 : 0;
-    if (sz > start + 1) {
-      if (chars[start] == '0' && chars[start + 1] == 'x') {
-        int i = start + 2;
-        if (i == sz) {
-          return false; // str == "0x"
-        }
-        // checking hex (it can't be anything else)
-        for (; i < chars.length; i++) {
-          if ((chars[i] < '0' || chars[i] > '9') && (chars[i] < 'a' || chars[i] > 'f')
-              && (chars[i] < 'A' || chars[i] > 'F')) {
-            return false;
-          }
-        }
-        return true;
-      }
-    }
-    sz--; // don't want to loop to the last char, check it afterwords
-          // for type qualifiers
-    int i = start;
-    // loop to the next to last char or to the last char if we need another digit to
-    // make a valid number (e.g. chars[0..5] = "1234E")
-    while (i < sz || (i < sz + 1 && allowSigns && !foundDigit)) {
-      if (chars[i] >= '0' && chars[i] <= '9') {
-        foundDigit = true;
-        allowSigns = false;
-
-      } else if (chars[i] == '.') {
-        if (hasDecPoint || hasExp) {
-          // two decimal points or dec in exponent
-          return false;
-        }
-        hasDecPoint = true;
-      } else if (chars[i] == 'e' || chars[i] == 'E') {
-        // we've already taken care of hex.
-        if (hasExp) {
-          // two E's
-          return false;
-        }
-        if (!foundDigit) {
-          return false;
-        }
-        hasExp = true;
-        allowSigns = true;
-      } else if (chars[i] == '+' || chars[i] == '-') {
-        if (!allowSigns) {
-          return false;
-        }
-        allowSigns = false;
-        foundDigit = false; // we need a digit after the E
-      } else {
-        return false;
-      }
-      i++;
-    }
-    if (i < chars.length) {
-      if (chars[i] >= '0' && chars[i] <= '9') {
-        // no type qualifier, OK
-        return true;
-      }
-      if (chars[i] == 'e' || chars[i] == 'E') {
-        // can't have an E at the last byte
-        return false;
-      }
-      if (chars[i] == '.') {
-        if (hasDecPoint || hasExp) {
-          // two decimal points or dec in exponent
-          return false;
-        }
-        // single trailing decimal point after non-exponent is ok
-        return foundDigit;
-      }
-      if (!allowSigns && (chars[i] == 'd' || chars[i] == 'D' || chars[i] == 'f' || chars[i] == 'F')) {
-        return foundDigit;
-      }
-      if (chars[i] == 'l' || chars[i] == 'L') {
-        // not allowing L with an exponent
-        return foundDigit && !hasExp;
-      }
-      // last character is illegal
-      return false;
-    }
-    // allowSigns is true iff the val ends in 'E'
-    // found digit it to make sure weird stuff like '.' and '1E-' doesn't pass
-    return !allowSigns && foundDigit;
-  }
-
-  /**
-   * <p>
-   * Checks whether the <code>String</code> contains only digit characters.
-   * </p>
-   *
-   * <p>
-   * <code>Null</code> and empty String will return <code>false</code>.
-   * </p>
-   *
-   * @param str
-   *          the <code>String</code> to check
-   * @return <code>true</code> if str contains only unicode numeric
-   */
-  public static boolean isDigits(String str) {
-    if (StringUtil.isEmpty(str)) {
-      return false;
-    }
-    for (int i = 0; i < str.length(); i++) {
-      if (!Character.isDigit(str.charAt(i))) {
-        return false;
-      }
-    }
-    return true;
   }
 
   /**
