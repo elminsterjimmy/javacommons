@@ -1,5 +1,5 @@
 package com.elminster.common.threadpool;
 
-public class FutureOverflowException extends Exception {
+public class FutureOverflowException extends RuntimeException {
 
 }

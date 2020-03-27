@@ -2,6 +2,12 @@ package com.elminster.common.threadpool;
 
 import com.elminster.common.event.Event;
 
+/**
+ * The Future Event.
+ *
+ * @author jgu
+ * @version 1.0
+ */
 public class FutureEvent implements Event {
   
   private final String name;

@@ -1,20 +1,21 @@
 package com.elminster.common.threadpool;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
+import com.elminster.common.misc.LockWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 /**
  * The future monitor with reactor pattern.
- * 
+ *
+ * Notice that if the {@link ListenableFuture}'s listener registered after the
+ * Future completed, it will not get the notification of the {@link FutureEvent}.
+ *
  * @author jinggu
  * @version 1.0
  */
@@ -24,11 +25,13 @@ public class FutureMonitor implements Runnable {
 
   private final int maxFutureToMonitor;
   private final List<ListenableFuture<?>> monitoredFutures;
-  private Lock lock = new ReentrantLock();
+  private ReadWriteLock lock = new ReentrantReadWriteLock();
+  private Lock readLock = lock.readLock();
+  private Lock writeLock = lock.writeLock();
 
   public FutureMonitor(int maxFutureToMonitor) {
     this.maxFutureToMonitor = maxFutureToMonitor;
-    this.monitoredFutures = new LinkedList<>();
+    this.monitoredFutures = Collections.synchronizedList(new LinkedList<>());
   }
 
   /**
@@ -51,35 +54,37 @@ public class FutureMonitor implements Runnable {
 
   /**
    * Collect the events.
-   * 
+   *
    * @return the events
    */
   private List<FutureEvent> collect() {
-    List<FutureEvent> events = new ArrayList<>();
-    for (ListenableFuture<?> future : monitoredFutures) {
-      if (future.isDone()) {
-        FutureEvent event;
-        if (future.isCancelled()) {
-          event = new FutureCancelledEvent(future, null);
-        } else {
-          try {
-            Object rtn = future.get();
-            event = new FutureFinishedEvent(future, rtn);
-          } catch (InterruptedException | ExecutionException e) {
-            event = new FutureExceptionEvent(future, e);
+    return LockWrapper.wrapperWithLock(readLock, () -> {
+      List<FutureEvent> events = new ArrayList<>();
+      for (ListenableFuture<?> future : monitoredFutures) {
+        if (future.isDone()) {
+          FutureEvent event;
+          if (future.isCancelled()) {
+            event = new FutureCancelledEvent(future, null);
+          } else {
+            try {
+              Object rtn = future.get();
+              event = new FutureFinishedEvent(future, rtn);
+            } catch (InterruptedException | ExecutionException e) {
+              event = new FutureExceptionEvent(future, e);
+            }
           }
+          events.add(event);
         }
-        events.add(event);
       }
-    }
-    return events;
+      return events;
+    });
   }
 
   /**
    * Dispatch the event.
-   * 
+   *
    * @param event
-   *          the event
+   *     the event
    */
   private void dispatch(FutureEvent event) {
     ListenableFuture<?> listenableFuture = (ListenableFuture<?>) event.getSource();
@@ -93,32 +98,24 @@ public class FutureMonitor implements Runnable {
         listener.onFinished(event);
       }
     }
-    try {
-      lock.lock();
-      monitoredFutures.remove(listenableFuture);
-    } finally {
-      lock.unlock();
-    }
+    LockWrapper.wrapperWithLock(writeLock, () -> monitoredFutures.remove(listenableFuture));
   }
 
   /**
    * Add the future to monitor.
-   * 
+   *
    * @param future
-   *          the future to monitor
+   *     the future to monitor
    * @throws FutureOverflowException
-   *           if exceed the max monitor future count
+   *     if exceed the max monitor future count
    */
   public void addFuture(ListenableFuture<?> future) throws FutureOverflowException {
-    try {
-      lock.lock();
+    LockWrapper.wrapperWithLock(writeLock, () -> {
       if (monitoredFutures.size() > maxFutureToMonitor) {
         throw new FutureOverflowException();
       }
       monitoredFutures.add(future);
-    } finally {
-      lock.unlock();
-    }
+    });
   }
 
   public int getMaxFutureToMonitor() {

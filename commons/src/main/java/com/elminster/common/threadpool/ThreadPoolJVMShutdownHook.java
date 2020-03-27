@@ -18,6 +18,8 @@ public class ThreadPoolJVMShutdownHook extends Thread {
   
   /** the logger. */
   private static final Logger logger = LoggerFactory.getLogger(ThreadPoolJVMShutdownHook.class);
+  /** the thread pool. */
+  private ThreadPool threadPool;
   /** the timeout. */
   private long timeout;
   /** the time unit for timeout. */
@@ -25,17 +27,20 @@ public class ThreadPoolJVMShutdownHook extends Thread {
   
   /**
    * Default Constructor with 1 minute timeout.
+   * @param threadPool the thread pool
    */
-  public ThreadPoolJVMShutdownHook() {
-    this(1, TimeUnit.MINUTES);
+  public ThreadPoolJVMShutdownHook(ThreadPool threadPool) {
+    this(threadPool, 1, TimeUnit.MINUTES);
   }
   
   /**
    * Constructor with timeout and time unit.
+   * @param threadPool the thread pool
    * @param timeout the timeout
    * @param timeUnit the time unit
    */
-  public ThreadPoolJVMShutdownHook(long timeout, TimeUnit timeUnit) {
+  public ThreadPoolJVMShutdownHook(ThreadPool threadPool, long timeout, TimeUnit timeUnit) {
+    this.threadPool = threadPool;
     this.timeout = timeout;
     this.timeUnit = timeUnit;
   }
@@ -44,22 +49,28 @@ public class ThreadPoolJVMShutdownHook extends Thread {
    * {@inheritDoc}
    */
   public void run() {
-    ThreadPool tp = ThreadPool.getDefaultThreadPool();
-    tp.shutdown();
+    threadPool.shutdown();
     // interrupt all running runnables
     try {
-      if (!tp.executor.awaitTermination(timeout, timeUnit)) {
+      if (!threadPool.executor.awaitTermination(timeout, timeUnit)) {
         logger.debug("Executor did not terminate in the specified time.");
-        List<Runnable> droppedTasks = tp.executor.shutdownNow();
+        List<Runnable> droppedTasks = threadPool.executor.shutdownNow();
         logger.debug("Executor was abruptly shut down. " + droppedTasks.size() + " tasks will not be executed.");
       }
-      if (!tp.scheduledExecutor.awaitTermination(timeout, timeUnit)) {
+      if (!threadPool.scheduler.awaitTermination(timeout, timeUnit)) {
         logger.debug("Scheduled Executor did not terminate in the specified time.");
-        List<Runnable> droppedTasks = tp.scheduledExecutor.shutdownNow();
+        List<Runnable> droppedTasks = threadPool.scheduler.shutdownNow();
         logger.debug("Scheduled Executor was abruptly shut down. " + droppedTasks.size() + " tasks will not be executed.");
       }
     } catch (InterruptedException e) {
       logger.warn("interrupted while shudown executors", e);
     }
+  }
+
+  /**
+   * Attach this shutdown hook to JVM runtime.
+   */
+  public void attachToJVMRuntime() {
+    Runtime.getRuntime().addShutdownHook(this);
   }
 }
