@@ -1,4 +1,4 @@
-package com.elminster.common.exec;
+package com.elminster.common.cli;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,9 +16,9 @@ import java.util.Set;
 public class CommandLineArgs {
 
   /** the option arguments. */
-  private final Map<String, List<String>> optionArgs = new HashMap<String, List<String>>();
+  private final Map<String, List<String>> optionArgs = new HashMap<>();
   /** the non option arguments. */
-  private final List<String> nonOptionArgs = new ArrayList<String>();
+  private final List<String> nonOptionArgs = new ArrayList<>();
 
   /**
    * Add option argument.
@@ -27,7 +27,7 @@ public class CommandLineArgs {
    */
   public void addOptionArg(String optionName, String optionValue) {
     if (!this.optionArgs.containsKey(optionName)) {
-      this.optionArgs.put(optionName, new ArrayList<String>());
+      this.optionArgs.put(optionName, new ArrayList<>());
     }
     if (optionValue != null) {
       this.optionArgs.get(optionName).add(optionValue);
