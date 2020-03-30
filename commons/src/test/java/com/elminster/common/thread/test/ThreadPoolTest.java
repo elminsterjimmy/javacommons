@@ -1,12 +1,11 @@
 package com.elminster.common.thread.test;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-
 import com.elminster.common.thread.threadpool.*;
-import com.elminster.common.threadpool.*;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class ThreadPoolTest {
 
