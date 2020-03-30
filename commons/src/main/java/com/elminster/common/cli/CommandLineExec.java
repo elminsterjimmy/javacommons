@@ -47,7 +47,7 @@ public class CommandLineExec {
    *     the command to execute
    */
   public Future<CommandLineResult> execute(Command command) {
-    return execute(command, new SampleExecStreamHandler());
+    return execute(command, new SimpleExecStreamHandler());
   }
 
   /**

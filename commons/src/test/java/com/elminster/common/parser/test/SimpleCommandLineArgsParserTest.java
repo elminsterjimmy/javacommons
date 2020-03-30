@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.elminster.common.constants.Constants.StringConstants;
-import com.elminster.common.exec.CommandLineArgs;
+import com.elminster.common.cli.CommandLineArgs;
 import com.elminster.common.parser.ParseException;
 import com.elminster.common.parser.SimpleCommandLineArgsParser;
 

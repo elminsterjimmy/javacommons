@@ -12,7 +12,7 @@ import java.io.OutputStream;
  * @author jgu
  * @version 1.0
  */
-public class SampleExecStreamHandler extends AbstractExecStreamHandler implements ExecuteStreamHandler {
+public class SimpleExecStreamHandler extends AbstractExecStreamHandler implements ExecuteStreamHandler {
 
   private ByteArrayOutputStream stdoutOutputStream;
   private ByteArrayOutputStream stderrOutputStream;
