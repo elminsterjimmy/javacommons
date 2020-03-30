@@ -80,7 +80,7 @@ public class CommandLineExec {
         }
         int exitValue = process.waitFor();
         return new CommandLineResult(exitValue, streamHandler.getStdout(), streamHandler.getStderr());
-      } catch (IOException  ioe) {
+      } catch (IOException ioe) {
         throw new RuntimeException(ioe);
       } catch (InterruptedException ie) {
         logger.warn(String.format("CLI [%s] has been interrupted.", command));
