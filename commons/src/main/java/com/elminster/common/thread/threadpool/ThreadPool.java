@@ -1,12 +1,12 @@
-package com.elminster.common.threadpool;
+package com.elminster.common.thread.threadpool;
 
-import static com.elminster.common.threadpool.ThreadPoolConfiguration.BLOCKING_QUEUE_SIZE;
-import static com.elminster.common.threadpool.ThreadPoolConfiguration.CORE_POOL_SIZE;
-import static com.elminster.common.threadpool.ThreadPoolConfiguration.DAEMON_THREAD;
-import static com.elminster.common.threadpool.ThreadPoolConfiguration.KEEP_ALIVE_TIME;
-import static com.elminster.common.threadpool.ThreadPoolConfiguration.MAX_POOL_SIZE;
-import static com.elminster.common.threadpool.ThreadPoolConfiguration.POOL_NAME;
-import static com.elminster.common.threadpool.ThreadPoolConfiguration.REJECTED_POLICY;
+import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.BLOCKING_QUEUE_SIZE;
+import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.CORE_POOL_SIZE;
+import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.DAEMON_THREAD;
+import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.KEEP_ALIVE_TIME;
+import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.MAX_POOL_SIZE;
+import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.POOL_NAME;
+import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.REJECTED_POLICY;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

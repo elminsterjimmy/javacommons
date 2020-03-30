@@ -3,10 +3,10 @@ package com.elminster.common.thread.test;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.elminster.common.thread.IJob;
-import com.elminster.common.thread.IJob.JobStatus;
-import com.elminster.common.thread.IJobMonitor;
-import com.elminster.common.thread.Job;
+import com.elminster.common.thread.job.IJob;
+import com.elminster.common.thread.job.IJob.JobStatus;
+import com.elminster.common.thread.job.IJobMonitor;
+import com.elminster.common.thread.job.Job;
 
 public class JobTest {
 

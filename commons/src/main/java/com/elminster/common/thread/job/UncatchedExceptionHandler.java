@@ -1,4 +1,4 @@
-package com.elminster.common.thread;
+package com.elminster.common.thread.job;
 
 /**
  * The UncatchedExceptionHandler.

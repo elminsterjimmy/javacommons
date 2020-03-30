@@ -1,6 +1,6 @@
-package com.elminster.common.thread;
+package com.elminster.common.thread.job;
 
-import com.elminster.common.thread.IJob.JobStatus;
+import com.elminster.common.thread.job.IJob.JobStatus;
 
 /**
  * The Job monitor.

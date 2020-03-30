@@ -4,7 +4,8 @@ import com.elminster.common.config.key.Key;
 import com.elminster.common.constants.Constants;
 import com.elminster.common.misc.LockWrapper;
 import com.elminster.common.observable.FileWatcher;
-import com.elminster.common.threadpool.ThreadPool;
+import com.elminster.common.thread.threadpool.ThreadPool;
+import com.elminster.common.thread.threadpool.ThreadPoolAdapter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -82,10 +83,13 @@ public class DynamicConfiguration extends StandardConfiguration implements Obser
   protected void loadResources() {
     if (null != configurationFiles) {
       ThreadPool pool = ThreadPool.getDefaultThreadPool();
-      pool.addThreadPoolListener(() -> {
-        if (null != fileWatchers) {
-          for (FileWatcher fw : fileWatchers) {
-            fw.stopWatch();
+      pool.addThreadPoolListener(new ThreadPoolAdapter() {
+        @Override
+        public void onShutdown(ThreadPool threadPool) {
+          if (null != fileWatchers) {
+            for (FileWatcher fw : fileWatchers) {
+              fw.stopWatch();
+            }
           }
         }
       });

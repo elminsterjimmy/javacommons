@@ -1,7 +1,8 @@
-package com.elminster.common.thread;
+package com.elminster.common.thread.job;
 
 import java.util.Date;
 
+import com.elminster.common.thread.wrapper.ThreadNameWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,28 +131,30 @@ abstract public class Job implements IJob {
    */
   @Override
   public void run() {
-    Thread.currentThread().setName(name);
-    jobStarted = System.currentTimeMillis();
-    if (logger.isDebugEnabled()) {
-      logger.debug(String.format("Job {%X}-{%s} started at %tc.", id, name, new Date(jobStarted)));
-    }
-    try {
-      status = JobStatus.RUNNING;
-      status = doWork(monitor);
-    } catch (InterruptedException ie) {
-      status = JobStatus.INTERRUPTED;
-      uncatchedExceptionHandler.handleUncatchedException(ie);
-    } catch (Throwable t) {
-      status = JobStatus.ERROR;
-      uncatchedExceptionHandler.handleUncatchedException(t);
-    } finally {
+    ThreadNameWrapper.replaceThreadName(s -> {
+      Thread.currentThread().setName(s + " - " + name);
+      jobStarted = System.currentTimeMillis();
       if (logger.isDebugEnabled()) {
-        long finishedTs = System.currentTimeMillis();
-        long delta = finishedTs - jobStarted;
-        logger.debug(String.format("Job [{%X}-{%s}] finished at %tc. Time delta = [%d] ms. Status = [%s].", id, name, new Date(
-            finishedTs), delta, status.toString()));
+        logger.debug(String.format("Job {%X}-{%s} started at %tc.", id, name, new Date(jobStarted)));
       }
-    }
+      try {
+        status = JobStatus.RUNNING;
+        status = Job.this.doWork(monitor);
+      } catch (InterruptedException ie) {
+        status = JobStatus.INTERRUPTED;
+        uncatchedExceptionHandler.handleUncatchedException(ie);
+      } catch (Throwable t) {
+        status = JobStatus.ERROR;
+        uncatchedExceptionHandler.handleUncatchedException(t);
+      } finally {
+        if (logger.isDebugEnabled()) {
+          long finishedTs = System.currentTimeMillis();
+          long delta = finishedTs - jobStarted;
+          logger.debug(String.format("Job [{%X}-{%s}] finished at %tc. Time delta = [%d] ms. Status = [%s].", id, name, new Date(
+              finishedTs), delta, status.toString()));
+        }
+      }
+    });
   }
 
   /**

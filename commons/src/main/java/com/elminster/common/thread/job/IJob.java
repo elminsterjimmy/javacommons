@@ -1,4 +1,6 @@
-package com.elminster.common.thread;
+package com.elminster.common.thread.job;
+
+import com.elminster.common.thread.job.IJobMonitor;
 
 /**
  * The job interface.

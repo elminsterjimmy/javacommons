@@ -1,9 +1,9 @@
-package com.elminster.common.thread;
+package com.elminster.common.thread.job;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.elminster.common.thread.IJob.JobStatus;
+import com.elminster.common.thread.job.IJob.JobStatus;
 
 /**
  * The default job monitor.
