@@ -8,7 +8,7 @@ import com.elminster.common.util.Assert;
 
 public class FilterChain implements Iterable<Filter> {
   
-  private List<Filter> filters = new ArrayList<Filter>();
+  private List<Filter> filters = new ArrayList<>();
   private Operator operator;
   private boolean negate;
   
