@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -13,15 +14,24 @@ import com.elminster.web.commons.response.JsonResponse;
 import com.elminster.web.commons.response.JsonResponseBuilder;
 
 /**
- * Use {@link GlobalControllerExceptionHandler} for global error handle.
+ * The Global Controller exception handler.
+ * 
+ * @author jgu
+ * @version 1.0
  */
-@Deprecated
-public class BaseController {
+@ControllerAdvice
+final public class GlobalControllerExceptionHandler {
 
-  protected static final Log logger = LogFactory.getLog(BaseController.class);
-  protected static JsonResponseBuilder jsonResponseBuilder = JsonResponseBuilder.INSTANCE;
+  /** the logger. */
+  private static final Log logger = LogFactory.getLog(GlobalControllerExceptionHandler.class);
+  /** the JSON response builder. */
+  private static JsonResponseBuilder jsonResponseBuilder = JsonResponseBuilder.INSTANCE;
 
-  // handle validate exception
+  /**
+   * Handle validate exception.
+   * @param exception the MethodArgumentNotValidException exception
+   * @return a response with HTTP <code>400</code> error.
+   */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseBody
   public ResponseEntity<JsonResponse> handleValidateException(MethodArgumentNotValidException exception) {
@@ -30,7 +40,11 @@ public class BaseController {
         .getBindingResult()), HttpStatus.BAD_REQUEST);
   }
 
-  // handle uncaught exception
+  /**
+   * Handle uncaught exception.
+   * @param exception the uncaught exception
+   * @return a response with HTTP <code>500</code> error.
+   */
   @ExceptionHandler(Exception.class)
   @ResponseBody
   public ResponseEntity<JsonResponse> handleUncaughtException(Exception exception) {
