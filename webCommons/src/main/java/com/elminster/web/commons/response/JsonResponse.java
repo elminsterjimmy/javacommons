@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * The general JSON response.
- * 
+ *
  * @author jgu
  * @version 1.0
  */
@@ -33,27 +33,7 @@ public class JsonResponse implements Serializable {
    * The json data.
    */
   private Object data;
-  /**
-   * The created / updated resource URI.
-   */
-  private String resource;
-  /**
-   * The next Page URI.
-   */
-  private String nextPage;
-  /**
-   * The page Number.
-   */
-  private int pageNumber;
-  /**
-   * The page size.
-   */
-  private int pageSize;
-  /**
-   * The total pages.
-   */
-  private int totalPages;
-  
+
   public JsonResponse() {
     this.status = STATUS_OK;
   }
@@ -87,7 +67,7 @@ public class JsonResponse implements Serializable {
   
   public JsonResponse addError(ResponseError error) {
     if (null == this.errors) {
-      this.errors = new ArrayList<ResponseError>();
+      this.errors = new ArrayList<>();
     }
     this.errors.add(error);
     return this;
@@ -105,81 +85,6 @@ public class JsonResponse implements Serializable {
    */
   public JsonResponse setData(Object data) {
     this.data = data;
-    return this;
-  }
-
-  /**
-   * @return the resource
-   */
-  public String getResource() {
-    return resource;
-  }
-
-  /**
-   * @param resource the resource to set
-   */
-  public JsonResponse setResource(String resource) {
-    this.resource = resource;
-    return this;
-  }
-
-  /**
-   * @return the nextPage
-   */
-  public String getNextPage() {
-    return nextPage;
-  }
-
-  /**
-   * @param nextPage the nextPage to set
-   */
-  public JsonResponse setNextPage(String nextPage) {
-    this.nextPage = nextPage;
-    return this;
-  }
-
-  /**
-   * @return the pageNumber
-   */
-  public int getPageNumber() {
-    return pageNumber;
-  }
-
-  /**
-   * @param pageNumber the pageNumber to set
-   */
-  public JsonResponse setPageNumber(int pageNumber) {
-    this.pageNumber = pageNumber;
-    return this;
-  }
-
-  /**
-   * @return the pageSize
-   */
-  public int getPageSize() {
-    return pageSize;
-  }
-
-  /**
-   * @param pageSize the pageSize to set
-   */
-  public JsonResponse setPageSize(int pageSize) {
-    this.pageSize = pageSize;
-    return this;
-  }
-
-  /**
-   * @return the totalPages
-   */
-  public int getTotalPages() {
-    return totalPages;
-  }
-
-  /**
-   * @param totalPages the totalPages to set
-   */
-  public JsonResponse setTotalPages(int totalPages) {
-    this.totalPages = totalPages;
     return this;
   }
 }
