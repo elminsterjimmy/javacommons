@@ -1,7 +1,5 @@
 package com.elminster.common.thread.wrapper;
 
-import com.elminster.common.function.Action;
-
 import java.util.function.Consumer;
 import java.util.function.Function;
 
