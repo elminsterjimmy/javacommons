@@ -1,5 +1,6 @@
-package com.elminster.spring.web.helper;
+package com.elminster.spring.web.httpclient;
 
+import com.elminster.spring.web.httpclient.HttpCallException;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 

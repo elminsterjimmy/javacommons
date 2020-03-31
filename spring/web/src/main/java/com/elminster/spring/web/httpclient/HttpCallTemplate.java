@@ -1,4 +1,4 @@
-package com.elminster.spring.web.helper;
+package com.elminster.spring.web.httpclient;
 
 import com.elminster.common.constants.Constants;
 import org.slf4j.Logger;

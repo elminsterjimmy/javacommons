@@ -1,4 +1,4 @@
-package com.elminster.spring.web.helper;
+package com.elminster.spring.web.httpclient;
 
 /**
  * The HTTP call exception.
@@ -7,7 +7,6 @@ package com.elminster.spring.web.helper;
  * @version 1.0
  */
 public class HttpCallException extends RuntimeException {
-
 
   public HttpCallException() {
   }
@@ -20,7 +19,7 @@ public class HttpCallException extends RuntimeException {
     super(message, cause);
   }
 
-  public <T> HttpCallException(Throwable cause) {
+  public HttpCallException(Throwable cause) {
     super(cause);
   }
 }

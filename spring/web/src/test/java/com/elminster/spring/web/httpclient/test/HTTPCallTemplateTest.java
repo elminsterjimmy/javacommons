@@ -1,7 +1,7 @@
-package com.elminster.spring.web.helper.test;
+package com.elminster.spring.web.httpclient.test;
 
-import com.elminster.spring.web.helper.HttpCallTemplate;
-import com.elminster.spring.web.helper.UnexpectedHttpStatusException;
+import com.elminster.spring.web.httpclient.HttpCallTemplate;
+import com.elminster.spring.web.httpclient.UnexpectedHttpStatusException;
 import com.elminster.web.commons.response.JsonResponse;
 import com.elminster.web.commons.response.JsonResponseBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
