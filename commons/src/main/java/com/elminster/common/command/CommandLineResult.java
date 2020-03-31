@@ -1,4 +1,4 @@
-package com.elminster.common.cli;
+package com.elminster.common.command;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

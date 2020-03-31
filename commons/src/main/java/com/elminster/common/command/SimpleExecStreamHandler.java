@@ -1,4 +1,4 @@
-package com.elminster.common.cli;
+package com.elminster.common.command;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

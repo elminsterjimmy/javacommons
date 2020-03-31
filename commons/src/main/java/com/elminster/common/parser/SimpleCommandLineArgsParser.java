@@ -1,7 +1,7 @@
 package com.elminster.common.parser;
 
 import com.elminster.common.constants.Constants.StringConstants;
-import com.elminster.common.cli.CommandLineArgs;
+import com.elminster.common.command.CommandLineArgs;
 import com.elminster.common.util.StringUtil;
 
 /**

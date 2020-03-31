@@ -1,4 +1,4 @@
-package com.elminster.common.cli;
+package com.elminster.common.command;
 
 import java.util.ArrayList;
 import java.util.Collections;

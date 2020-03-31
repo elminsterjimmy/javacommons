@@ -1,12 +1,13 @@
-package com.elminster.common.cli;
+package com.elminster.common.command;
 
-import com.elminster.common.constants.Constants;
 import com.elminster.common.util.Assert;
-import org.apache.commons.lang3.ObjectUtils;
+import com.elminster.common.util.CollectionUtil;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class Command {
@@ -18,30 +19,42 @@ public class Command {
   private final String command;
   /** the work directory. */
   private final File workingDir;
+  /** the command args. */
+  private final CommandArgument[] args;
   /** the process environment. */
   private final Map<String, String> environment;
 
-  public Command(String command) {
-    this(command, PWD, EMPTY_ENV);
+  public Command(String command, CommandArgument... args) {
+    this(command, args, PWD, EMPTY_ENV);
   }
 
-  public Command(String command, File workingDir, Map<String, String> environment) {
+  public Command(String command, CommandArgument[] args, File workingDir, Map<String, String> environment) {
     Assert.notBlank(command);
     this.command = command;
+    this.args = args;
     this.workingDir = workingDir;
     this.environment = environment;
   }
 
   public String getCommandName() {
-    return command.split(Constants.StringConstants.SPACE)[0];
+    return command;
   }
 
   /**
-   * Fixme: handle space in arg
-   * @return
+   * Get the commands to run.
+   * @return commands
    */
   public String[] getCommands() {
-    return command.split(Constants.StringConstants.SPACE);
+    int len = null == args ? 1 : 1 + args.length;
+    List<String> cmds = new ArrayList<>(len);
+    cmds.add(command);
+    for (CommandArgument arg : args) {
+      String[] quotedArgs = arg.getQuotedArgument();
+      for (String quotedArg : quotedArgs) {
+        cmds.add(quotedArg);
+      }
+    }
+    return (String[]) CollectionUtil.collection2Array(cmds);
   }
 
   public File getWorkingDir() {

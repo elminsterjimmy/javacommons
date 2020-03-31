@@ -1,4 +1,4 @@
-package com.elminster.common.cli;
+package com.elminster.common.command;
 
 import com.elminster.common.thread.wrapper.ThreadNameWrapper;
 import com.elminster.common.thread.threadpool.ThreadPool;
@@ -60,6 +60,10 @@ public class CommandLineExec {
    */
   public Future<CommandLineResult> execute(Command command, ExecuteStreamHandler streamHandler) {
     return threadPool.submit(() -> ThreadNameWrapper.replaceThreadName(s -> {
+      if (logger.isDebugEnabled()) {
+        logger.debug("execute command [{}].", command);
+      }
+      Thread.currentThread().setName(s + " - " + command.getCommandName());
       ProcessBuilder pb = new ProcessBuilder();
       pb.command(command.getCommands());
       pb.directory(command.getWorkingDir());
