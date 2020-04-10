@@ -101,6 +101,9 @@ public class HttpCallTemplate {
                                                   K requestBody, ParameterizedTypeReference<T> parameterizedTypeReference,
                                                   Object... uriVariables) throws HttpCallException {
     HttpEntity<K> request = createHttpRequestEntity(requestBody);
+    if (logger.isDebugEnabled()) {
+      logger.debug(HTTP_CALL_DEBUG_REQUEST, url, request.getHeaders(), request.getBody(), extractUriVariables(uriVariables));
+    }
     try {
       ResponseEntity<T> response = restTemplate.exchange(url, method, request, parameterizedTypeReference, uriVariables);
       if (logger.isDebugEnabled()) {
