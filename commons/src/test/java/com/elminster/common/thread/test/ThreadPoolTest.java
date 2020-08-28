@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class ThreadPoolTest {
 
@@ -80,7 +81,7 @@ public class ThreadPoolTest {
         @Override
         public void onException(FutureEvent event) {
           Throwable t = (Throwable) event.getTarget();
-          Assert.assertEquals(t.getCause().getMessage(), "illegal state!");
+          Assert.assertEquals("java.lang.IllegalStateException: illegal state!", t.getCause().getMessage());
         }
         
         @Override
@@ -89,10 +90,6 @@ public class ThreadPoolTest {
       });
     }
 
-    try {
-      Thread.sleep(5000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    tp.shutdown(5, TimeUnit.SECONDS);
   }
 }

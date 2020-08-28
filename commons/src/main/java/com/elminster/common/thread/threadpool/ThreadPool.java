@@ -1,20 +1,15 @@
 package com.elminster.common.thread.threadpool;
 
-import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.BLOCKING_QUEUE_SIZE;
-import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.CORE_POOL_SIZE;
-import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.DAEMON_THREAD;
-import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.KEEP_ALIVE_TIME;
-import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.MAX_POOL_SIZE;
-import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.POOL_NAME;
-import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.REJECTED_POLICY;
+import com.elminster.common.util.CollectionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.elminster.common.thread.threadpool.ThreadPoolConfiguration.*;
 
 /**
  * The thread pool.
@@ -131,17 +126,22 @@ final public class ThreadPool {
    *
    * @param callable
    *     the callable
-   * @return a futrue
+   * @return a {@link CompletableFuture} wrapped with a {@link ListenableFuture}
    */
-  @SuppressWarnings("unchecked")
   public <V> Future<V> submit(Callable<V> callable) {
     if (null != listeners) {
       for (ThreadPoolListener tl : listeners) {
         tl.onAcceptCallable(this, callable);
       }
     }
-    Future<V> future = executor.submit(callable);
-    return (Future<V>) wrap(future);
+    CompletableFuture<V> completableFuture = CompletableFuture.supplyAsync(() -> {
+      try {
+        return callable.call();
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }, executor);
+    return (Future<V>) wrap(completableFuture);
   }
 
   /**
@@ -193,13 +193,12 @@ final public class ThreadPool {
    *     the time from now to delay execution
    * @param unit
    *     the time unit of the delay parameter
-   * @return a ScheduledFuture that can be used to extract result or cancel
+   * @return a {@link ScheduledFuture} that wrapped with a {@link ListenableFuture}
    * @throws RejectedExecutionException
    *     if the task cannot be scheduled for execution
    * @throws NullPointerException
    *     if callable is null
    */
-  @SuppressWarnings("unchecked")
   public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
     if (null != listeners) {
       for (ThreadPoolListener tl : listeners) {
@@ -277,15 +276,38 @@ final public class ThreadPool {
    * Shutdown the pool.
    */
   public void shutdown() {
+    shutdown(0, TimeUnit.NANOSECONDS);
+  }
+
+  /**
+   * Shutdown the pool.
+   */
+  public void shutdown(long timeout, TimeUnit unit) {
     for (ThreadPoolListener listener : listeners) {
       listener.onShutdown(this);
     }
     executor.shutdown();
+
+    List<CompletableFuture<Boolean>> awaiters = new ArrayList<>(3);
+    awaiters.add(awaitTermination(executor, timeout, unit));
     // in case of the executor is same as the scheduler
     if (executor != scheduler) {
       scheduler.shutdown();
+      awaiters.add(awaitTermination(scheduler, timeout, unit));
     }
     monitorExecutor.shutdown();
+    awaiters.add(awaitTermination(monitorExecutor, timeout, unit));
+    CompletableFuture.allOf((CompletableFuture<?>[]) CollectionUtil.collection2Array(awaiters)).join();
+  }
+
+  private CompletableFuture<Boolean> awaitTermination(ExecutorService executor, long timeout, TimeUnit unit) {
+    return CompletableFuture.supplyAsync(() -> {
+      try {
+        return executor.awaitTermination(timeout, unit);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+    });
   }
 
   /**
@@ -323,7 +345,7 @@ final public class ThreadPool {
    *     the future to wrap
    * @return wrapped future
    */
-  private Future<?> wrap(Future<?> future) {
+  synchronized private Future<?> wrap(Future<?> future) {
     ListenableFuture<?> listenableFuture;
     if (future instanceof ListenableFuture) {
       listenableFuture = (ListenableFuture<?>) future;
