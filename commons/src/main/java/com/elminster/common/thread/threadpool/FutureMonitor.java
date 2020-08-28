@@ -47,7 +47,7 @@ public class FutureMonitor implements Runnable {
       try {
         Thread.sleep(100);
       } catch (InterruptedException e) {
-        logger.error(String.format("Futrue Monitor has been interrupted! Current Monitoring Future Count [%d].", monitoredFutures.size()));
+        logger.error(String.format("Future Monitor has been interrupted! Current Monitoring Future Count [%d].", monitoredFutures.size()));
       }
     }
   }
