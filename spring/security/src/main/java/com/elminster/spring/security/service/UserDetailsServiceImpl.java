@@ -26,8 +26,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   }
 
   /**
-   * @param defaultUserDetailsDao
-   *          the defaultUserDetailsDao to set
+   * @param userService
+   *          the user service to set
    */
   @Autowired
   public void setDefaultUserDetailsDao(AuthUserService userService) {
