@@ -33,6 +33,7 @@
   <modules>
     <module>core</module>
     <module>security</module>
-<!--    <module>web</module>-->
+      <module>jpa</module>
+      <!--    <module>web</module>-->
   </modules>
 </project>
