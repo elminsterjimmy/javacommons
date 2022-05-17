@@ -311,29 +311,7 @@ public abstract class StringUtil {
    * @return String without newline, <code>null</code> if null String input
    */
   public static String chomp(String str) {
-    if (isEmpty(str)) {
-      return str;
-    }
-
-    if (str.length() == 1) {
-      char ch = str.charAt(0);
-      if (ch == StringUtil.CR || ch == StringUtil.LF) {
-        return EMPTY;
-      }
-      return str;
-    }
-
-    int lastIdx = str.length() - 1;
-    char last = str.charAt(lastIdx);
-
-    if (last == StringUtil.LF) {
-      if (str.charAt(lastIdx - 1) == StringUtil.CR) {
-        lastIdx--;
-      }
-    } else if (last != StringUtil.CR) {
-      lastIdx++;
-    }
-    return str.substring(0, lastIdx);
+    return StringUtils.chomp(str);
   }
 
   /**
@@ -492,8 +470,10 @@ public abstract class StringUtil {
    * @return the boolean value
    */
   public static boolean string2Boolean(String string) {
-    return "1".equals(string) || Boolean.TRUE.toString().equalsIgnoreCase(string) || "yes".equalsIgnoreCase(string)
-        || "on".equalsIgnoreCase(string);
+    return "1".equals(string)
+            || Boolean.TRUE.toString().equalsIgnoreCase(string)
+            || "yes".equalsIgnoreCase(string)
+            || "on".equalsIgnoreCase(string);
   }
   
   /**
@@ -511,7 +491,7 @@ public abstract class StringUtil {
     int pos = string.lastIndexOf(toReplace);
     if (pos > -1) {
       return new StringBuilder(string.substring(0, pos)).append(replacement)
-          .append(string.substring(pos + toReplace.length(), string.length())).toString();
+          .append(string.substring(pos + toReplace.length())).toString();
     } else {
       return string;
     }
@@ -532,7 +512,7 @@ public abstract class StringUtil {
    */
   public static String replaceByIndexes(String string, int replaceStart, int replaceEnd, String replacement) {
     return new StringBuilder(string.substring(0, replaceStart)).append(replacement)
-          .append(string.substring(replaceEnd, string.length())).toString();
+          .append(string.substring(replaceEnd)).toString();
   }
 
   /**

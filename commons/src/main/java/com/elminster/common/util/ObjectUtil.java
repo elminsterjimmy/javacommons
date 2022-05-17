@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 import com.elminster.common.constants.Constants.StringConstants;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Object Utilities
@@ -31,7 +32,7 @@ public abstract class ObjectUtil {
    *     first Object to compare
    * @param o2
    *     second Object to compare
-   * @return whether the Objects is equal
+   * @return whether the Objects equal
    */
   public static boolean isEqual(Object o1, Object o2) {
     if (null == o1 && null == o2) {
@@ -124,25 +125,7 @@ public abstract class ObjectUtil {
    * @return a String which contains all fields key-value pair
    */
   public static String buildToStringByReflect(Object obj) {
-    StringBuilder builder = new StringBuilder();
-
-    Field[] fields = ReflectUtil.getAllField(obj.getClass());
-    try {
-      builder.append(ARRAY_START);
-      for (Field field : fields) {
-        Object value;
-        value = ReflectUtil.getFieldValue(obj, field);
-        builder.append(field.getName() + StringConstants.EQUAL + toString(value));
-        builder.append(StringConstants.COMMA);
-      }
-      builder.setLength(builder.length() - 1);
-      builder.append(ARRAY_END);
-    } catch (IllegalArgumentException e) {
-      e.printStackTrace();
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
-    }
-    return builder.toString();
+    return ToStringBuilder.reflectionToString(obj);
   }
 
   /**
@@ -244,7 +227,7 @@ public abstract class ObjectUtil {
 
   /**
    * Convert object to Optional to prevent NPE.
-   * A typical usage is in an invoke chain to avoid NPE.
+   * A typical usage is in invoking chain to avoid NPE.
    * <cdoe>
    * Optional<AnnotatedType[]> optional = toOptional(() -> {
    *   return String.class.getAnnotatedInterfaces().getClass().getAnnotatedInterfaces();

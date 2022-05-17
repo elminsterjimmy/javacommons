@@ -23,16 +23,6 @@ public class AssertException extends RuntimeException {
   /**
    * @param message
    * @param cause
-   * @param enableSuppression
-   * @param writableStackTrace
-   */
-  public AssertException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-    super(message, cause, enableSuppression, writableStackTrace);
-  }
-
-  /**
-   * @param message
-   * @param cause
    */
   public AssertException(String message, Throwable cause) {
     super(message, cause);
